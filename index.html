@@ -1,0 +1,4716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clara — Integrations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ══ Clara Foundation v3.0 ══════════════════════════════ */
+
+    /* Primary */
+    --primary:              #335894;   /* Primary Default — buttons, checkboxes, etc. */
+    --primary-hover:        #294676;   /* Primary Hover */
+    --primary-active:       #1f3559;   /* Primary Active */
+    --primary-outline:      #859bbf;   /* Primary Outline — focus/press borders */
+    --primary-disabled:     #f3f5f6;   /* Primary Disabled bg */
+    --on-primary:           #ffffff;   /* Text/icons over primary (high emphasis) */
+    --on-primary-low:       #c0c7d3;   /* Text/icons over primary (low emphasis) */
+    --on-primary-disabled:  #9c9fa0;
+
+    /* Backgrounds */
+    --bg-page:              #fbfcfd;   /* Background Default — page canvas */
+    --bg-surface:           #ffffff;   /* Background Alternative — cards, sheets, modals */
+    --bg-highlight:         #f7f9fa;   /* Background Highlight — wrapping emphasis */
+    --bg-hover:             #f1f5f8;   /* Background Hover — interactive elements */
+    --bg-active:            #ebeef4;   /* Background Active — selected state */
+    --bg-disabled:          #f3f5f6;   /* Background Disabled */
+
+    /* Background status */
+    --bg-info:              #e2eafe;
+    --bg-success:           #e8f6e5;
+    --bg-warning:           #fff9e3;
+    --bg-critical:          #fce0e0;
+    --bg-advice:            #efe7fe;
+
+    /* Content — text & icons */
+    --content-high:         #1f2223;   /* High emphasis: titles, headings */
+    --content-medium:       #404344;   /* Medium: paragraphs, descriptions */
+    --content-low:          #737677;   /* Low: helper text, T&Cs */
+    --content-disabled:     #9c9fa0;
+
+    /* Content status */
+    --content-info:         #244eb0;
+    --content-success:      #356d29;
+    --content-warning:      #483c10;
+    --content-critical:     #b00020;
+    --content-advice:       #663db0;
+
+    /* Borders */
+    --border:               #dfe1e2;   /* Border Default — dividers, grouping */
+    --border-interactive:   #bbbebf;   /* Border Interactive — inputs, selectors */
+    --border-hover:         #737677;   /* Border Hover */
+    --border-disabled:      #edeff0;   /* Border Disabled */
+    --border-critical:      #b00020;
+    --border-success:       #356d29;
+
+    /* Extras */
+    --overlay:              rgba(115,118,119,0.70);
+    --skeleton:             #edeff0;
+
+    /* Sidebar / Dark nav */
+    --bg-sidebar:           #1f304b;   /* Pro Enterprise = app sidenav */
+    --bg-dark:              #1f304b;
+    --border-dark:          rgba(255,255,255,0.08);
+    --text-sidebar:         #c0c7d3;   /* onPrimary Low emphasis */
+    --text-sidebar-active:  #ffffff;
+
+    /* Extras — badges */
+    --badge-pro-bg:         #5353fa;
+    --badge-pro-text:       #ffffff;
+    --badge-enterprise-bg:  #1f304b;
+    --badge-enterprise-text:#ffffff;
+
+    /* ── Compat aliases (existing rules use these) ── */
+    --accent:               #335894;
+    --accent-hover:         #294676;
+    --accent-light:         #e2eafe;
+    --accent-mid:           #859bbf;
+    --bg-card:              #ffffff;
+    --bg-card-hover:        #f1f5f8;
+    --bg-card-selected:     #ebeef4;
+    --text-primary:         #1f2223;
+    --text-secondary:       #404344;
+    --text-muted:           #737677;
+    --green:                #356d29;
+    --green-light:          #e8f6e5;
+    --yellow:               #483c10;
+    --red:                  #b00020;
+
+    /* Misc */
+    --sheet-width: 420px;
+    --radius-sm:   4px;
+    --radius-md:   8px;
+    --radius-lg:   12px;
+
+    /* ── Typography scale (DM Sans) ── */
+    --font: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* H1 */ --h1-size: 2.25rem; --h1-lh: 3rem;   --h1-w: 600; --h1-ls: -0.021em;
+    /* H2 */ --h2-size: 1.75rem; --h2-lh: 2.5rem;  --h2-w: 600; --h2-ls: -0.020em;
+    /* H3 */ --h3-size: 1.5rem;  --h3-lh: 2.25rem; --h3-w: 600; --h3-ls: -0.017em;
+    /* Sub1*/ --sub1-size:1.25rem;--sub1-lh:2rem;   --sub1-w:600;--sub1-ls:-0.016em;
+    /* Sub2*/ --sub2-size:1.125rem;--sub2-lh:1.5rem;--sub2-w:700;--sub2-ls:-0.014em;
+    /* Btn */ --btn-size: 1rem;   --btn-lh: 1.5rem; --btn-w: 500; --btn-ls: -0.011em;
+    /* B1  */ --b1-size:  1rem;   --b1-lh:  1.5rem; --b1-w:  400; --b1-ls: -0.011em;
+    /* B2  */ --b2-size:  0.875rem;--b2-lh: 1.375rem;--b2-w: 400; --b2-ls: -0.006em;
+    /* Cap */ --cap-size: 0.75rem; --cap-lh: 1rem;  --cap-w: 400; --cap-ls: 0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    font-size: var(--b1-size);
+    line-height: var(--b1-lh);
+    letter-spacing: var(--b1-ls);
+    background: var(--bg-page);
+    color: var(--content-high);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Global typography helpers ── */
+  h1 { font-size:var(--h1-size); line-height:var(--h1-lh); font-weight:var(--h1-w); letter-spacing:var(--h1-ls); color:var(--content-high); }
+  h2 { font-size:var(--h2-size); line-height:var(--h2-lh); font-weight:var(--h2-w); letter-spacing:var(--h2-ls); color:var(--content-high); }
+  h3 { font-size:var(--h3-size); line-height:var(--h3-lh); font-weight:var(--h3-w); letter-spacing:var(--h3-ls); color:var(--content-high); }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: 220px;
+    background: var(--bg-sidebar);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: 0;
+  }
+
+  .sidebar-logo {
+    padding: 24px 16px 16px;
+    border-bottom: 1px solid var(--border-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sidebar-logo-icon {
+    width: 32px; height: 32px;
+    background: var(--primary);
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--on-primary); font-weight: 700; font-size: 16px;
+  }
+
+  .sidebar-logo-text { color: white; font-weight: 700; font-size: 16px; }
+
+  .sidebar-nav { padding: 8px; flex: 1; }
+
+  .nav-label {
+    font-size: var(--cap-size);
+    line-height: var(--cap-lh);
+    font-weight: 600;
+    color: var(--on-primary-low);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 8px 8px 4px;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--text-sidebar);
+    font-size: var(--b2-size);
+    line-height: var(--b2-lh);
+    letter-spacing: var(--b2-ls);
+    font-weight: 500;
+    transition: background .15s;
+    margin-bottom: 2px;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,.07); color: white; }
+  .nav-item.active { background: rgba(37,99,235,.28); color: white; }
+
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .nav-item .badge-new {
+    margin-left: auto;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+  }
+
+  .nav-separator { height: 1px; background: var(--border-dark); margin: 8px 0; }
+
+  .sidebar-footer { padding: 12px; border-top: 1px solid var(--border-dark); }
+
+  /* ─── MAIN LAYOUT ─── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ─── TOPBAR ─── */
+  .topbar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .topbar-company {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .topbar-company svg { color: var(--text-muted); }
+
+  .topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+  }
+
+  .topbar-role {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .topbar-right a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* ─── PAGE CONTENT ─── */
+  .page-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+    position: relative;
+  }
+
+  .page-title {
+    font-size: var(--h2-size);
+    line-height: var(--h2-lh);
+    font-weight: var(--h2-w);
+    letter-spacing: var(--h2-ls);
+    color: var(--content-high);
+    margin-bottom: 24px;
+  }
+
+  .search-bar {
+    width: 380px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--border-interactive);
+    border-radius: var(--radius-md);
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    line-height: var(--b2-lh);
+    letter-spacing: var(--b2-ls);
+    color: var(--content-medium);
+    background: var(--bg-surface);
+    margin-bottom: 8px;
+    outline: none;
+  }
+
+  .search-bar:focus { border-color: var(--primary); }
+
+  .filter-label {
+    font-size: var(--cap-size);
+    line-height: var(--cap-lh);
+    color: var(--content-low);
+    margin-bottom: 16px;
+  }
+
+  /* ─── INTEGRATIONS GRID ─── */
+  .integrations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .integration-card {
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    cursor: pointer;
+    transition: border-color .18s, box-shadow .18s, background .18s;
+    position: relative;
+  }
+
+  .integration-card:not(.placeholder):hover {
+    border-color: var(--accent-mid);
+    box-shadow: 0 4px 16px rgba(37,99,235,.08);
+    background: var(--bg-card-hover);
+  }
+
+  /* ─── PLACEHOLDER CARDS ─── */
+  .integration-card.placeholder {
+    opacity: .45;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .placeholder-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .placeholder-line {
+    height: 11px;
+    border-radius: 4px;
+    background: var(--border);
+    margin-bottom: 8px;
+  }
+
+  .integration-card.selected {
+    border-color: var(--accent);
+    background: var(--bg-card-selected);
+    box-shadow: 0 4px 16px rgba(37,99,235,.12);
+  }
+
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+
+  .card-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    background: var(--bg-highlight);
+    overflow: hidden;
+  }
+
+  .card-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+  .card-status-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .status-requested { background: var(--bg-warning); color: var(--content-warning); border: 1px solid #e8d97a; }
+  .status-active    { background: var(--bg-success); color: var(--content-success); border: 1px solid #a3d49a; }
+  .status-draft     { background: var(--bg-highlight); color: var(--content-medium); border: 1px solid var(--border); }
+
+  .card-name {
+    font-size: var(--b1-size);
+    line-height: var(--b1-lh);
+    font-weight: 600;
+    letter-spacing: var(--b1-ls);
+    color: var(--content-high);
+    margin-bottom: 8px;
+  }
+
+  .card-description {
+    font-size: var(--b2-size);
+    line-height: var(--b2-lh);
+    letter-spacing: var(--b2-ls);
+    color: var(--content-medium);
+    margin-bottom: 16px;
+  }
+
+  .card-plans { display: flex; gap: 8px; }
+
+  .plan-badge {
+    font-size: var(--cap-size);
+    line-height: var(--cap-lh);
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--badge-pro-bg);
+    color: var(--badge-pro-text);
+  }
+
+  .plan-badge.enterprise {
+    background: var(--badge-enterprise-bg);
+    color: var(--badge-enterprise-text);
+  }
+
+  /* ─── SIDE SHEET ─── */
+  .side-sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+
+  .side-sheet-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .side-sheet {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: var(--sheet-width);
+    background: white;
+    box-shadow: -8px 0 40px rgba(0,0,0,.12);
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform .28s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+  }
+
+  .side-sheet.open { transform: translateX(0); }
+
+  .sheet-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    transition: background .15s;
+    z-index: 1;
+  }
+
+  .sheet-close:hover { background: var(--bg-highlight); }
+
+  .sheet-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 28px 100px;
+  }
+
+  .sheet-logo-wrap {
+    width: 72px; height: 72px;
+    border-radius: 16px;
+    background: var(--bg-highlight);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    font-size: 32px;
+  }
+
+  .sheet-title {
+    font-size: var(--h3-size);
+    line-height: var(--h3-lh);
+    font-weight: var(--h3-w);
+    letter-spacing: var(--h3-ls);
+    color: var(--content-high);
+    margin-bottom: 16px;
+  }
+
+  .sheet-section-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+  .sheet-plans { display: flex; gap: 8px; margin-bottom: 24px; }
+
+  .sheet-plan-badge {
+    font-size: var(--cap-size);
+    line-height: var(--cap-lh);
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  .sheet-plan-badge.pro { background: var(--badge-pro-bg); color: var(--badge-pro-text); }
+  .sheet-plan-badge.enterprise { background: var(--badge-enterprise-bg); color: var(--badge-enterprise-text); }
+
+  .sheet-divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+  .sheet-about {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 8px;
+  }
+
+  .sheet-how-video {
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-dark);
+    aspect-ratio: 16/9;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    margin-top: 12px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .sheet-how-video-thumb {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: .7;
+    position: absolute;
+    inset: 0;
+  }
+
+  .play-btn {
+    width: 52px; height: 52px;
+    background: rgba(255,255,255,.92);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 16px rgba(0,0,0,.3);
+  }
+
+  .play-btn svg { margin-left: 3px; }
+
+  .sheet-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 16px 28px;
+    background: white;
+    border-top: 1px solid var(--border);
+    z-index: 2;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 12px 24px;
+    background: var(--primary);
+    color: var(--on-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font);
+    font-size: var(--btn-size);
+    line-height: var(--btn-lh);
+    font-weight: var(--btn-w);
+    letter-spacing: var(--btn-ls);
+    cursor: pointer;
+    transition: background .15s;
+  }
+
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-primary:disabled { background: var(--primary-disabled); color: var(--content-disabled); cursor: not-allowed; }
+
+  .btn-secondary {
+    padding: 10px 20px;
+    background: var(--bg-surface);
+    color: var(--content-high);
+    border: 1.5px solid var(--border-interactive);
+    border-radius: var(--radius-md);
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    line-height: var(--b2-lh);
+    font-weight: 600;
+    letter-spacing: var(--b2-ls);
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+
+  .btn-secondary:hover { background: var(--bg-hover); border-color: var(--border-hover); }
+
+  /* ─── WIZARD MODAL ─── */
+  .wizard-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(1,21,53,.65);
+    z-index: 200;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+
+  .wizard-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .wizard-modal {
+    background: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(24px);
+    transition: transform .25s cubic-bezier(.4,0,.2,1);
+  }
+
+  .wizard-overlay.open .wizard-modal { transform: translateY(0); }
+
+  /* Wizard Top Bar */
+  .wizard-topbar {
+    height: 60px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    gap: 16px;
+    flex-shrink: 0;
+    background: white;
+  }
+
+  .wizard-topbar-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+
+  .wizard-topbar-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .wizard-topbar-subtitle span {
+    background: var(--bg-highlight);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .wizard-close {
+    margin-left: auto;
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    transition: background .15s;
+  }
+
+  .wizard-close:hover { background: var(--bg-highlight); }
+
+  /* Progress bar */
+  .wizard-progress-bar {
+    height: 4px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .wizard-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width .35s ease;
+  }
+
+  /* Wizard Body */
+  .wizard-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* Left stepper */
+  .wizard-stepper {
+    width: 240px;
+    border-right: 1px solid var(--border);
+    padding: 32px 16px;
+    flex-shrink: 0;
+    background: var(--bg-highlight);
+  }
+
+  .stepper-title {
+    font-size: var(--cap-size);
+    line-height: var(--cap-lh);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--content-low);
+    margin-bottom: 16px;
+  }
+
+  .stepper-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 4px;
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    transition: background .15s;
+  }
+
+  .stepper-item.active { background: var(--bg-active); }
+
+  .stepper-dot {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: var(--border);
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .stepper-item.active .stepper-dot {
+    background: var(--accent);
+    color: white;
+  }
+
+  .stepper-item.done .stepper-dot {
+    background: var(--green);
+    color: white;
+  }
+
+  .stepper-item-text {}
+  .stepper-item-name {
+    font-size: var(--b2-size);
+    line-height: var(--b2-lh);
+    letter-spacing: var(--b2-ls);
+    font-weight: 600;
+    color: var(--content-medium);
+  }
+
+  .stepper-item.active .stepper-item-name { color: var(--primary); }
+  .stepper-item.done .stepper-item-name { color: var(--content-high); }
+
+  .stepper-item-sub {
+    font-size: var(--cap-size);
+    line-height: var(--cap-lh);
+    color: var(--content-low);
+    margin-top: 2px;
+  }
+
+  .stepper-connector {
+    width: 2px;
+    height: 16px;
+    background: var(--border);
+    margin: 0 0 0 20px;
+  }
+
+  /* Wizard Step Content */
+  .wizard-step-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 48px;
+  }
+
+  .step-heading {
+    font-size: var(--h3-size);
+    line-height: var(--h3-lh);
+    font-weight: var(--h3-w);
+    letter-spacing: var(--h3-ls);
+    color: var(--content-high);
+    margin-bottom: 8px;
+  }
+
+  .step-subtext {
+    font-size: var(--b2-size);
+    line-height: var(--b2-lh);
+    letter-spacing: var(--b2-ls);
+    color: var(--content-medium);
+    margin-bottom: 32px;
+  }
+
+  /* Wizard Footer */
+  .wizard-footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    flex-shrink: 0;
+  }
+
+  .wizard-footer .btn-link {
+    background: none;
+    border: none;
+    color: var(--content-medium);
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    line-height: var(--b2-lh);
+    letter-spacing: var(--b2-ls);
+    cursor: pointer;
+    padding: 4px 0;
+    font-weight: 500;
+  }
+
+  .wizard-footer .btn-link:hover { color: var(--content-high); }
+
+  .wizard-footer .spacer { flex: 1; }
+
+  .btn-primary-medium {
+    padding: 10px 24px;
+    background: var(--primary);
+    color: var(--on-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font);
+    font-size: var(--btn-size);
+    line-height: var(--btn-lh);
+    font-weight: var(--btn-w);
+    letter-spacing: var(--btn-ls);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    transition: background .15s;
+  }
+
+  .btn-primary-medium:hover { background: var(--primary-hover); }
+  .btn-primary-medium:disabled { background: var(--primary-disabled); color: var(--content-disabled); cursor: not-allowed; }
+
+  /* ─── STEP 1: USE CASE ─── */
+  .use-case-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .use-case-card {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .use-case-card:hover { border-color: var(--accent-mid); background: var(--accent-light); }
+
+  .use-case-card.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .use-case-radio {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color .15s;
+  }
+
+  .use-case-card.selected .use-case-radio {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .use-case-radio-dot {
+    width: 6px; height: 6px;
+    background: white;
+    border-radius: 50%;
+    display: none;
+  }
+
+  .use-case-card.selected .use-case-radio-dot { display: block; }
+
+  .use-case-info {}
+  .use-case-name { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+  .use-case-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+  .use-case-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .use-case-tag {
+    background: var(--bg-highlight);
+    color: var(--content-medium);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+
+  .integration-name-field {
+    margin-top: 24px;
+  }
+
+  .use-case-inline-name {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--accent-mid);
+    display: none;
+  }
+
+  .use-case-card.selected .use-case-inline-name { display: block; }
+
+  /* Coming soon card — non-selectable, subtle */
+  .use-case-card.coming-soon {
+    pointer-events: none;
+    background: var(--bg-highlight);
+    border-color: var(--border);
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+  }
+
+  .use-case-card.coming-soon .use-case-name {
+    font-size: var(--b2-size);
+    font-weight: 500;
+    color: var(--content-disabled);
+    margin: 0;
+  }
+
+  .coming-soon-chip {
+    display: inline-flex;
+    align-items: center;
+    background: var(--bg-disabled);
+    color: var(--content-low);
+    font-size: var(--cap-size);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* Omie transaction type selector inside use-case card */
+  .uc-omie-type { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+  .uc-omie-type-label {
+    font-size: var(--b2-size);
+    font-weight: 600;
+    color: var(--content-high);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .uc-type-options { display: flex; gap: 8px; }
+
+  .uc-type-option {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    border: 1.5px solid var(--border-interactive);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    background: var(--bg-surface);
+    transition: border-color .15s, background .15s;
+  }
+
+  .uc-type-option:hover { border-color: var(--primary-outline); background: var(--bg-hover); }
+
+  .uc-type-option:has(input:checked) {
+    border-color: var(--primary);
+    background: var(--accent-light);
+  }
+
+  .uc-type-option input[type="radio"] {
+    accent-color: var(--primary);
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    cursor: pointer;
+  }
+
+  .uc-type-option-title {
+    font-size: var(--b2-size);
+    font-weight: 600;
+    color: var(--content-high);
+    line-height: var(--b2-lh);
+    letter-spacing: var(--b2-ls);
+  }
+
+  .uc-type-option-desc {
+    font-size: var(--cap-size);
+    color: var(--content-low);
+    margin-top: 2px;
+  }
+
+  /* ── Step 1 redesign ── */
+  .s1-feature-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .s1-feature-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--bg-highlight);
+    border: 1px solid var(--border);
+    color: var(--content-medium);
+    font-size: var(--cap-size);
+    font-weight: 400;
+    letter-spacing: var(--cap-ls);
+  }
+
+  .s1-form-block { margin-bottom: 32px; }
+
+  .s1-section-label {
+    font-size: var(--b2-size);
+    line-height: var(--b2-lh);
+    font-weight: 600;
+    letter-spacing: var(--b2-ls);
+    color: var(--content-high);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* Full-width text input override for step 1 name field */
+  .s1-name-input { max-width: 100% !important; }
+
+  /* More use cases coming section */
+  .s1-more-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1.5px dashed var(--border-interactive);
+  }
+
+  .s1-more-label {
+    font-size: var(--cap-size);
+    line-height: var(--cap-lh);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--content-low);
+    margin-bottom: 12px;
+  }
+
+  .s1-more-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .s1-more-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--bg-highlight);
+    border: 1.5px solid var(--border);
+    color: var(--content-disabled);
+    font-size: var(--b2-size);
+    font-weight: 400;
+    letter-spacing: var(--b2-ls);
+  }
+
+  .field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .field-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .text-input {
+    width: 100%;
+    max-width: 440px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-primary);
+    background: white;
+    outline: none;
+    transition: border-color .15s;
+  }
+
+  .text-input:focus { border-color: var(--accent); }
+
+  /* ─── STEP 2: AUTHENTICATION ─── */
+  .auth-block {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .auth-block-header {
+    padding: 16px 20px;
+    background: var(--bg-highlight);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .auth-block-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .auth-block-title { font-size: 15px; font-weight: 700; }
+  .auth-block-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+  .auth-block-badge {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .badge-connected     { background: var(--bg-success);  color: var(--content-success);  }
+  .badge-pending       { background: var(--bg-warning);  color: var(--content-warning);  }
+  .badge-not-connected { background: var(--bg-critical); color: var(--content-critical); }
+
+  .auth-block-body { padding: 20px; }
+
+  .form-row { margin-bottom: 16px; }
+
+  .form-row-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .select-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-primary);
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat calc(100% - 12px) center;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .select-input:focus { border-color: var(--accent); }
+
+  .text-input-masked {
+    font-family: monospace;
+    letter-spacing: .08em;
+  }
+
+  /* ─── STEP 2 TWO-COLUMN LAYOUT ─── */
+  .step2-layout {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+
+  .step2-form { flex: 1; min-width: 0; }
+
+  .step2-howto {
+    width: 264px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    background: white;
+  }
+
+  .howto-header {
+    padding: 16px 18px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .howto-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .howto-title svg { color: var(--accent); flex-shrink: 0; }
+
+  .howto-steps {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .howto-step {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .howto-step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .howto-step-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .howto-step-text strong { color: var(--text-primary); font-weight: 600; }
+
+  .howto-tips {
+    padding: 12px 18px;
+  }
+
+  .howto-tips-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  .howto-tips ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .howto-tips li {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    padding-left: 12px;
+    position: relative;
+  }
+
+  .howto-tips li::before {
+    content: '·';
+    position: absolute;
+    left: 2px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .howto-portal-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 11px 18px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s;
+  }
+
+  .howto-portal-link:hover { background: var(--accent-light); }
+
+  .test-connection-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-outline {
+    padding: 8px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: background .15s, border-color .15s;
+  }
+
+  .btn-outline:hover { background: var(--bg-highlight); border-color: var(--border-interactive); }
+
+  .connection-status {
+    font-size: 13px;
+    font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .connection-status.success {
+    color: var(--content-success);
+    background: var(--green-light);
+    border: 1px solid #a3d49a;
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  .connection-status.error {
+    color: var(--content-critical);
+    background: var(--bg-critical);
+    border: 1px solid var(--border-critical);
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  /* ─── STEP 3: FIELD MAPPING ─── */
+  .mapping-section {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .mapping-section-header {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--bg-highlight);
+    transition: background .15s;
+  }
+
+  .mapping-section-header:hover { background: var(--bg-highlight); }
+
+  .mapping-section-number {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mapping-section-number.locked { background: var(--content-disabled); }
+
+  .mapping-section-title { font-size: 14px; font-weight: 700; flex: 1; }
+
+  .mapping-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+
+  .mapping-badge.locked    { background: var(--bg-disabled);  color: var(--content-disabled); }
+  .mapping-badge.missing   { background: var(--bg-critical); color: var(--content-critical); }
+  .mapping-badge.partial   { background: var(--bg-warning);  color: var(--content-warning);  }
+  .mapping-badge.completed { background: var(--bg-success);  color: var(--content-success);  }
+
+  .mapping-section-body {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    display: none;
+  }
+
+  .mapping-section-body.open { display: block; }
+
+  .mapping-table { width: 100%; border-collapse: collapse; }
+
+  .mapping-table th {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-muted);
+    padding: 0 0 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mapping-table td {
+    padding: 10px 0;
+    font-size: 13.5px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mapping-table tr:last-child td { border-bottom: none; }
+
+  .mapping-arrow { color: var(--text-muted); padding: 0 10px; }
+
+  .lock-icon { color: var(--content-low); font-size: 13px; }
+
+  /* ─── DIM MODE OPTIONS (radio-style) ─── */
+  .dim-mode-option {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color .15s;
+    background: white;
+  }
+
+  .dim-mode-option:last-child { margin-bottom: 0; }
+
+  .dim-mode-option.selected { border-color: var(--accent); }
+
+  .dim-mode-option-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    user-select: none;
+  }
+
+  .dim-radio {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border-interactive);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: border-color .15s, background .15s;
+  }
+
+  .dim-mode-option.selected .dim-radio {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .dim-radio-dot {
+    width: 6px; height: 6px;
+    background: white;
+    border-radius: 50%;
+    display: none;
+  }
+
+  .dim-mode-option.selected .dim-radio-dot { display: block; }
+
+  .dim-mode-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .dim-mode-content {
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--border);
+    display: none;
+    background: var(--accent-light);
+  }
+
+  .dim-mode-option.selected .dim-mode-content { display: block; }
+
+  /* Default value sub-options */
+  .dim-default-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .dim-default-opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .dim-default-opt input[type="radio"] {
+    accent-color: var(--accent);
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .dim-default-opt .select-input,
+  .dim-default-opt .text-input {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  /* Individual mapping */
+  .dim-field-row {
+    display: grid;
+    grid-template-columns: 1fr 32px 1fr;
+    gap: 8px;
+    align-items: end;
+    padding-top: 14px;
+    margin-bottom: 12px;
+  }
+
+  .dim-field-col-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+
+  .dim-field-fixed {
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg-highlight);
+  }
+
+  .dim-field-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    padding-bottom: 2px;
+    font-size: 16px;
+  }
+
+  /* ── Tab toggle (Default value / Map by value) ── */
+  .dim-tab-toggle {
+    display: inline-flex;
+    background: var(--border);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 2px;
+    margin-bottom: 20px;
+  }
+
+  .dim-tab {
+    padding: 7px 20px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background .15s, color .15s, box-shadow .15s;
+  }
+
+  .dim-tab.active {
+    background: white;
+    color: var(--accent);
+    font-weight: 700;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  }
+
+  .dim-tab-content { display: none; }
+  .dim-tab-content.active { display: block; }
+
+  /* Mapping row for the new layout */
+  .dim-mapping-row {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 8px;
+    align-items: start;
+  }
+
+  .dim-system-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--text-muted);
+    margin-bottom: 7px;
+  }
+
+  .dim-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dim-dot.clara { background: var(--accent); }
+  .dim-dot.omie  { background: #2e7d32; }
+
+  .dim-source-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border: 1.5px dashed var(--border-interactive);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Arrow aligned to the input row (skips over system label) */
+  .dim-mapping-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 16px;
+    padding-top: 26px;
+  }
+
+  /* Omie select with green badge prefix */
+  .dim-omie-select-wrap {
+    display: flex;
+    align-items: stretch;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color .15s;
+  }
+
+  .dim-omie-select-wrap:focus-within { border-color: var(--accent); }
+
+  .dim-omie-badge {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    background: #e8f5e9;
+    color: #2e7d32;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    border-right: 1.5px solid #c8e6c9;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .dim-omie-select-wrap .select-input,
+  .dim-omie-select-wrap .text-input {
+    border: none;
+    border-radius: 0;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dim-omie-select-wrap .select-input:focus,
+  .dim-omie-select-wrap .text-input:focus { outline: none; box-shadow: none; }
+
+  .dim-switch-btn {
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+
+  .dim-switch-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Mapping rows table */
+  .mapping-rows-wrap {
+    border: 1.5px solid var(--border);
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .add-row-inside {
+    padding: 7px 12px;
+    border-left: 1.5px solid var(--border);
+    border-right: 1.5px solid var(--border);
+    border-top: 1px solid var(--border);
+    background: white;
+  }
+
+  .mapping-rows-head {
+    display: grid;
+    grid-template-columns: 1fr 28px 1fr 32px;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-highlight);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mapping-rows-head span {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--text-muted);
+  }
+
+  .mapping-value-row {
+    display: grid;
+    grid-template-columns: 1fr 28px 1fr 32px;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mapping-value-row:last-child { border-bottom: none; }
+
+  .add-row-btn {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 6px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .add-row-btn:hover { text-decoration: underline; }
+
+  .del-row-btn {
+    width: 26px; height: 26px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+
+  .del-row-btn:hover { background: var(--bg-critical); color: var(--red); border-color: var(--border-critical); }
+
+  /* Mandatory fallback row */
+  .mapping-fallback-req {
+    display: grid;
+    grid-template-columns: 1fr 28px 1fr;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--accent-light);
+    border: 1.5px solid var(--border);
+    border-top: 1.5px dashed var(--accent-mid);
+    border-radius: 0 0 8px 8px;
+    margin-top: 0;
+  }
+
+  .fallback-clara-label {
+    font-size: 12.5px;
+    font-style: italic;
+    color: var(--text-muted);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .fallback-clara-label::before {
+    content: '↩';
+    font-style: normal;
+    color: #60a5fa;
+    font-size: 13px;
+  }
+
+  /* ─── DIMENSION CARDS ─── */
+  .dimension-card {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    background: var(--bg-highlight);
+  }
+
+  .dimension-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .dimension-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .dimension-arrow {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  .dimension-omie-field {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-family: monospace;
+    background: var(--bg-highlight);
+    padding: 1px 7px;
+    border-radius: 4px;
+  }
+
+  .dimension-required-pill {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--red);
+    background: var(--bg-critical);
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .dimension-optional-pill {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--bg-highlight);
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .dimension-remove-btn {
+    margin-left: 8px;
+    width: 24px; height: 24px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    color: var(--text-muted);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+
+  .dimension-remove-btn:hover {
+    background: var(--bg-critical);
+    color: var(--red);
+    border-color: var(--border-critical);
+  }
+
+  .add-dimension-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    padding: 10px 16px;
+    border: 1.5px dashed var(--border-interactive);
+    border-radius: 10px;
+    background: transparent;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-top: 4px;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+
+  .add-dimension-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  /* ── Optional fields (Observation / Custom) ── */
+  .optional-add-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 0 4px;
+    flex-wrap: wrap;
+  }
+
+  .optional-add-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .add-optional-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border: 1.5px dashed var(--border-interactive);
+    border-radius: 8px;
+    background: white;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+
+  .add-optional-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+  .add-optional-btn:disabled { opacity: .4; cursor: default; pointer-events: none; }
+
+  .optional-field-card {
+    border: 1.5px solid var(--accent-mid);
+    border-radius: 12px;
+    background: var(--accent-light);
+    margin-top: 14px;
+    overflow: hidden;
+  }
+
+  .opt-field-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    background: white;
+  }
+
+  .opt-field-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--bg-info);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .opt-field-title-wrap { flex: 1; min-width: 0; }
+
+  .opt-field-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .opt-optional-tag {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  .opt-field-desc { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+  .opt-include-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    margin-left: auto;
+    padding-left: 16px;
+  }
+
+  .opt-include-label { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
+
+  .opt-toggle {
+    width: 44px; height: 24px;
+    border-radius: 24px;
+    background: var(--accent);
+    cursor: pointer;
+    position: relative;
+    transition: background .15s;
+    flex-shrink: 0;
+  }
+
+  .opt-toggle.off { background: var(--border-interactive); }
+
+  .opt-toggle::after {
+    content: '';
+    width: 20px; height: 20px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px; left: 22px;
+    transition: left .15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  }
+
+  .opt-toggle.off::after { left: 2px; }
+
+  .opt-remove-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: border-color .15s, color .15s;
+    margin-left: 10px;
+    line-height: 1;
+  }
+
+  .opt-remove-btn:hover { border-color: var(--content-critical); color: var(--content-critical); }
+
+  .opt-field-body { padding: 20px 22px; }
+
+  /* Observation */
+  .obs-sep-row { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+  .obs-sep-label { font-size: 14px; color: var(--text-secondary); font-weight: 500; white-space: nowrap; }
+  .obs-sep-row .text-input { max-width: 480px; }
+  .obs-fields-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 14px; }
+
+  .obs-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 16px;
+    margin-bottom: 24px;
+  }
+
+  .obs-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .obs-check input[type="checkbox"] {
+    width: 17px; height: 17px;
+    border-radius: 4px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* Custom field mappings */
+  .custom-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 20px 24px;
+    text-align: center;
+  }
+
+  .custom-empty-icon { color: var(--border-interactive); margin-bottom: 12px; }
+  .custom-empty-title { font-size: 15px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px; }
+  .custom-empty-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+
+  /* Separator chips */
+  .sep-chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  .sep-chip {
+    min-width: 42px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .sep-chip:hover:not(.selected) { border-color: var(--text-secondary); color: var(--text-primary); }
+
+  .sep-chip.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+
+  /* Inline new mapping form */
+  .new-mapping-form {
+    border: 1.5px solid var(--accent-mid);
+    border-radius: 10px;
+    background: white;
+    margin-bottom: 16px;
+  }
+
+  .nmf-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nmf-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+  .nmf-desc { font-size: 12.5px; color: var(--text-muted); }
+
+  .nmf-close {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: border-color .15s, color .15s;
+  }
+
+  .nmf-close:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+
+  .nmf-body { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+  /* Mapping type panels */
+  .nmf-type-panel { display: none; }
+  .nmf-type-panel.active { display: block; }
+
+  .nmf-footer { display: flex; gap: 10px; padding: 12px 20px; border-top: 1px solid var(--border); justify-content: flex-end; }
+
+  /* Created mapping rows */
+  .custom-mapping-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+
+  .custom-mapping-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+
+  .mapping-type-tag {
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--bg-info);
+    color: var(--content-info);
+    flex-shrink: 0;
+  }
+
+  .custom-mapping-row .spacer { flex: 1; }
+
+  .cmr-del {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    transition: color .15s;
+  }
+
+  .cmr-del:hover { color: var(--content-critical); }
+
+  .opt-footer { padding: 14px 20px 20px; border-top: 1px solid var(--border); }
+
+  .custom-add-more { padding: 0 0 14px; }
+
+  /* ─── STEP 4: SYNC ─── */
+  .sync-empty {
+    text-align: center;
+    padding: 48px 32px;
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    color: var(--text-muted);
+  }
+
+  .sync-empty-icon { font-size: 32px; margin-bottom: 12px; }
+  .sync-empty-title { font-size: 16px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; }
+  .sync-empty-text { font-size: 14px; margin-bottom: 20px; }
+
+  .btn-outline-accent {
+    padding: 9px 20px;
+    border: 1.5px solid var(--accent);
+    border-radius: 10px;
+    background: white;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: background .15s;
+  }
+
+  .btn-outline-accent:hover { background: var(--accent-light); }
+
+  .sync-card {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+
+  .sync-card-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+
+  .sync-card-icon {
+    width: 36px; height: 36px;
+    background: var(--accent-light);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+  }
+
+  .sync-card-name { font-size: 15px; font-weight: 700; flex: 1; }
+
+  .sync-card-menu {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: background .15s;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: .04em;
+  }
+
+  .sync-card-menu:hover { background: var(--bg-highlight); }
+
+  .sync-card-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .sync-meta-item {}
+  .sync-meta-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  .sync-meta-value { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-top: 2px; }
+
+  /* ─── DRAWER (How to get credentials) ─── */
+  .drawer-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.2);
+    z-index: 300;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+  }
+
+  .drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+  .drawer {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 420px;
+    background: white;
+    z-index: 301;
+    box-shadow: -4px 0 32px rgba(0,0,0,.14);
+    transform: translateX(100%);
+    transition: transform .28s cubic-bezier(.4,0,.2,1);
+    display: flex; flex-direction: column;
+  }
+
+  .drawer.open { transform: translateX(0); }
+
+  .drawer-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .drawer-title { font-size: 17px; font-weight: 800; flex: 1; }
+
+  .drawer-body { flex: 1; overflow-y: auto; padding: 24px; }
+
+  .step-list { list-style: none; }
+
+  .step-list-item {
+    display: flex; gap: 14px; margin-bottom: 16px;
+  }
+
+  .step-list-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-list-text { font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
+
+  .drawer-link-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: white;
+    text-decoration: none;
+    margin-top: 8px;
+    transition: background .15s;
+  }
+
+  .drawer-link-btn:hover { background: var(--accent-light); }
+
+  /* ─── NEW SYNC DRAWER ─── */
+  .sync-form-row { margin-bottom: 18px; }
+
+  .frequency-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .freq-btn {
+    padding: 9px 6px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    color: var(--text-secondary);
+    transition: border-color .15s, background .15s, color .15s;
+  }
+
+  .freq-btn:hover { border-color: var(--accent-mid); background: var(--accent-light); }
+  .freq-btn.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+
+  .drawer-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+  }
+
+  .drawer-footer .btn-primary-medium { flex: 1; justify-content: center; }
+
+  /* ─── STEP 0 LANDING ─── */
+  .step0-card {
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .step0-logo {
+    width: 80px; height: 80px;
+    border-radius: 20px;
+    background: var(--bg-highlight);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 24px;
+  }
+
+  .step0-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+  .step0-desc {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 36px;
+  }
+
+  .step0-steps {
+    text-align: left;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+
+  .step0-step-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .step0-step-item:last-child { border-bottom: none; }
+
+  .step0-step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step0-step-name { font-weight: 700; color: var(--text-primary); }
+  .step0-step-desc { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--content-high);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 500;
+    opacity: 0;
+    transition: opacity .2s, transform .2s;
+    pointer-events: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ─── SAVED INTEGRATION CARD ─── */
+  .saved-integration {
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 24px;
+    background: white;
+  }
+
+  /* Chevron for step expand/collapse */
+  .chevron {
+    transition: transform .2s;
+    color: var(--text-muted);
+  }
+
+  .chevron.open { transform: rotate(180deg); }
+
+  /* Success screen */
+  .wizard-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    padding: 60px 40px;
+  }
+
+  .success-icon {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    margin-bottom: 24px;
+  }
+
+  .success-title { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+  .success-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.65; max-width: 420px; margin-bottom: 32px; }
+
+  /* Hidden */
+  .hidden { display: none !important; }
+
+  /* Page-level integration tabs */
+  .page-integ-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .page-integ-tab {
+    padding: 8px 16px;
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    line-height: var(--b2-lh);
+    letter-spacing: var(--b2-ls);
+    color: var(--content-low);
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color .15s, border-color .15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .page-integ-tab:hover { color: var(--content-high); }
+  .page-integ-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+  .page-integ-dot { width:7px; height:7px; border-radius:50%; background:var(--content-success); flex-shrink:0; }
+
+  #pitab-panel-omie { display: grid; grid-template-columns: 1fr 280px; gap: 24px; align-items: start; }
+  #pitab-panel-omie.hidden { display: none !important; }
+
+  /* Single inline sync form */
+  .sync-inline-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    max-width: 580px;
+    margin-top: 8px;
+  }
+
+  /* ─── INTEGRATIONS DETAIL PAGE ─── */
+  .integ-detail-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: var(--bg-page);
+    display: flex;
+    overflow: hidden;
+  }
+
+  .integ-detail-sidebar {
+    width: 204px;
+    background: var(--bg-dark);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .integ-detail-sidebar .sidebar-logo {
+    padding: 22px 18px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 8px;
+  }
+
+  .id-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    position: relative;
+  }
+
+  .id-nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+  .id-nav-item.active { color: white; background: rgba(255,255,255,0.1); }
+  .id-nav-item.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:white; }
+  .id-nav-item svg { width:16px; height:16px; flex-shrink:0; }
+
+  .id-nav-dot { width:7px; height:7px; border-radius:50%; background:var(--content-success); margin-left:auto; }
+
+  .integ-detail-main { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
+
+  .integ-detail-topbar {
+    height: 52px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  .id-topbar-company { font-size:14px; font-weight:600; color:var(--bg-dark); display:flex; align-items:center; gap:5px; }
+  .id-topbar-spacer { flex:1; }
+  .id-topbar-actions { display:flex; align-items:center; gap:22px; font-size:13px; color:var(--text-secondary); }
+
+  .integ-detail-scroll { flex:1; overflow-y:auto; padding:28px 36px; }
+
+  .id-page-title { font-size:24px; font-weight:800; color:var(--text-primary); margin-bottom:20px; }
+
+  .id-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 28px;
+  }
+
+  .id-tab {
+    padding: 9px 18px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color .15s, border-color .15s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+
+  .id-tab:hover { color: var(--text-primary); }
+  .id-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+  .id-tab-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+
+  .id-tab-panel { display: none; }
+  .id-tab-panel.active { display: block; }
+  #id-panel-omie.active { display: grid; grid-template-columns: 1fr 280px; gap: 24px; align-items: start; }
+
+  /* Read-only config cards */
+  .ro-card { background:white; border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:16px; }
+  .ro-card:last-child { margin-bottom:0; }
+
+  .ro-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ro-card-title { font-size:13.5px; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
+
+  .ro-locked-badge {
+    font-size:10px; font-weight:600; color:var(--text-secondary);
+    background:var(--bg-card-hover); padding:2px 7px;
+    border-radius:10px; text-transform:uppercase; letter-spacing:.05em;
+  }
+
+  .ro-card-body { padding:14px 20px; }
+
+  .ro-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .ro-row:last-child { border-bottom: none; }
+  .ro-label { color:var(--content-low); min-width:150px; flex-shrink:0; font-size:var(--cap-size); line-height:var(--cap-lh); }
+  .ro-value { color:var(--text-primary); font-weight:500; flex:1; }
+
+  .ro-mapping-pair {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+    flex-wrap: wrap;
+  }
+
+  .ro-mapping-pair:last-child { border-bottom: none; }
+  .ro-tag { padding:3px 10px; border-radius:6px; font-size:12px; }
+  .ro-tag.clara { background:var(--bg-highlight); color:var(--content-medium); border:1px solid var(--border); }
+  .ro-tag.omie { background:#e8f5e9; color:#2e7d32; font-weight:600; }
+  .ro-arrow { color:var(--content-low); }
+  .ro-default-badge { font-size:var(--cap-size); line-height:var(--cap-lh); color:var(--content-low); background:var(--bg-highlight); padding:2px 6px; border-radius:4px; border:1px solid var(--border); }
+
+  /* Right sidebar */
+  .id-side-card { background:white; border:1px solid var(--border); border-radius:12px; padding:18px 20px; margin-bottom:14px; }
+  .id-side-card:last-child { margin-bottom:0; }
+  .id-side-title { font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:12px; }
+
+  .id-status-row { display:flex; align-items:center; justify-content:space-between; font-size:13px; color:var(--text-secondary); margin-bottom:8px; }
+
+  .id-active-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--bg-success);
+    color: var(--content-success);
+    font-size: var(--cap-size);
+    line-height: var(--cap-lh);
+    font-weight: 600;
+  }
+
+  .id-active-badge::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--content-success); }
+
+  .id-action-btn {
+    width: 100%;
+    padding: 9px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color .15s, color .15s;
+    margin-bottom: 8px;
+  }
+
+  .id-action-btn:last-child { margin-bottom:0; }
+  .id-action-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .id-action-btn.primary { background:var(--accent); color:white; border-color:var(--accent); justify-content:center; font-weight:600; }
+  .id-action-btn.primary:hover { background:var(--accent-hover); border-color:var(--accent-hover); color:white; }
+
+  /* ─── EDIT CONFIG OVERLAY ─── */
+  #editConfigOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    background: var(--bg-page);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #editConfigOverlay.hidden { display: none; }
+
+  .ecfg-topbar {
+    height: 60px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .ecfg-topbar-title {
+    font-size: var(--b1-size);
+    font-weight: 700;
+    letter-spacing: var(--b1-ls);
+    color: var(--content-high);
+  }
+
+  .ecfg-topbar-badge {
+    font-size: var(--cap-size);
+    font-weight: 500;
+    color: var(--content-low);
+    background: var(--bg-highlight);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .ecfg-close {
+    margin-left: auto;
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--content-medium);
+    transition: background .15s;
+  }
+
+  .ecfg-close:hover { background: var(--bg-hover); }
+
+  .ecfg-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 48px;
+  }
+
+  /* Hide the wizard-style heading/subtext inside the overlay */
+  #editConfigOverlay .step-heading,
+  #editConfigOverlay .step-subtext { display: none; }
+
+  .ecfg-footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 48px;
+    background: var(--bg-surface);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  /* ── Duplicate flow shared ── */
+  .dup-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 48px 40px 40px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .dup-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    background: var(--bg-success);
+    color: var(--content-success);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    flex-shrink: 0;
+  }
+  .dup-title {
+    font-size: var(--sub1-size);
+    font-weight: var(--sub1-w);
+    line-height: var(--sub1-lh);
+    letter-spacing: var(--sub1-ls);
+    color: var(--content-high);
+    margin-bottom: 12px;
+  }
+  .dup-desc {
+    font-size: var(--b2-size);
+    line-height: var(--b2-lh);
+    color: var(--content-medium);
+    margin-bottom: 32px;
+  }
+  .dup-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  .dup-btn-yes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 24px;
+    background: var(--primary);
+    color: var(--on-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font);
+    font-size: var(--btn-size);
+    font-weight: var(--btn-w);
+    letter-spacing: var(--btn-ls);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .dup-btn-yes:hover { background: var(--primary-hover); }
+  .dup-btn-no {
+    padding: 12px 24px;
+    background: none;
+    border: 1.5px solid var(--border-interactive);
+    border-radius: var(--radius-md);
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    color: var(--content-medium);
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .dup-btn-no:hover { border-color: var(--border-hover); color: var(--content-high); }
+
+  /* ── Duplicate how-cards ── */
+  .dup-how-cards {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+  }
+  .dup-how-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding: 24px;
+    border: 1.5px solid var(--border-interactive);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    cursor: pointer;
+    transition: border-color .15s, background .15s, box-shadow .15s;
+    font-family: var(--font);
+  }
+  .dup-how-card:hover {
+    border-color: var(--primary-outline);
+    background: var(--bg-hover);
+    box-shadow: 0 2px 8px rgba(51,88,148,.08);
+  }
+  .dup-how-card-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--bg-info);
+    color: var(--content-info);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+  }
+  .dup-how-card:last-child .dup-how-card-icon {
+    background: var(--bg-highlight);
+    color: var(--content-medium);
+  }
+  .dup-how-card-title {
+    font-size: var(--b1-size);
+    font-weight: 600;
+    color: var(--content-high);
+    margin-bottom: 6px;
+    line-height: var(--b1-lh);
+  }
+  .dup-how-card-desc {
+    font-size: var(--b2-size);
+    color: var(--content-medium);
+    line-height: var(--b2-lh);
+  }
+
+  /* ── Second flow mapping header ── */
+  .second-mapping-header {
+    padding: 0 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+  .second-mapping-badge {
+    display: inline-flex;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--bg-info);
+    color: var(--content-info);
+    font-size: var(--cap-size);
+    font-weight: 600;
+    letter-spacing: .02em;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">C</div>
+    <span class="sidebar-logo-text">Clara</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Account
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Management
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Digital account
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Payments
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Benefits
+    </div>
+    <div class="nav-separator"></div>
+    <div class="nav-label">Settings</div>
+    <div class="nav-item">Company profile</div>
+    <div class="nav-item">Policies</div>
+    <div class="nav-item">Accounting fields</div>
+    <div class="nav-item">Upgrade plan</div>
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      Integrations
+      <span class="badge-new">New</span>
+    </div>
+  </nav>
+</aside>
+
+<!-- ─── MAIN ─── -->
+<div class="main">
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-company">
+      QM &nbsp; QA MX171224
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-role">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Financial Analyst
+      </div>
+      <a href="#">🌐 English ↓</a>
+      <a href="#">🎧 Help</a>
+      <a href="#">👤 My profile</a>
+    </div>
+  </header>
+
+  <!-- Page -->
+  <main class="page-content" id="mainPage">
+    <h1 class="page-title">Integrations</h1>
+
+    <!-- Tab nav — hidden until an integration goes active -->
+    <div class="page-integ-tabs hidden" id="pageIntegTabs">
+      <button class="page-integ-tab active" id="pitab-overview" onclick="switchPageTab('overview')">Overview</button>
+      <button class="page-integ-tab" id="pitab-omie" onclick="switchPageTab('omie')">Omie ERP <span class="page-integ-dot"></span></button>
+    </div>
+
+    <!-- Overview panel (search + cards grid) -->
+    <div id="pitab-panel-overview">
+    <input class="search-bar" type="text" placeholder="Search by integration name" />
+    <div class="filter-label">No filters applied</div>
+
+    <div class="integrations-grid" id="integrationsGrid">
+
+      <!-- OMIE — first and only interactive card -->
+      <div class="integration-card" id="omieCard" onclick="openOmieSheet()">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8f4fd;">
+            <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="20" fill="#0099d6"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="15" font-weight="bold" font-family="sans-serif">O</text></svg>
+          </div>
+        </div>
+        <div class="card-name">Omie ERP</div>
+        <div class="card-description">Automate your financial data flow from Clara to Omie, reducing manual entries and reconciliation time.</div>
+        <div class="card-plans"><span class="plan-badge">Pro</span><span class="plan-badge enterprise">Enterprise</span></div>
+      </div>
+
+      <!-- Placeholder cards -->
+      <div class="integration-card placeholder">
+        <div class="card-header"><div class="placeholder-icon"></div></div>
+        <div class="placeholder-line" style="width:55%;"></div>
+        <div class="placeholder-line" style="width:90%;"></div>
+        <div class="placeholder-line" style="width:75%;margin-bottom:14px;"></div>
+        <div class="card-plans"><span class="plan-badge">Pro</span><span class="plan-badge enterprise">Enterprise</span></div>
+      </div>
+
+      <div class="integration-card placeholder">
+        <div class="card-header"><div class="placeholder-icon"></div></div>
+        <div class="placeholder-line" style="width:65%;"></div>
+        <div class="placeholder-line" style="width:85%;"></div>
+        <div class="placeholder-line" style="width:60%;margin-bottom:14px;"></div>
+        <div class="card-plans"><span class="plan-badge enterprise">Enterprise</span></div>
+      </div>
+
+      <div class="integration-card placeholder">
+        <div class="card-header"><div class="placeholder-icon"></div></div>
+        <div class="placeholder-line" style="width:70%;"></div>
+        <div class="placeholder-line" style="width:80%;"></div>
+        <div class="placeholder-line" style="width:50%;margin-bottom:14px;"></div>
+        <div class="card-plans"><span class="plan-badge">Pro</span><span class="plan-badge enterprise">Enterprise</span></div>
+      </div>
+
+      <div class="integration-card placeholder">
+        <div class="card-header"><div class="placeholder-icon"></div></div>
+        <div class="placeholder-line" style="width:50%;"></div>
+        <div class="placeholder-line" style="width:90%;"></div>
+        <div class="placeholder-line" style="width:70%;margin-bottom:14px;"></div>
+        <div class="card-plans"><span class="plan-badge">Pro</span><span class="plan-badge enterprise">Enterprise</span></div>
+      </div>
+
+      <div class="integration-card placeholder">
+        <div class="card-header"><div class="placeholder-icon"></div></div>
+        <div class="placeholder-line" style="width:60%;"></div>
+        <div class="placeholder-line" style="width:75%;"></div>
+        <div class="placeholder-line" style="width:85%;margin-bottom:14px;"></div>
+        <div class="card-plans"><span class="plan-badge">Pro</span><span class="plan-badge enterprise">Enterprise</span></div>
+      </div>
+
+      <div class="integration-card placeholder">
+        <div class="card-header"><div class="placeholder-icon"></div></div>
+        <div class="placeholder-line" style="width:45%;"></div>
+        <div class="placeholder-line" style="width:88%;"></div>
+        <div class="placeholder-line" style="width:65%;margin-bottom:14px;"></div>
+        <div class="card-plans"><span class="plan-badge enterprise">Enterprise</span></div>
+      </div>
+
+      <div class="integration-card placeholder">
+        <div class="card-header"><div class="placeholder-icon"></div></div>
+        <div class="placeholder-line" style="width:58%;"></div>
+        <div class="placeholder-line" style="width:82%;"></div>
+        <div class="placeholder-line" style="width:72%;margin-bottom:14px;"></div>
+        <div class="card-plans"><span class="plan-badge">Pro</span><span class="plan-badge enterprise">Enterprise</span></div>
+      </div>
+
+      <div class="integration-card placeholder">
+        <div class="card-header"><div class="placeholder-icon"></div></div>
+        <div class="placeholder-line" style="width:68%;"></div>
+        <div class="placeholder-line" style="width:78%;"></div>
+        <div class="placeholder-line" style="width:55%;margin-bottom:14px;"></div>
+        <div class="card-plans"><span class="plan-badge">Pro</span><span class="plan-badge enterprise">Enterprise</span></div>
+      </div>
+
+      <div class="integration-card placeholder">
+        <div class="card-header"><div class="placeholder-icon"></div></div>
+        <div class="placeholder-line" style="width:52%;"></div>
+        <div class="placeholder-line" style="width:86%;"></div>
+        <div class="placeholder-line" style="width:68%;margin-bottom:14px;"></div>
+        <div class="card-plans"><span class="plan-badge">Pro</span><span class="plan-badge enterprise">Enterprise</span></div>
+      </div>
+
+    </div>
+    </div><!-- /pitab-panel-overview -->
+
+    <!-- Omie ERP tab panel — read-only config -->
+    <div id="pitab-panel-omie" class="hidden">
+
+      <!-- Left column -->
+      <div>
+        <div class="ro-card">
+          <div class="ro-card-header">
+            <div class="ro-card-title">Integration details</div>
+            <span class="id-active-badge">Active</span>
+          </div>
+          <div class="ro-card-body">
+            <div class="ro-row"><span class="ro-label">Name</span><span class="ro-value" id="ro-name">—</span></div>
+            <div class="ro-row"><span class="ro-label">Omie App Key</span><span class="ro-value" style="font-family:monospace;letter-spacing:.08em;">●●●● ●●●● ●●●● ●●●● &nbsp;<span style="color:var(--content-success);font-size:11px;font-family:sans-serif;">✓ Verified</span></span></div>
+            <div class="ro-row"><span class="ro-label">Use case</span><span class="ro-value" id="ro-usecase">Card transactions → Omie ERP</span></div>
+          </div>
+        </div>
+        <div class="ro-card">
+          <div class="ro-card-header"><div class="ro-card-title">Sync schedule</div></div>
+          <div class="ro-card-body">
+            <div class="ro-row"><span class="ro-label">Sync name</span><span class="ro-value" id="ro-sync-name">Daily card sync</span></div>
+            <div class="ro-row"><span class="ro-label">Frequency</span><span class="ro-value" id="ro-freq">Daily</span></div>
+            <div class="ro-row"><span class="ro-label">Run time</span><span class="ro-value">06:00 AM — America/Sao_Paulo</span></div>
+            <div class="ro-row"><span class="ro-label">Historical data</span><span class="ro-value" id="ro-hist">Current month</span></div>
+            <div class="ro-row"><span class="ro-label">Days of grace</span><span class="ro-value">2 days</span></div>
+          </div>
+        </div>
+        <div class="ro-card">
+          <div class="ro-card-header"><div class="ro-card-title">Fixed mappings <span class="ro-locked-badge">Locked</span></div></div>
+          <div class="ro-card-body">
+            <div class="ro-mapping-pair"><span class="ro-tag clara">Amount</span><span class="ro-arrow">→</span><span class="ro-tag omie">Valor</span></div>
+            <div class="ro-mapping-pair"><span class="ro-tag clara">Merchant Name</span><span class="ro-arrow">→</span><span class="ro-tag omie">Nome Fornecedor</span></div>
+            <div class="ro-mapping-pair"><span class="ro-tag clara">Transaction Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Data Lançamento</span></div>
+            <div class="ro-mapping-pair"><span class="ro-tag clara">Currency</span><span class="ro-arrow">→</span><span class="ro-tag omie">Moeda</span></div>
+            <div class="ro-mapping-pair"><span class="ro-tag clara">Card last 4</span><span class="ro-arrow">→</span><span class="ro-tag omie">Número do Cartão</span></div>
+          </div>
+        </div>
+        <div class="ro-card">
+          <div class="ro-card-header"><div class="ro-card-title">Catalog mappings</div></div>
+          <div class="ro-card-body">
+            <div class="ro-mapping-pair"><span class="ro-tag clara">All categories, labels, and fields</span><span class="ro-arrow">→</span><span class="ro-tag omie">Categorias</span><span class="ro-default-badge">default</span></div>
+            <div class="ro-mapping-pair"><span class="ro-tag clara">All suppliers</span><span class="ro-arrow">→</span><span class="ro-tag omie">Clientes/Fornecedores</span><span class="ro-default-badge">default</span></div>
+            <div class="ro-mapping-pair"><span class="ro-tag clara">All bank accounts</span><span class="ro-arrow">→</span><span class="ro-tag omie">Conta Corrente</span><span class="ro-default-badge">default</span></div>
+          </div>
+        </div>
+        <div class="ro-card">
+          <div class="ro-card-header"><div class="ro-card-title">Date mappings</div></div>
+          <div class="ro-card-body">
+            <div class="ro-mapping-pair"><span class="ro-tag clara">Transaction Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Competência</span></div>
+            <div class="ro-mapping-pair"><span class="ro-tag clara">Posting Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Data de Pagamento</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right sidebar -->
+      <div>
+        <div class="id-side-card">
+          <div class="id-side-title">Status</div>
+          <div class="id-status-row"><span>Integration</span><span class="id-active-badge">Active</span></div>
+          <div style="margin-top:12px;">
+            <div style="font-size:12px;color:var(--content-low);margin-bottom:3px;">Last sync</div>
+            <div style="font-size:13px;color:var(--content-medium);font-weight:500;">Not run yet</div>
+          </div>
+          <div style="margin-top:10px;">
+            <div style="font-size:12px;color:var(--content-low);margin-bottom:3px;">Next sync</div>
+            <div style="font-size:13px;color:var(--content-medium);font-weight:500;">Tomorrow at 6:00 AM</div>
+          </div>
+        </div>
+        <div class="id-side-card">
+          <div class="id-side-title">Actions</div>
+          <button class="id-action-btn primary"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Run sync now</button>
+          <button class="id-action-btn" onclick="openEditConfig()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit configuration</button>
+          <button class="id-action-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>View sync logs</button>
+        </div>
+      </div>
+
+    </div><!-- /pitab-panel-omie -->
+
+  </main>
+</div>
+
+<!-- ─── SIDE SHEET OVERLAY ─── -->
+<div class="side-sheet-overlay" id="sheetOverlay" onclick="closeOmieSheet()"></div>
+
+<!-- ─── SIDE SHEET ─── -->
+<div class="side-sheet" id="omieSheet">
+  <button class="sheet-close" onclick="closeOmieSheet()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+
+  <div class="sheet-body">
+    <div class="sheet-logo-wrap">
+      <svg width="44" height="44" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="20" fill="#0099d6"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="sans-serif">O</text></svg>
+    </div>
+
+    <div class="sheet-title">Omie ERP</div>
+
+    <div class="sheet-section-label">Available on</div>
+    <div class="sheet-plans">
+      <span class="sheet-plan-badge pro">Clara Pro</span>
+      <span class="sheet-plan-badge enterprise">Clara Enterprise</span>
+    </div>
+
+    <div class="sheet-divider"></div>
+
+    <div class="sheet-section-label">About this integration</div>
+    <p class="sheet-about">
+      Connect Clara to Omie ERP and keep your financial data in sync automatically. Card transactions, reimbursements, and digital account activity are pushed directly to Omie — no manual exports, no rekeying.
+    </p>
+    <p class="sheet-about" style="margin-top:10px;">
+      Set up takes under 30 minutes. Once active, your sync runs on the schedule you define.
+    </p>
+
+    <div class="sheet-divider"></div>
+
+    <div class="sheet-section-label">What you can sync</div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:4px;">
+      <li style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--content-medium);">
+        <span style="color:var(--green);font-size:16px;">✓</span> Card transactions
+      </li>
+      <li style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--content-medium);">
+        <span style="color:var(--green);font-size:16px;">✓</span> Reimbursements
+      </li>
+      <li style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--content-medium);">
+        <span style="color:var(--green);font-size:16px;">✓</span> Digital account transactions
+      </li>
+    </ul>
+
+    <div class="sheet-divider"></div>
+
+    <div class="sheet-section-label">See how it works</div>
+    <p class="sheet-about">Watch a quick walkthrough of the setup and sync flow.</p>
+    <div class="sheet-how-video">
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,#021b47,#0099d6);opacity:.7;"></div>
+      <div class="play-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet-footer">
+    <button class="btn-primary" onclick="openWizard()">Set up now →</button>
+  </div>
+</div>
+
+<!-- ─── WIZARD MODAL ─── -->
+<div class="wizard-overlay" id="wizardOverlay">
+  <div class="wizard-modal" id="wizardModal">
+
+    <!-- Wizard Topbar -->
+    <div class="wizard-topbar">
+      <div>
+        <div class="wizard-topbar-title">Connect Omie ERP</div>
+        <div class="wizard-topbar-subtitle" id="wizardSubtitle">Step 1 of 4 — Choose a use case</div>
+      </div>
+      <button class="wizard-close" onclick="closeWizard()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="wizard-progress-bar">
+      <div class="wizard-progress-fill" id="wizardProgress" style="width:25%"></div>
+    </div>
+
+    <!-- Wizard Body -->
+    <div class="wizard-body">
+
+      <!-- Left Stepper -->
+      <aside class="wizard-stepper">
+        <div class="stepper-title">Setup steps</div>
+
+        <div class="stepper-item active" id="step1-nav">
+          <div class="stepper-dot">1</div>
+          <div class="stepper-item-text">
+            <div class="stepper-item-name">Use case</div>
+            <div class="stepper-item-sub">Choose what to sync</div>
+          </div>
+        </div>
+        <div class="stepper-connector"></div>
+
+        <div class="stepper-item" id="step2-nav">
+          <div class="stepper-dot">2</div>
+          <div class="stepper-item-text">
+            <div class="stepper-item-name">Omie credentials</div>
+            <div class="stepper-item-sub">Connect your Omie account</div>
+          </div>
+        </div>
+        <div class="stepper-connector"></div>
+
+        <div class="stepper-item" id="step3-nav">
+          <div class="stepper-dot">3</div>
+          <div class="stepper-item-text">
+            <div class="stepper-item-name">Field mapping</div>
+            <div class="stepper-item-sub">Map Clara fields to Omie</div>
+          </div>
+        </div>
+        <div class="stepper-connector"></div>
+
+        <div class="stepper-item" id="step4-nav">
+          <div class="stepper-dot">4</div>
+          <div class="stepper-item-text">
+            <div class="stepper-item-name">Sync schedule</div>
+            <div class="stepper-item-sub">Set when data syncs</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Step Content -->
+      <div class="wizard-step-content" id="wizardStepContent">
+
+        <!-- ─ STEP 1: CARD TRANSACTIONS SETUP ─ -->
+        <div id="step1">
+          <div class="step-heading">Set up card transactions sync</div>
+          <p class="step-subtext">Sync Clara corporate card activity to Omie as financial entries.</p>
+
+          <!-- Feature tags -->
+          <div class="s1-feature-tags">
+            <span class="s1-feature-tag">Categories</span>
+            <span class="s1-feature-tag">Suppliers</span>
+            <span class="s1-feature-tag">Departments</span>
+          </div>
+
+          <!-- Integration name -->
+          <div class="s1-form-block">
+            <label class="s1-section-label" for="s1-integ-name">Integration name</label>
+            <input class="text-input s1-name-input" type="text" id="s1-integ-name"
+              placeholder="e.g. Card transactions — Omie"
+              oninput="checkStep1Ready()" onfocus="autofill(this,'Card transactions — Omie')" />
+            <div class="field-hint" style="margin-top:8px;">This name will appear in your integrations list.</div>
+          </div>
+
+          <!-- Omie transaction type -->
+          <div class="s1-form-block">
+            <span class="s1-section-label">Omie transaction type</span>
+            <div class="uc-type-options">
+              <label class="uc-type-option">
+                <input type="radio" name="omie-type" value="pagar" checked onchange="checkStep1Ready()" />
+                <div>
+                  <div class="uc-type-option-title">Contas a pagar</div>
+                  <div class="uc-type-option-desc">Accounts payable — card expenses sent as payable entries</div>
+                </div>
+              </label>
+              <label class="uc-type-option">
+                <input type="radio" name="omie-type" value="receber" onchange="checkStep1Ready()" />
+                <div>
+                  <div class="uc-type-option-title">Contas a receber</div>
+                  <div class="uc-type-option-desc">Accounts receivable — card credits sent as receivable entries</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- More use cases coming -->
+          <div class="s1-more-section">
+            <div class="s1-more-label">More use cases coming</div>
+            <div class="s1-more-chips">
+              <span class="s1-more-chip">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                Reimbursements
+              </span>
+              <span class="s1-more-chip">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                Digital account transactions
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─ STEP 2: AUTH ─ -->
+        <div id="step2" class="hidden">
+          <div class="step2-layout">
+
+            <!-- Left: form -->
+            <div class="step2-form">
+              <div class="step-heading">Connect your Omie account</div>
+              <p class="step-subtext">Enter your Omie API credentials to authorize Clara to push data to your account.</p>
+
+              <div class="auth-block">
+                <div class="auth-block-header">
+                  <div class="auth-block-icon">
+                    <svg width="20" height="20" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="20" fill="#0099d6"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="sans-serif">O</text></svg>
+                  </div>
+                  <div>
+                    <div class="auth-block-title">Omie ERP</div>
+                    <div class="auth-block-subtitle">App Key + App Secret (REST API)</div>
+                  </div>
+                  <span class="auth-block-badge badge-pending" id="omieConnectBadge">Not connected</span>
+                </div>
+                <div class="auth-block-body">
+                  <input type="hidden" id="omieConnName" />
+                  <div class="form-row-grid">
+                    <div>
+                      <label class="field-label">App Key</label>
+                      <input class="text-input text-input-masked" type="password" placeholder="Paste your App Key" id="omieAppKey" onfocus="autofill(this,'18234761902837465')" oninput="checkStep2Ready()" />
+                    </div>
+                    <div>
+                      <label class="field-label">App Secret</label>
+                      <input class="text-input text-input-masked" type="password" placeholder="Paste your App Secret" id="omieAppSecret" onfocus="autofill(this,'a9f3c2e1b847d056f3a2c9e1b847d056')" oninput="checkStep2Ready()" />
+                    </div>
+                  </div>
+                  <div class="test-connection-row">
+                    <button class="btn-outline" onclick="testConnection()">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                      Test connection
+                    </button>
+                    <div class="connection-status hidden" id="connStatus"></div>
+                  </div>
+                </div>
+              </div>
+
+              <p style="font-size:13px;color:var(--text-muted);margin-top:10px;">
+                Your credentials are encrypted and stored securely.
+              </p>
+            </div>
+
+            <!-- Right: how-to panel (always visible) -->
+            <div class="step2-howto">
+              <div class="howto-header">
+                <div class="howto-title">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  How to get your credentials
+                </div>
+              </div>
+              <div class="howto-steps">
+                <div class="howto-step">
+                  <div class="howto-step-num">1</div>
+                  <div class="howto-step-text">Go to <strong>developer.omie.com.br</strong> and sign in.</div>
+                </div>
+                <div class="howto-step">
+                  <div class="howto-step-num">2</div>
+                  <div class="howto-step-text">Open <strong>Aplicativos</strong> in the sidebar.</div>
+                </div>
+                <div class="howto-step">
+                  <div class="howto-step-num">3</div>
+                  <div class="howto-step-text">Select an existing app or create a new one.</div>
+                </div>
+                <div class="howto-step">
+                  <div class="howto-step-num">4</div>
+                  <div class="howto-step-text">Copy the <strong>App Key</strong> and <strong>App Secret</strong> and paste them here.</div>
+                </div>
+              </div>
+              <div class="howto-tips">
+                <div class="howto-tips-title">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  Keep in mind
+                </div>
+                <ul>
+                  <li>Credentials must be active — expired keys will stop the sync.</li>
+                  <li>Can't find them? Contact your Omie account admin.</li>
+                </ul>
+              </div>
+              <a class="howto-portal-link" href="#" onclick="return false;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Open Omie Developer Portal
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ─ STEP 3: FIELD MAPPING ─ -->
+        <div id="step3" class="hidden">
+          <div class="step-heading">Map your fields</div>
+          <p class="step-subtext">Tell Clara how to translate your data before it reaches Omie. Sections 1–3 are required; sections 4–5 are optional.</p>
+
+          <!-- Section 1: Fixed -->
+          <div class="mapping-section">
+            <div class="mapping-section-header" onclick="toggleSection(1)">
+              <div class="mapping-section-number locked">🔒</div>
+              <div class="mapping-section-title">Fixed mappings</div>
+              <span class="mapping-badge locked">Locked</span>
+              <svg class="chevron" id="chev1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="mapping-section-body" id="sec1">
+              <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Pre-configured by Clara. These mappings are applied automatically to every sync and cannot be changed.</p>
+              <table class="mapping-table">
+                <tr><th>Clara field</th><th></th><th>Omie field</th><th></th></tr>
+                <tr>
+                  <td>Authorization Number</td>
+                  <td class="mapping-arrow">→</td>
+                  <td>Codigo Lancamento Integracao</td>
+                  <td class="lock-icon">🔒</td>
+                </tr>
+                <tr>
+                  <td>Amount</td>
+                  <td class="mapping-arrow">→</td>
+                  <td>Valor Documento</td>
+                  <td class="lock-icon">🔒</td>
+                </tr>
+                <tr>
+                  <td>Static: 100</td>
+                  <td class="mapping-arrow">→</td>
+                  <td>Lote (batch)</td>
+                  <td class="lock-icon">🔒</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Section 2: Catalog -->
+          <div class="mapping-section">
+            <div class="mapping-section-header" onclick="toggleSection(2)">
+              <div class="mapping-section-number">2</div>
+              <div class="mapping-section-title">Catalog mappings</div>
+              <span class="mapping-badge missing" id="sec2badge">Missing</span>
+              <svg class="chevron open" id="chev2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="mapping-section-body open" id="sec2">
+              <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Map each Clara dimension to its Omie destination field. Choose a default value for all transactions, or map values individually.</p>
+
+              <!-- Categories -->
+              <div class="dimension-card">
+                <div class="dimension-card-header"><span class="dimension-name">Categories</span></div>
+                <div style="padding:16px 18px 18px;">
+                  <div class="dim-tab-toggle">
+                    <button class="dim-tab active" id="dimtab-default-cat" onclick="setDimMode('cat','default')">Default value</button>
+                    <button class="dim-tab" id="dimtab-individual-cat" onclick="setDimMode('cat','individual')">Map by value</button>
+                  </div>
+                  <!-- Default value panel -->
+                  <div class="dim-tab-content active" id="dimopt-default-cat">
+                    <div class="dim-mapping-row">
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot clara"></span>Clara</div>
+                        <div class="dim-source-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>All categories, labels, and fields</div>
+                      </div>
+                      <div class="dim-mapping-arrow">→</div>
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot omie"></span>Omie</div>
+                        <div class="dim-omie-select-wrap">
+                          <span class="dim-omie-badge">OMIE</span>
+                          <select class="select-input catalog-required-select" id="omie-select-cat" onchange="checkCatalogComplete()"><option value="">Select an Omie value</option><option>1.01 — Serviços</option><option>2.01 — Produtos</option><option>3.01 — Despesas operacionais</option></select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Map by value panel -->
+                  <div class="dim-tab-content" id="dimopt-individual-cat">
+                    <div class="dim-mapping-row" style="margin-bottom:14px;">
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot clara"></span>Clara source field</div>
+                        <select class="select-input" style="width:100%;"><option>Clara Category</option><option>Labels</option><option>Custom field</option></select>
+                      </div>
+                      <div class="dim-mapping-arrow">→</div>
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot omie"></span>Omie destination field</div>
+                        <div class="dim-field-fixed">Categorias</div>
+                      </div>
+                    </div>
+                    <div class="mapping-rows-wrap"><div class="mapping-rows-head"><span>Clara value</span><span></span><span>Omie value</span><span></span></div><div id="rows-cat"><div class="mapping-value-row"><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select...</option><option>Viagem</option><option>Alimentação</option><option>Software</option><option>Hospedagem</option></select><span class="mapping-arrow" style="text-align:center;">→</span><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select...</option><option>1.01 — Serviços</option><option>2.01 — Produtos</option><option>3.01 — Despesas operacionais</option></select><button class="del-row-btn" onclick="removeMappingRow(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div></div></div>
+                    <div class="add-row-inside"><button class="add-row-btn" onclick="addMappingRow('cat','Clara value','1.01 — Serviços|2.01 — Produtos|3.01 — Despesas operacionais','Viagem|Alimentação|Software|Hospedagem')">+ Add row</button></div>
+                    <div class="mapping-fallback-req"><span class="fallback-clara-label">All other values</span><span class="mapping-arrow" style="text-align:center;">→</span><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select Omie value...</option><option>1.01 — Serviços</option><option>2.01 — Produtos</option><option>3.01 — Despesas operacionais</option></select></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Suppliers -->
+              <div class="dimension-card">
+                <div class="dimension-card-header"><span class="dimension-name">Suppliers</span></div>
+                <div style="padding:16px 18px 18px;">
+                  <div class="dim-tab-toggle">
+                    <button class="dim-tab active" id="dimtab-default-sup" onclick="setDimMode('sup','default')">Default value</button>
+                    <button class="dim-tab" id="dimtab-individual-sup" onclick="setDimMode('sup','individual')">Map by value</button>
+                  </div>
+                  <!-- Default value panel -->
+                  <div class="dim-tab-content active" id="dimopt-default-sup">
+                    <div class="dim-mapping-row">
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot clara"></span>Clara</div>
+                        <div class="dim-source-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>All suppliers</div>
+                      </div>
+                      <div class="dim-mapping-arrow">→</div>
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot omie"></span>Omie</div>
+                        <div class="dim-omie-select-wrap">
+                          <span class="dim-omie-badge">OMIE</span>
+                          <select class="select-input catalog-required-select" id="omie-select-sup" onchange="checkCatalogComplete()"><option value="">Select an Omie value</option><option>Fornecedor Genérico</option><option>Claro Brasil</option><option>99 Tecnologia</option></select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Map by value panel -->
+                  <div class="dim-tab-content" id="dimopt-individual-sup">
+                    <div class="dim-mapping-row" style="margin-bottom:14px;">
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot clara"></span>Clara source field</div>
+                        <select class="select-input" style="width:100%;"><option>Clara Supplier</option><option>Merchant name</option><option>Custom field</option></select>
+                      </div>
+                      <div class="dim-mapping-arrow">→</div>
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot omie"></span>Omie destination field</div>
+                        <div class="dim-field-fixed">Clientes/Fornecedores</div>
+                      </div>
+                    </div>
+                    <div class="mapping-rows-wrap"><div class="mapping-rows-head"><span>Clara value</span><span></span><span>Omie value</span><span></span></div><div id="rows-sup"><div class="mapping-value-row"><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select...</option><option>Fornecedor A</option><option>Fornecedor B</option><option>Fornecedor C</option></select><span class="mapping-arrow" style="text-align:center;">→</span><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select...</option><option>Fornecedor Genérico</option><option>Claro Brasil</option><option>99 Tecnologia</option></select><button class="del-row-btn" onclick="removeMappingRow(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div></div></div>
+                    <div class="add-row-inside"><button class="add-row-btn" onclick="addMappingRow('sup','Omie supplier','Fornecedor Genérico|Claro Brasil|99 Tecnologia','Fornecedor A|Fornecedor B|Fornecedor C')">+ Add row</button></div>
+                    <div class="mapping-fallback-req"><span class="fallback-clara-label">All other values</span><span class="mapping-arrow" style="text-align:center;">→</span><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select Omie value...</option><option>Fornecedor Genérico</option><option>Claro Brasil</option><option>99 Tecnologia</option></select></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bank Account -->
+              <div class="dimension-card">
+                <div class="dimension-card-header"><span class="dimension-name">Bank Account</span></div>
+                <div style="padding:16px 18px 18px;">
+                  <div class="dim-tab-toggle">
+                    <button class="dim-tab active" id="dimtab-default-bank" onclick="setDimMode('bank','default')">Default value</button>
+                    <button class="dim-tab" id="dimtab-individual-bank" onclick="setDimMode('bank','individual')">Map by value</button>
+                  </div>
+                  <!-- Default value panel -->
+                  <div class="dim-tab-content active" id="dimopt-default-bank">
+                    <div class="dim-mapping-row">
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot clara"></span>Clara</div>
+                        <div class="dim-source-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>All bank accounts</div>
+                      </div>
+                      <div class="dim-mapping-arrow">→</div>
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot omie"></span>Omie</div>
+                        <div class="dim-omie-select-wrap">
+                          <span class="dim-omie-badge">OMIE</span>
+                          <select class="select-input catalog-required-select" id="omie-select-bank" onchange="checkCatalogComplete()"><option value="">Select an Omie value</option><option>Conta Principal — 001</option><option>Conta Despesas — 002</option></select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Map by value panel -->
+                  <div class="dim-tab-content" id="dimopt-individual-bank">
+                    <div class="dim-mapping-row" style="margin-bottom:14px;">
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot clara"></span>Clara source field</div>
+                        <select class="select-input" style="width:100%;"><option>Clara Bank Account</option><option>Custom field</option></select>
+                      </div>
+                      <div class="dim-mapping-arrow">→</div>
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot omie"></span>Omie destination field</div>
+                        <div class="dim-field-fixed">Conta Corrente</div>
+                      </div>
+                    </div>
+                    <div class="mapping-rows-wrap"><div class="mapping-rows-head"><span>Clara value</span><span></span><span>Omie value</span><span></span></div><div id="rows-bank"><div class="mapping-value-row"><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select...</option><option>Conta Clara Principal</option><option>Conta Clara Secundária</option></select><span class="mapping-arrow" style="text-align:center;">→</span><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select...</option><option>Conta Principal — 001</option><option>Conta Despesas — 002</option></select><button class="del-row-btn" onclick="removeMappingRow(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div></div></div>
+                    <div class="add-row-inside"><button class="add-row-btn" onclick="addMappingRow('bank','Omie account','Conta Principal — 001|Conta Despesas — 002','Conta Clara Principal|Conta Clara Secundária')">+ Add row</button></div>
+                    <div class="mapping-fallback-req"><span class="fallback-clara-label">All other values</span><span class="mapping-arrow" style="text-align:center;">→</span><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select Omie value...</option><option>Conta Principal — 001</option><option>Conta Despesas — 002</option></select></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Add optional department dimension -->
+              <button class="add-dimension-btn" id="addDimBtn" onclick="addDepartmentDim()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add optional department dimension
+              </button>
+
+              <!-- Departments (optional, hidden by default) -->
+              <div class="dimension-card hidden" id="dim-departments" style="margin-top:10px;border-color:var(--accent-mid);background:var(--accent-light);">
+                <div class="dimension-card-header">
+                  <span class="dimension-name">Departments</span>
+                  <button class="dimension-remove-btn" style="margin-left:auto;" onclick="removeDepartmentDim()" title="Remove dimension">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+                <div style="padding:16px 18px 18px;">
+                  <div class="dim-tab-toggle">
+                    <button class="dim-tab active" id="dimtab-default-dept" onclick="setDimMode('dept','default')">Default value</button>
+                    <button class="dim-tab" id="dimtab-individual-dept" onclick="setDimMode('dept','individual')">Map by value</button>
+                  </div>
+                  <!-- Default value panel -->
+                  <div class="dim-tab-content active" id="dimopt-default-dept">
+                    <div class="dim-mapping-row">
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot clara"></span>Clara</div>
+                        <div class="dim-source-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>All departments</div>
+                      </div>
+                      <div class="dim-mapping-arrow">→</div>
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot omie"></span>Omie</div>
+                        <div class="dim-omie-select-wrap">
+                          <span class="dim-omie-badge">OMIE</span>
+                          <select class="select-input" id="omie-select-dept"><option value="">Select an Omie value</option><option>Financeiro</option><option>Comercial</option><option>Operações</option></select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Map by value panel -->
+                  <div class="dim-tab-content" id="dimopt-individual-dept">
+                    <div class="dim-mapping-row" style="margin-bottom:14px;">
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot clara"></span>Clara source field</div>
+                        <select class="select-input" style="width:100%;"><option>Clara Department</option><option>Labels</option><option>Custom field</option></select>
+                      </div>
+                      <div class="dim-mapping-arrow">→</div>
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot omie"></span>Omie destination field</div>
+                        <div class="dim-field-fixed">Departamentos</div>
+                      </div>
+                    </div>
+                    <div class="mapping-rows-wrap"><div class="mapping-rows-head"><span>Clara value</span><span></span><span>Omie value</span><span></span></div><div id="rows-dept"><div class="mapping-value-row"><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select...</option><option>Financeiro</option><option>Comercial</option><option>Marketing</option><option>Operações</option></select><span class="mapping-arrow" style="text-align:center;">→</span><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select...</option><option>Financeiro</option><option>Comercial</option><option>Operações</option></select><button class="del-row-btn" onclick="removeMappingRow(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div></div></div>
+                    <div class="add-row-inside"><button class="add-row-btn" onclick="addMappingRow('dept','Omie dept','Financeiro|Comercial|Operações','Financeiro|Comercial|Marketing|Operações')">+ Add row</button></div>
+                    <div class="mapping-fallback-req"><span class="fallback-clara-label">All other values</span><span class="mapping-arrow" style="text-align:center;">→</span><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select Omie value...</option><option>Financeiro</option><option>Comercial</option><option>Operações</option></select></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 3: Date -->
+          <div class="mapping-section">
+            <div class="mapping-section-header" onclick="toggleSection(3)">
+              <div class="mapping-section-number">3</div>
+              <div class="mapping-section-title">Date mappings</div>
+              <span class="mapping-badge completed">Completed</span>
+              <svg class="chevron" id="chev3" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="mapping-section-body" id="sec3">
+              <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">These defaults work for most setups. Override any Clara field if your accounting workflow uses different dates.</p>
+              <table class="mapping-table">
+                <tr><th>Clara field</th><th></th><th>Omie destination</th></tr>
+                <tr><td><select class="select-input" style="width:180px;font-size:13px;padding:6px 10px;"><option>Operation Date</option><option>Accounting Date</option><option>Transaction Date</option></select></td><td class="mapping-arrow">→</td><td style="font-size:13px;color:var(--text-secondary);">Entry date <span style="color:var(--text-muted);font-family:monospace;font-size:12px;">(data_entrada)</span></td></tr>
+                <tr><td><select class="select-input" style="width:180px;font-size:13px;padding:6px 10px;"><option>Accounting Date</option><option>Operation Date</option><option>Transaction Date</option></select></td><td class="mapping-arrow">→</td><td style="font-size:13px;color:var(--text-secondary);">Forecast date <span style="color:var(--text-muted);font-family:monospace;font-size:12px;">(data_previsao)</span></td></tr>
+                <tr><td><select class="select-input" style="width:180px;font-size:13px;padding:6px 10px;"><option>Transaction Date</option><option>Operation Date</option><option>Accounting Date</option></select></td><td class="mapping-arrow">→</td><td style="font-size:13px;color:var(--text-secondary);">Due date <span style="color:var(--text-muted);font-family:monospace;font-size:12px;">(data_vencimento)</span></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Optional fields add bar -->
+          <div class="optional-add-bar">
+            <span class="optional-add-label">Optional fields:</span>
+            <button class="add-optional-btn" id="addObsBtn" onclick="addOptionalField('obs')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Observation field
+            </button>
+            <button class="add-optional-btn" id="addCustomBtn" onclick="addOptionalField('custom')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Custom field mappings
+            </button>
+          </div>
+
+          <!-- Observation field card (hidden by default) -->
+          <div class="optional-field-card hidden" id="opt-obs">
+            <div class="opt-field-header">
+              <div class="opt-field-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+              </div>
+              <div class="opt-field-title-wrap">
+                <div class="opt-field-title">Observation field configuration <span class="opt-optional-tag">(Optional)</span></div>
+                <div class="opt-field-desc">Define which Clara fields are combined into the Omie observation field.</div>
+              </div>
+              <div class="opt-include-wrap">
+                <span class="opt-include-label">Include field</span>
+                <div class="opt-toggle" id="obs-toggle" onclick="toggleOptField('obs')"></div>
+              </div>
+              <button class="opt-remove-btn" onclick="removeOptionalField('obs')" title="Remove">×</button>
+            </div>
+            <div class="opt-field-body" id="obs-body">
+              <div class="obs-sep-row">
+                <span class="obs-sep-label">Separator</span>
+                <div class="sep-chips">
+                  <button class="sep-chip selected" onclick="selectSep(this)">/</button>
+                  <button class="sep-chip" onclick="selectSep(this)">-</button>
+                  <button class="sep-chip" onclick="selectSep(this)">|</button>
+                  <button class="sep-chip" onclick="selectSep(this)">,</button>
+                  <button class="sep-chip" onclick="selectSep(this)" style="font-size:11px;letter-spacing:.05em;">SPACE</button>
+                </div>
+              </div>
+              <div class="obs-fields-label">Select the fields to include in observation</div>
+              <div class="obs-checkbox-grid">
+                <label class="obs-check"><input type="checkbox"> Merchant Name</label>
+                <label class="obs-check"><input type="checkbox"> Merchant Category (MCC)</label>
+                <label class="obs-check"><input type="checkbox"> Cardholder Name</label>
+                <label class="obs-check"><input type="checkbox"> Authorization Number</label>
+                <label class="obs-check"><input type="checkbox"> Transaction Date</label>
+                <label class="obs-check"><input type="checkbox"> Amount</label>
+                <label class="obs-check"><input type="checkbox"> Currency</label>
+                <label class="obs-check"><input type="checkbox"> Status</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom field mappings card (hidden by default) -->
+          <div class="optional-field-card hidden" id="opt-custom">
+            <div class="opt-field-header">
+              <div class="opt-field-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="9" cy="6" r="2" fill="white"/><circle cx="15" cy="12" r="2" fill="white"/><circle cx="9" cy="18" r="2" fill="white"/></svg>
+              </div>
+              <div class="opt-field-title-wrap">
+                <div class="opt-field-title">Custom field mappings <span class="opt-optional-tag">(Optional)</span></div>
+                <div class="opt-field-desc">Create additional mappings beyond the fixed and catalog mappings.</div>
+              </div>
+              <div class="opt-include-wrap">
+                <span class="opt-include-label">Include field</span>
+                <div class="opt-toggle" id="custom-toggle" onclick="toggleOptField('custom')"></div>
+              </div>
+              <button class="opt-remove-btn" onclick="removeOptionalField('custom')" title="Remove">×</button>
+            </div>
+            <div class="opt-field-body" id="custom-body">
+
+              <!-- Inline new mapping form -->
+              <div class="new-mapping-form hidden" id="new-mapping-form">
+                <div class="nmf-header">
+                  <div>
+                    <div class="nmf-title">New field mapping</div>
+                    <div class="nmf-desc">Create a custom field mapping between Clara and Omie.</div>
+                  </div>
+                  <button class="nmf-close" onclick="closeNewMapping()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+                <div class="nmf-body">
+
+                  <!-- Field name -->
+                  <input class="text-input" type="text" id="nmf-name" placeholder="Field name (e.g. Cost Center)" />
+
+                  <!-- Mapping type tab toggle — hugs 2 tabs -->
+                  <div class="dim-tab-toggle" style="margin-bottom:16px;align-self:flex-start;">
+                    <button class="dim-tab active" id="nmf-tab-standard" onclick="setMappingType('standard')">Standard 1:1</button>
+                    <button class="dim-tab" id="nmf-tab-variable" onclick="setMappingType('variable')">Map by value</button>
+                  </div>
+
+                  <!-- ── Standard (1:1) panel ── -->
+                  <div class="nmf-type-panel active" id="nmf-panel-standard">
+                    <div class="dim-mapping-row">
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot clara"></span>Clara source field</div>
+                        <select class="select-input" id="nmf-clara-standard">
+                          <option value="">Select Clara field…</option>
+                          <option>Merchant Name</option><option>Category</option><option>Amount</option>
+                          <option>Transaction Date</option><option>Cardholder Name</option>
+                          <option>Authorization Number</option><option>Currency</option><option>Status</option>
+                        </select>
+                      </div>
+                      <div class="dim-mapping-arrow">→</div>
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot omie"></span>Omie destination field</div>
+                        <div class="dim-omie-select-wrap">
+                          <span class="dim-omie-badge">OMIE</span>
+                          <select class="select-input" id="nmf-omie-standard-select">
+                            <option value="">Select Omie field…</option>
+                            <option>Valor Documento</option><option>Número do Documento</option>
+                            <option>Observação</option><option>Código de Integração</option><option>Tags</option>
+                          </select>
+                          <input class="text-input" type="text" id="nmf-omie-standard-input" placeholder="Type a hardcoded value" style="display:none;" />
+                        </div>
+                        <button class="dim-switch-btn" id="nmf-switch-standard" onclick="toggleNmfOmie('standard')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Switch to fixed value</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- ── Variable (value matching) panel ── -->
+                  <div class="nmf-type-panel" id="nmf-panel-variable">
+                    <div class="dim-mapping-row" style="margin-bottom:14px;">
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot clara"></span>Clara source field</div>
+                        <select class="select-input" id="nmf-clara-variable">
+                          <option value="">Select Clara field…</option>
+                          <option>Merchant Name</option><option>Category</option><option>Amount</option>
+                          <option>Transaction Date</option><option>Cardholder Name</option>
+                          <option>Authorization Number</option><option>Currency</option><option>Status</option>
+                        </select>
+                      </div>
+                      <div class="dim-mapping-arrow">→</div>
+                      <div>
+                        <div class="dim-system-label"><span class="dim-dot omie"></span>Omie destination field</div>
+                        <div class="dim-omie-select-wrap">
+                          <span class="dim-omie-badge">OMIE</span>
+                          <select class="select-input" id="nmf-omie-variable-select">
+                            <option value="">Select Omie field…</option>
+                            <option>Valor Documento</option><option>Número do Documento</option>
+                            <option>Observação</option><option>Código de Integração</option><option>Tags</option>
+                          </select>
+                          <input class="text-input" type="text" id="nmf-omie-variable-input" placeholder="Type a hardcoded value" style="display:none;" />
+                        </div>
+                        <button class="dim-switch-btn" id="nmf-switch-variable" onclick="toggleNmfOmie('variable')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>Switch to fixed value</button>
+                      </div>
+                    </div>
+                    <div class="mapping-rows-wrap">
+                      <div class="mapping-rows-head"><span>Clara value</span><span></span><span>Omie value</span><span></span></div>
+                      <div id="nmf-variable-rows">
+                        <div class="mapping-value-row">
+                          <select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select…</option><option>Viagem</option><option>Alimentação</option><option>Software</option></select>
+                          <span class="mapping-arrow" style="text-align:center;">→</span>
+                          <select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select…</option><option>Valor Documento</option><option>Tags</option></select>
+                          <button class="del-row-btn" onclick="removeMappingRow(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="add-row-inside"><button class="add-row-btn" onclick="addNmfVariableRow()">+ Add row</button></div>
+                    <div class="mapping-fallback-req" style="margin-top:0;">
+                      <span class="fallback-clara-label">All other values</span>
+                      <span class="mapping-arrow" style="text-align:center;">→</span>
+                      <select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select Omie value…</option><option>Valor Documento</option><option>Tags</option></select>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="nmf-footer">
+                  <button class="btn-secondary" onclick="closeNewMapping()">Cancel</button>
+                  <button class="btn-primary-medium" onclick="createCustomMapping()">Create mapping</button>
+                </div>
+              </div>
+
+              <!-- Mapping list (populated after creation) -->
+              <div class="custom-mapping-list hidden" id="custom-mapping-list"></div>
+              <div class="custom-add-more hidden" id="custom-add-more">
+                <button class="add-dimension-btn" onclick="openNewMapping()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add another mapping
+                </button>
+              </div>
+
+              <!-- Empty state -->
+              <div class="custom-empty-state" id="custom-empty-state">
+                <div class="custom-empty-icon">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="7" cy="18" r="2"/><circle cx="17" cy="6" r="2"/><path d="M7 16V8a4 4 0 0 1 4-4h2"/><path d="M17 8v8a4 4 0 0 1-4 4H11"/></svg>
+                </div>
+                <div class="custom-empty-title">No mappings configured yet.</div>
+                <div class="custom-empty-desc">Add a mapping to connect Clara and Omie fields.</div>
+                <button class="btn-primary-medium" onclick="openNewMapping()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add mapping
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ─ STEP 4: SYNC ─ -->
+        <div id="step4" class="hidden">
+          <div class="step-heading">Set your sync schedule</div>
+          <p class="step-subtext">Define when Clara automatically pushes data to Omie.</p>
+          <div class="sync-inline-card">
+            <div class="sync-form-row">
+              <label class="field-label">Sync name</label>
+              <input class="text-input" type="text" id="syncName" value="Daily card sync" placeholder="e.g. Daily card sync" />
+            </div>
+            <div class="sync-form-row">
+              <label class="field-label">Historical data</label>
+              <select class="select-input" id="syncHistorical">
+                <option>Current month</option>
+                <option>Last 30 days</option>
+                <option>Last 90 days</option>
+                <option>Custom date range</option>
+              </select>
+            </div>
+            <div class="sync-form-row">
+              <label class="field-label">Frequency</label>
+              <div class="frequency-options">
+                <button class="freq-btn active" onclick="selectFreq(this)">Daily</button>
+                <button class="freq-btn" onclick="selectFreq(this)">Weekly</button>
+                <button class="freq-btn" onclick="selectFreq(this)">Monthly</button>
+                <button class="freq-btn" onclick="selectFreq(this)">Custom</button>
+              </div>
+            </div>
+            <div class="sync-form-row">
+              <label class="field-label">Run time</label>
+              <div style="display:flex;gap:10px;">
+                <input class="text-input" type="time" value="06:00" style="width:130px;" />
+                <select class="select-input" style="flex:1;">
+                  <option>America/Sao_Paulo</option>
+                  <option>America/Mexico_City</option>
+                  <option>UTC</option>
+                </select>
+              </div>
+            </div>
+            <div class="sync-form-row" style="margin-bottom:0;">
+              <label class="field-label">Days of grace</label>
+              <input class="text-input" type="number" value="2" min="0" max="30" style="width:100px;" />
+              <div class="field-hint">Clara will look back this many days before each run to capture late-posted transactions.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─ SCREEN A: SET UP NOW OR LATER? ─ -->
+        <div id="stepDupWhen" class="hidden">
+          <div class="dup-wrap">
+            <div class="dup-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="dup-title" id="dupWhenTitle">Contas a pagar is live!</div>
+            <p class="dup-desc">Would you like to set up <strong id="dupWhenTarget">Contas a receber</strong> now?</p>
+            <div class="dup-actions">
+              <button class="dup-btn-yes" onclick="setupNextNow()">
+                Set up <span id="dupWhenTargetBtn">Contas a receber</span> now
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+              <button class="dup-btn-no" onclick="skipDuplicate()">I'll set it up later</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─ SCREEN B: DUPLICATE OR SCRATCH? ─ -->
+        <div id="stepDupHow" class="hidden">
+          <div class="dup-wrap" style="max-width:560px;">
+            <div class="dup-title" style="margin-bottom:8px;">How do you want to start?</div>
+            <p class="dup-desc" style="margin-bottom:24px;">Setting up <strong id="dupHowTarget">Contas a receber</strong>. You can copy the mappings you already configured or start fresh.</p>
+            <div class="dup-how-cards">
+              <button class="dup-how-card" onclick="openSecondMapping('duplicate')">
+                <div class="dup-how-card-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </div>
+                <div class="dup-how-card-title">Duplicate mappings</div>
+                <div class="dup-how-card-desc">Copy all field mappings from <span class="dup-how-source-label">Contas a pagar</span>. Only the transaction type changes.</div>
+              </button>
+              <button class="dup-how-card" onclick="openSecondMapping('scratch')">
+                <div class="dup-how-card-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <div class="dup-how-card-title">Start from scratch</div>
+                <div class="dup-how-card-desc">Open the mapping editor empty and configure each field independently.</div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─ SCREEN C: SECOND FLOW MAPPING ─ -->
+        <div id="stepSecondMapping" class="hidden">
+          <div class="second-mapping-header">
+            <div class="second-mapping-badge" id="secondMappingBadge">Contas a receber</div>
+            <div class="step-heading" style="margin-bottom:4px;">Map your fields</div>
+            <p class="step-subtext" style="margin-bottom:0;" id="secondMappingDesc">Mapping copied from Contas a pagar — review and adjust before saving.</p>
+          </div>
+          <div id="secondMappingBody"></div>
+        </div>
+
+        <!-- ─ SUCCESS ─ -->
+        <div id="stepSuccess" class="hidden" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:0 40px;">
+          <div class="success-icon">✓</div>
+          <div class="success-title" id="successTitle">Integration is live!</div>
+          <p class="success-desc" id="successDesc">Your Omie ERP integration has been saved and is now active. The first sync will run on the schedule you set.</p>
+          <button class="btn-primary" style="max-width:240px;margin-top:8px;" onclick="finishWizard()">Go to Integrations →</button>
+        </div>
+
+      </div>
+    </div><!-- /wizard-body -->
+
+    <!-- Wizard Footer -->
+    <div class="wizard-footer" id="wizardFooter">
+      <button class="btn-link" onclick="saveAsDraft()">Save as draft</button>
+      <div class="spacer"></div>
+      <button class="btn-secondary" id="wizardBack" onclick="prevStep()" style="display:none;">← Back</button>
+      <button class="btn-primary-medium" id="wizardNext" onclick="nextStep()">
+        Continue
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+  </div><!-- /wizard-modal -->
+</div><!-- /wizard-overlay -->
+
+
+<!-- sync drawer removed — single inline schedule in step 4 -->
+
+<!-- integrations detail page moved inline to main page -->
+
+<!-- ─── TOAST ─── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── AUTOFILL (guided prototype) ───
+function autofill(el, value) {
+  if (!el.value) {
+    el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+}
+
+// ─── STATE ───
+let currentStep = 1;
+let selectedUseCase = 'card'; // MVP: card transactions only
+let omieConnected = false;
+let obsOn = false;
+
+const stepSubtitles = {
+  1: 'Step 1 of 4 — Choose a use case',
+  2: 'Step 2 of 4 — Connect Omie',
+  3: 'Step 3 of 4 — Map your fields',
+  4: 'Step 4 of 4 — Sync schedule',
+};
+
+const progressPct = { 1: 25, 2: 50, 3: 75, 4: 100 };
+
+// ─── SIDE SHEET ───
+function openOmieSheet() {
+  document.getElementById('omieCard').classList.add('selected');
+  document.getElementById('sheetOverlay').classList.add('open');
+  document.getElementById('omieSheet').classList.add('open');
+}
+
+function closeOmieSheet() {
+  document.getElementById('omieCard').classList.remove('selected');
+  document.getElementById('sheetOverlay').classList.remove('open');
+  document.getElementById('omieSheet').classList.remove('open');
+}
+
+// ─── WIZARD ───
+function openWizard() {
+  closeOmieSheet();
+  currentStep = 1;
+  showStep(1);
+  document.getElementById('wizardOverlay').classList.add('open');
+}
+
+function closeWizard() {
+  if (currentStep < 4) {
+    if (!confirm('Leave setup? Your progress will be lost unless you save as a draft.')) return;
+  }
+  document.getElementById('wizardOverlay').classList.remove('open');
+}
+
+function showStep(n) {
+  [1,2,3,4].forEach(i => {
+    document.getElementById('step' + i).classList.add('hidden');
+    const nav = document.getElementById('step' + i + '-nav');
+    nav.classList.remove('active', 'done');
+    if (i < n) nav.classList.add('done');
+    // update dot to checkmark for done
+    const dot = nav.querySelector('.stepper-dot');
+    if (i < n) dot.innerHTML = '✓';
+    else dot.innerHTML = i;
+  });
+
+  document.getElementById('step' + n).classList.remove('hidden');
+  document.getElementById('step' + n + '-nav').classList.add('active');
+  document.getElementById('wizardProgress').style.width = progressPct[n] + '%';
+  document.getElementById('wizardSubtitle').textContent = stepSubtitles[n];
+
+  // back button
+  document.getElementById('wizardBack').style.display = n > 1 ? 'block' : 'none';
+
+  // step 1 starts locked until use case + name are both set
+  if (n === 1) checkStep1Ready();
+
+  // silently carry the integration name forward as the connection name
+  if (n === 2) {
+    document.getElementById('omieConnName').value = getIntegrationName();
+  }
+
+  // footer next label
+  const nextBtn = document.getElementById('wizardNext');
+  const arrowIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+  const plugIcon  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>';
+
+  if (n === 2) {
+    const k = document.getElementById('omieAppKey').value.trim();
+    const s = document.getElementById('omieAppSecret').value.trim();
+    nextBtn.disabled = !(k && s) && !omieConnected;
+    nextBtn.innerHTML = omieConnected
+      ? 'Continue ' + arrowIcon
+      : plugIcon + ' Connect &amp; continue';
+  } else if (n === 4) {
+    nextBtn.disabled = false;
+    nextBtn.innerHTML = 'Save integration ' + arrowIcon;
+  } else {
+    nextBtn.disabled = false;
+    nextBtn.innerHTML = 'Continue ' + arrowIcon;
+  }
+}
+
+function nextStep() {
+  if (currentStep === 1) {
+    if (!getIntegrationName()) { showToast('⚠️ Give this integration a name before continuing.'); return; }
+  }
+  if (currentStep === 2) {
+    if (!omieConnected) { connectAndContinue(); return; }
+  }
+  if (currentStep === 4) {
+    saveIntegration();
+    return;
+  }
+  currentStep++;
+  showStep(currentStep);
+}
+
+function prevStep() {
+  if (currentStep > 1) { currentStep--; showStep(currentStep); }
+}
+
+function getIntegrationName() {
+  const el = document.getElementById('s1-integ-name');
+  return el ? el.value.trim() : '';
+}
+
+function checkStep2Ready() {
+  const k = document.getElementById('omieAppKey').value.trim();
+  const s = document.getElementById('omieAppSecret').value.trim();
+  const nextBtn = document.getElementById('wizardNext');
+  const bothFilled = !!(k && s);
+  nextBtn.disabled = !bothFilled;
+  if (bothFilled && !omieConnected) {
+    const plugIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>';
+    nextBtn.innerHTML = plugIcon + ' Connect &amp; continue';
+  }
+}
+
+function checkStep1Ready() {
+  document.getElementById('wizardNext').disabled = !getIntegrationName();
+}
+
+// ─── AUTH ───
+function testConnection() {
+  const k = document.getElementById('omieAppKey').value;
+  const s = document.getElementById('omieAppSecret').value;
+  if (!k || !s) { showToast('⚠️ Enter your App Key and App Secret first.'); return; }
+  simulateConnect();
+}
+
+const spinnerSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>';
+const checkSvg   = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+const arrowSvg   = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+
+function markConnected() {
+  omieConnected = true;
+  const status  = document.getElementById('connStatus');
+  const nextBtn = document.getElementById('wizardNext');
+  status.classList.add('success');
+  status.innerHTML = checkSvg + ' Connected successfully';
+  document.getElementById('omieConnectBadge').textContent = 'Connected';
+  document.getElementById('omieConnectBadge').className = 'auth-block-badge badge-connected';
+  nextBtn.disabled = false;
+  nextBtn.innerHTML = 'Continue ' + arrowSvg;
+}
+
+function simulateConnect(onSuccess) {
+  const status  = document.getElementById('connStatus');
+  const nextBtn = document.getElementById('wizardNext');
+  status.classList.remove('hidden', 'success', 'error');
+  status.innerHTML = spinnerSvg + ' Testing...';
+  status.style.color = 'var(--text-muted)';
+  nextBtn.disabled = true;
+  setTimeout(() => {
+    markConnected();
+    if (typeof onSuccess === 'function') onSuccess();
+  }, 1800);
+}
+
+function connectAndContinue() {
+  const k = document.getElementById('omieAppKey').value;
+  const s = document.getElementById('omieAppSecret').value;
+  if (!k || !s) { showToast('⚠️ Enter your App Key and App Secret first.'); return; }
+  simulateConnect(() => {
+    setTimeout(() => {
+      currentStep++;
+      showStep(currentStep);
+    }, 700);
+  });
+}
+
+// ─── MAPPING ───
+function toggleSection(n) {
+  const body = document.getElementById('sec' + n);
+  const chev = document.getElementById('chev' + n);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+// ─── DIM MODES ───
+const dimModes = { cat: 'default', sup: 'default', bank: 'default', dept: 'default' };
+
+function setDimMode(dimId, mode) {
+  dimModes[dimId] = mode;
+  ['default', 'individual'].forEach(m => {
+    document.getElementById(`dimtab-${m}-${dimId}`).classList.toggle('active', m === mode);
+    document.getElementById(`dimopt-${m}-${dimId}`).classList.toggle('active', m === mode);
+  });
+  checkCatalogComplete();
+}
+
+function toggleFixedValue(dimId) {
+  const sel = document.getElementById(`omie-select-${dimId}`);
+  const inp = document.getElementById(`omie-input-${dimId}`);
+  const btn = document.getElementById(`switch-btn-${dimId}`);
+  const isSelect = sel.style.display !== 'none';
+  sel.style.display = isSelect ? 'none' : '';
+  inp.style.display = isSelect ? '' : 'none';
+  const swapIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>';
+  btn.innerHTML = swapIcon + (isSelect ? 'Switch to Omie value' : 'Switch to fixed value');
+  checkCatalogComplete();
+}
+
+function checkCatalogComplete() {
+  const required = ['cat', 'sup', 'bank'];
+  let filled = 0;
+  required.forEach(d => {
+    if (dimModes[d] === 'individual') {
+      filled++;
+    } else {
+      const sel = document.querySelector(`#dimopt-default-${d} .catalog-required-select`);
+      if (sel && sel.value) filled++;
+    }
+  });
+  const badge = document.getElementById('sec2badge');
+  if (filled === 3) { badge.textContent = 'Completed'; badge.className = 'mapping-badge completed'; }
+  else if (filled > 0) { badge.textContent = 'Partially completed'; badge.className = 'mapping-badge partial'; }
+  else { badge.textContent = 'Missing'; badge.className = 'mapping-badge missing'; }
+}
+
+function addMappingRow(dimId, omieLabel, omieOpts, claraOpts) {
+  const container = document.getElementById(`rows-${dimId}`);
+  const omieOptions = omieOpts.split('|').map(o => `<option>${o}</option>`).join('');
+  const claraOptions = claraOpts.split('|').map(o => `<option>${o}</option>`).join('');
+  const row = document.createElement('div');
+  row.className = 'mapping-value-row';
+  row.innerHTML = `
+    <select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select...</option>${claraOptions}</select>
+    <span class="mapping-arrow" style="text-align:center;">→</span>
+    <select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select...</option>${omieOptions}</select>
+    <button class="del-row-btn" onclick="removeMappingRow(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+  `;
+  container.appendChild(row);
+}
+
+function removeMappingRow(btn) {
+  const row = btn.closest('.mapping-value-row');
+  const container = row.parentElement;
+  if (container.children.length > 1) {
+    row.remove();
+  } else {
+    showToast('At least one mapping row is required.');
+  }
+}
+
+
+function addDepartmentDim() {
+  document.getElementById('dim-departments').classList.remove('hidden');
+  document.getElementById('addDimBtn').classList.add('hidden');
+}
+
+function removeDepartmentDim() {
+  document.getElementById('dim-departments').classList.add('hidden');
+  document.getElementById('addDimBtn').classList.remove('hidden');
+}
+
+// ─── OPTIONAL FIELDS ───
+function addOptionalField(id) {
+  document.getElementById(`opt-${id}`).classList.remove('hidden');
+  document.getElementById(`add${id === 'obs' ? 'Obs' : 'Custom'}Btn`).disabled = true;
+  if (id === 'custom') openNewMapping(); // auto-open form on first add
+}
+
+function removeOptionalField(id) {
+  document.getElementById(`opt-${id}`).classList.add('hidden');
+  document.getElementById(`add${id === 'obs' ? 'Obs' : 'Custom'}Btn`).disabled = false;
+  if (id === 'custom') {
+    document.getElementById('custom-empty-state').classList.remove('hidden');
+    document.getElementById('new-mapping-form').classList.add('hidden');
+    document.getElementById('custom-mapping-list').classList.add('hidden');
+    document.getElementById('custom-add-more').classList.add('hidden');
+    document.getElementById('custom-save-footer').classList.add('hidden');
+    document.getElementById('custom-mapping-list').innerHTML = '';
+  }
+}
+
+function toggleOptField(id) {
+  const toggle = document.getElementById(`${id}-toggle`);
+  const body   = document.getElementById(`${id}-body`);
+  const isOn   = !toggle.classList.contains('off');
+  toggle.classList.toggle('off', isOn);
+  body.style.display = isOn ? 'none' : '';
+}
+
+// ─── SEPARATOR CHIPS ───
+function selectSep(el) {
+  el.closest('.sep-chips').querySelectorAll('.sep-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ─── CUSTOM MAPPING FORM ───
+let currentMappingType = 'standard';
+
+function openNewMapping() {
+  document.getElementById('custom-empty-state').classList.add('hidden');
+  document.getElementById('custom-add-more').classList.add('hidden');
+  document.getElementById('new-mapping-form').classList.remove('hidden');
+  document.getElementById('nmf-name').value = '';
+  setMappingType('standard');
+  setTimeout(() => document.getElementById('nmf-name').focus(), 50);
+}
+
+function closeNewMapping() {
+  document.getElementById('new-mapping-form').classList.add('hidden');
+  const list = document.getElementById('custom-mapping-list');
+  if (list.children.length > 0) {
+    list.classList.remove('hidden');
+    document.getElementById('custom-add-more').classList.remove('hidden');
+    document.getElementById('custom-save-footer').classList.remove('hidden');
+  } else {
+    document.getElementById('custom-empty-state').classList.remove('hidden');
+  }
+}
+
+function setMappingType(type) {
+  currentMappingType = type;
+  ['standard','variable'].forEach(t => {
+    document.getElementById(`nmf-tab-${t}`).classList.toggle('active', t === type);
+    document.getElementById(`nmf-panel-${t}`).classList.toggle('active', t === type);
+  });
+}
+
+function toggleNmfOmie(panelType) {
+  const sel = document.getElementById(`nmf-omie-${panelType}-select`);
+  const inp = document.getElementById(`nmf-omie-${panelType}-input`);
+  const btn = document.getElementById(`nmf-switch-${panelType}`);
+  const swapIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>`;
+  const isSelect = sel.style.display !== 'none';
+  sel.style.display = isSelect ? 'none' : '';
+  inp.style.display = isSelect ? '' : 'none';
+  btn.innerHTML = swapIcon + (isSelect ? 'Switch to Omie value' : 'Switch to fixed value');
+}
+
+function addNmfVariableRow() {
+  const row = document.createElement('div');
+  row.className = 'mapping-value-row';
+  row.innerHTML = `<select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select…</option><option>Viagem</option><option>Alimentação</option><option>Software</option></select><span class="mapping-arrow" style="text-align:center;">→</span><select class="select-input" style="font-size:13px;padding:7px 10px;"><option value="">Select…</option><option>Valor Documento</option><option>Tags</option></select><button class="del-row-btn" onclick="removeMappingRow(this)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>`;
+  document.getElementById('nmf-variable-rows').appendChild(row);
+}
+
+function createCustomMapping() {
+  const name = document.getElementById('nmf-name').value.trim();
+  if (!name) { showToast('⚠️ Enter a field name.'); return; }
+
+  const typeLabels = { standard: 'Standard 1:1', variable: 'Map by value' };
+  let clara = '', omie = '';
+
+  if (currentMappingType === 'standard') {
+    clara = document.getElementById('nmf-clara-standard').value;
+    const sel = document.getElementById('nmf-omie-standard-select');
+    const inp = document.getElementById('nmf-omie-standard-input');
+    omie = sel.style.display !== 'none' ? sel.value : inp.value;
+  } else {
+    clara = document.getElementById('nmf-clara-variable').value;
+    const sel = document.getElementById('nmf-omie-variable-select');
+    const inp = document.getElementById('nmf-omie-variable-input');
+    omie = sel.style.display !== 'none' ? sel.value : inp.value;
+  }
+
+  if (!clara || !omie) { showToast('⚠️ Select source and destination fields.'); return; }
+
+  const list = document.getElementById('custom-mapping-list');
+  const row  = document.createElement('div');
+  row.className = 'custom-mapping-row';
+  row.innerHTML = `
+    <span style="font-weight:600;">${name}</span>
+    <span class="mapping-type-tag">${typeLabels[currentMappingType]}</span>
+    <span style="color:var(--text-muted);font-size:13px;">${clara}</span>
+    <span style="color:var(--text-muted);">→</span>
+    <span style="color:var(--text-muted);font-size:13px;">${omie}</span>
+    <span class="spacer"></span>
+    <button class="cmr-del" onclick="this.closest('.custom-mapping-row').remove();updateCustomState();" title="Remove">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+    </button>`;
+  list.appendChild(row);
+
+  document.getElementById('new-mapping-form').classList.add('hidden');
+  list.classList.remove('hidden');
+  document.getElementById('custom-empty-state').classList.add('hidden');
+  document.getElementById('custom-add-more').classList.remove('hidden');
+  document.getElementById('custom-save-footer').classList.remove('hidden');
+}
+
+function updateCustomState() {
+  const list = document.getElementById('custom-mapping-list');
+  if (list.children.length === 0) {
+    list.classList.add('hidden');
+    document.getElementById('custom-add-more').classList.add('hidden');
+    document.getElementById('custom-save-footer').classList.add('hidden');
+    document.getElementById('custom-empty-state').classList.remove('hidden');
+  }
+}
+
+// ─── SYNC ───
+function selectFreq(btn) {
+  btn.closest('.frequency-options').querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ─── SAVE ───
+function saveIntegration() {
+  const name = getIntegrationName() || 'Omie ERP Integration';
+
+  // Mark all steps done in stepper
+  document.getElementById('wizardProgress').style.width = '100%';
+  [1,2,3,4].forEach(i => {
+    const nav = document.getElementById('step' + i + '-nav');
+    nav.classList.remove('active');
+    nav.classList.add('done');
+    nav.querySelector('.stepper-dot').innerHTML = '✓';
+  });
+
+  // Hide step 4 and footer
+  document.getElementById('step4').classList.add('hidden');
+  document.getElementById('wizardFooter').classList.add('hidden');
+
+  // Read which flow type was selected
+  const selected = document.querySelector('input[name="omie-type"]:checked')?.value || 'pagar';
+  const selectedLabel = selected === 'pagar' ? 'Contas a pagar' : 'Contas a receber';
+  const otherLabel    = selected === 'pagar' ? 'Contas a receber' : 'Contas a pagar';
+
+  // Show "set up next flow?" screen
+  document.getElementById('dupWhenTitle').textContent = `${selectedLabel} is live!`;
+  document.getElementById('dupWhenTarget').textContent = otherLabel;
+  document.getElementById('dupWhenTargetBtn').textContent = otherLabel;
+
+  document.getElementById('stepDupWhen').classList.remove('hidden');
+}
+
+function _otherFlowLabel() {
+  const v = document.querySelector('input[name="omie-type"]:checked')?.value || 'pagar';
+  return v === 'pagar' ? 'Contas a receber' : 'Contas a pagar';
+}
+function _selectedFlowLabel() {
+  const v = document.querySelector('input[name="omie-type"]:checked')?.value || 'pagar';
+  return v === 'pagar' ? 'Contas a pagar' : 'Contas a receber';
+}
+
+function setupNextNow() {
+  const other = _otherFlowLabel();
+  document.getElementById('stepDupWhen').classList.add('hidden');
+  document.getElementById('dupHowTarget').textContent = other;
+  document.querySelectorAll('.dup-how-source-label').forEach(el => el.textContent = _selectedFlowLabel());
+  document.getElementById('stepDupHow').classList.remove('hidden');
+}
+
+function openSecondMapping(mode) {
+  const other = _otherFlowLabel();
+  document.getElementById('stepDupHow').classList.add('hidden');
+
+  // Adopt step3 into the second mapping body
+  const step3   = document.getElementById('step3');
+  const body    = document.getElementById('secondMappingBody');
+  step3.classList.remove('hidden');
+  body.appendChild(step3);
+
+  // Reset if starting from scratch
+  if (mode === 'scratch') {
+    step3.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+    step3.querySelectorAll('input[type="text"], input[type="number"]').forEach(i => {
+      if (!i.closest('.sync-inline-card')) i.value = '';
+    });
+    document.getElementById('secondMappingDesc').textContent =
+      `Configure each field mapping for ${other}.`;
+  } else {
+    document.getElementById('secondMappingDesc').textContent =
+      `Mappings copied from ${_selectedFlowLabel()} — review and adjust before saving.`;
+  }
+
+  document.getElementById('secondMappingBadge').textContent = other;
+  document.getElementById('stepSecondMapping').classList.remove('hidden');
+
+  // Footer: Back + Save
+  const footer = document.getElementById('wizardFooter');
+  footer.classList.remove('hidden');
+  footer.innerHTML = `
+    <button class="btn-link" onclick="backToHowChoice()">← Back</button>
+    <div class="spacer"></div>
+    <button class="btn-primary-medium" onclick="saveSecondMapping()">
+      Save ${other}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:4px;"><polyline points="20 6 9 17 4 12"/></svg>
+    </button>`;
+}
+
+function backToHowChoice() {
+  // Return step3 to wizard
+  _restoreStep3();
+  document.getElementById('stepSecondMapping').classList.add('hidden');
+  document.getElementById('wizardFooter').classList.add('hidden');
+  document.getElementById('stepDupHow').classList.remove('hidden');
+}
+
+function saveSecondMapping() {
+  _restoreStep3();
+  document.getElementById('stepSecondMapping').classList.add('hidden');
+  document.getElementById('wizardFooter').classList.add('hidden');
+  const name = getIntegrationName() || 'Omie ERP Integration';
+  showSuccessScreen(`Both flows are live! <strong>"${name}"</strong> is now active for Contas a pagar and Contas a receber.`);
+}
+
+function _restoreStep3() {
+  const step3 = document.getElementById('step3');
+  const step4 = document.getElementById('step4');
+  step3.classList.add('hidden');
+  step4.parentNode.insertBefore(step3, step4);
+}
+
+function skipDuplicate() {
+  document.getElementById('stepDupWhen').classList.add('hidden');
+  const name = getIntegrationName() || 'Omie ERP Integration';
+  showSuccessScreen(`<strong>"${name}"</strong> is live! You can set up ${_otherFlowLabel()} anytime from the Integrations page.`);
+}
+
+function showSuccessScreen(desc) {
+  const success = document.getElementById('stepSuccess');
+  success.classList.remove('hidden');
+  success.style.display = 'flex';
+  document.getElementById('successDesc').innerHTML = desc;
+}
+
+function saveAsDraft() {
+  showToast('Draft saved. You can resume from the Integrations page.');
+  setTimeout(() => closeWizard(), 1000);
+}
+
+function finishWizard() {
+  document.getElementById('wizardOverlay').classList.remove('open');
+
+  // Update Omie card badge
+  const omieCard = document.getElementById('omieCard');
+  let badge = omieCard.querySelector('.card-status-badge');
+  if (!badge) {
+    badge = document.createElement('span');
+    badge.className = 'card-status-badge';
+    omieCard.querySelector('.card-header').appendChild(badge);
+  }
+  badge.className = 'card-status-badge status-active';
+  badge.textContent = 'Active';
+
+  // Populate read-only fields
+  document.getElementById('ro-name').textContent = getIntegrationName() || 'Omie ERP Integration';
+  document.getElementById('ro-sync-name').textContent = document.getElementById('syncName').value || 'Daily card sync';
+  const freqBtn = document.querySelector('#step4 .freq-btn.active');
+  document.getElementById('ro-freq').textContent = freqBtn ? freqBtn.textContent : 'Daily';
+  document.getElementById('ro-hist').textContent = document.getElementById('syncHistorical').value || 'Current month';
+
+  // Show page tabs and switch to Omie ERP tab
+  document.getElementById('pageIntegTabs').classList.remove('hidden');
+  switchPageTab('omie');
+  showToast('🎉 Omie ERP integration is live!');
+}
+
+function switchPageTab(tab) {
+  ['overview','omie'].forEach(t => {
+    document.getElementById(`pitab-${t}`).classList.toggle('active', t === tab);
+    document.getElementById(`pitab-panel-${t}`).classList.toggle('hidden', t !== tab);
+  });
+}
+
+
+// ─── EDIT CONFIG OVERLAY ───
+function openEditConfig() {
+  const overlay = document.getElementById('editConfigOverlay');
+  const body    = document.getElementById('ecfgBody');
+  const step3   = document.getElementById('step3');
+  const step4   = document.getElementById('step4');
+
+  // Move step3 node into overlay body (no duplication)
+  body.appendChild(step3);
+  step3.classList.remove('hidden');
+
+  // Store reference to restore point
+  overlay._restoreBeforeStep4 = step4;
+
+  overlay.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeEditConfig() {
+  const overlay = document.getElementById('editConfigOverlay');
+  const body    = document.getElementById('ecfgBody');
+  const step3   = body.querySelector('#step3');
+
+  if (step3) {
+    const step4 = document.getElementById('step4');
+    step3.classList.add('hidden');
+    step4.parentNode.insertBefore(step3, step4);
+  }
+
+  overlay.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function saveEditConfig() {
+  closeEditConfig();
+  showToast('Configuration saved.');
+}
+
+// ─── TOAST ───
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── SPIN KEYFRAME ───
+const style = document.createElement('style');
+style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
+document.head.appendChild(style);
+</script>
+
+<div id="editConfigOverlay" class="hidden">
+  <div class="ecfg-topbar">
+    <div class="ecfg-topbar-title">Edit mapping configuration</div>
+    <span class="ecfg-topbar-badge">Omie ERP</span>
+    <div style="flex:1;"></div>
+    <button class="ecfg-close" onclick="closeEditConfig()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="ecfg-body" id="ecfgBody"></div>
+  <div class="ecfg-footer">
+    <button class="wizard-footer btn-link" onclick="closeEditConfig()">Cancel</button>
+    <div style="flex:1;"></div>
+    <button class="btn-primary-medium" onclick="saveEditConfig()">Save configuration <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:4px;vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg></button>
+  </div>
+</div>
+</body>
+</html>

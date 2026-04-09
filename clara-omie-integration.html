@@ -1136,6 +1136,7 @@
   .badge-connected     { background: var(--bg-success);  color: var(--content-success);  }
   .badge-pending       { background: var(--bg-warning);  color: var(--content-warning);  }
   .badge-not-connected { background: var(--bg-critical); color: var(--content-critical); }
+  .badge-testing       { background: var(--bg-highlight); color: var(--content-low); display: inline-flex; align-items: center; gap: 5px; }
 
   .auth-block-body { padding: 20px; }
 
@@ -3530,11 +3531,10 @@
                     </div>
                   </div>
                   <div class="test-connection-row">
-                    <button class="btn-outline" onclick="testConnection()">
+                    <button class="btn-outline" id="testConnectionBtn" onclick="testConnection()">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                       Test connection
                     </button>
-                    <div class="connection-status hidden" id="connStatus"></div>
                   </div>
                 </div>
               </div>
@@ -4415,8 +4415,18 @@ function checkStep2Ready() {
   const s = document.getElementById('omieAppSecret').value.trim();
   const nextBtn = document.getElementById('wizardNext');
   const bothFilled = !!(k && s);
+
+  // If user edits keys after connecting, reset connection state
+  if (omieConnected) {
+    omieConnected = false;
+    const badge = document.getElementById('omieConnectBadge');
+    badge.className = 'auth-block-badge badge-pending';
+    badge.textContent = 'Not connected';
+    document.getElementById('testConnectionBtn').style.display = '';
+  }
+
   nextBtn.disabled = !bothFilled;
-  if (bothFilled && !omieConnected) {
+  if (bothFilled) {
     const plugIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>';
     nextBtn.innerHTML = plugIcon + ' Connect &amp; continue';
   }
@@ -4440,22 +4450,21 @@ const arrowSvg   = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" 
 
 function markConnected() {
   omieConnected = true;
-  const status  = document.getElementById('connStatus');
+  const badge   = document.getElementById('omieConnectBadge');
   const nextBtn = document.getElementById('wizardNext');
-  status.classList.add('success');
-  status.innerHTML = checkSvg + ' Connected successfully';
-  document.getElementById('omieConnectBadge').textContent = 'Connected';
-  document.getElementById('omieConnectBadge').className = 'auth-block-badge badge-connected';
+  badge.className = 'auth-block-badge badge-connected';
+  badge.innerHTML = checkSvg + ' Connected';
+  document.getElementById('testConnectionBtn').style.display = 'none';
   nextBtn.disabled = false;
   nextBtn.innerHTML = 'Continue ' + arrowSvg;
 }
 
 function simulateConnect(onSuccess) {
-  const status  = document.getElementById('connStatus');
+  const badge   = document.getElementById('omieConnectBadge');
   const nextBtn = document.getElementById('wizardNext');
-  status.classList.remove('hidden', 'success', 'error');
-  status.innerHTML = spinnerSvg + ' Testing...';
-  status.style.color = 'var(--text-muted)';
+  badge.className = 'auth-block-badge badge-testing';
+  badge.innerHTML = spinnerSvg + ' Testing…';
+  document.getElementById('testConnectionBtn').style.display = 'none';
   nextBtn.disabled = true;
   setTimeout(() => {
     markConnected();

@@ -4137,8 +4137,6 @@ function showStep(n) {
   // back button
   document.getElementById('wizardBack').style.display = n > 1 ? 'block' : 'none';
 
-  // step 1 starts locked until use case + name are both set
-  if (n === 1) checkStep1Ready();
 
   // silently carry the integration name forward as the connection name
   if (n === 2) {
@@ -4150,23 +4148,23 @@ function showStep(n) {
   const arrowIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
   const plugIcon  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>';
 
-  if (n === 2) {
+  if (n === 1) {
+    nextBtn.innerHTML = 'Continue ' + arrowIcon;
+    nextBtn.disabled = !getIntegrationName();
+  } else if (n === 2) {
     const k = document.getElementById('omieAppKey').value.trim();
     const s = document.getElementById('omieAppSecret').value.trim();
-    nextBtn.disabled = !(k && s) && !omieConnected;
+    const bothFilled = !!(k && s);
+    nextBtn.disabled = !bothFilled && !omieConnected;
     nextBtn.innerHTML = omieConnected
       ? 'Continue ' + arrowIcon
       : plugIcon + ' Connect &amp; continue';
   } else if (n === 3) {
-    nextBtn.disabled = false;
     nextBtn.innerHTML = 'Continue ' + arrowIcon;
     checkStep3Ready();
   } else if (n === 4) {
     nextBtn.disabled = false;
     nextBtn.innerHTML = 'Save integration ' + arrowIcon;
-  } else {
-    nextBtn.disabled = false;
-    nextBtn.innerHTML = 'Continue ' + arrowIcon;
   }
 }
 

@@ -3718,16 +3718,16 @@
             <div class="mapping-section-header" onclick="toggleSection(3)">
               <div class="mapping-section-number">3</div>
               <div class="mapping-section-title">Date mappings</div>
-              <span class="mapping-badge completed">Completed</span>
+              <span class="mapping-badge missing" id="sec3badge">Missing</span>
               <svg class="chevron" id="chev3" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
             <div class="mapping-section-body" id="sec3">
               <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">These defaults work for most setups. Override any Clara field if your accounting workflow uses different dates.</p>
               <table class="mapping-table">
                 <tr><th>Clara field</th><th></th><th>Omie destination</th></tr>
-                <tr><td><select class="select-input" style="width:180px;font-size:13px;padding:6px 10px;"><option>Operation Date</option><option>Accounting Date</option><option>Transaction Date</option></select></td><td class="mapping-arrow">→</td><td style="font-size:13px;color:var(--text-secondary);">Entry date <span style="color:var(--text-muted);font-family:monospace;font-size:12px;">(data_entrada)</span></td></tr>
-                <tr><td><select class="select-input" style="width:180px;font-size:13px;padding:6px 10px;"><option>Accounting Date</option><option>Operation Date</option><option>Transaction Date</option></select></td><td class="mapping-arrow">→</td><td style="font-size:13px;color:var(--text-secondary);">Forecast date <span style="color:var(--text-muted);font-family:monospace;font-size:12px;">(data_previsao)</span></td></tr>
-                <tr><td><select class="select-input" style="width:180px;font-size:13px;padding:6px 10px;"><option>Transaction Date</option><option>Operation Date</option><option>Accounting Date</option></select></td><td class="mapping-arrow">→</td><td style="font-size:13px;color:var(--text-secondary);">Due date <span style="color:var(--text-muted);font-family:monospace;font-size:12px;">(data_vencimento)</span></td></tr>
+                <tr><td><select class="select-input" style="width:180px;font-size:13px;padding:6px 10px;" onchange="checkDateComplete()"><option value="">Select Clara field…</option><option>Operation Date</option><option>Accounting Date</option><option>Transaction Date</option></select></td><td class="mapping-arrow">→</td><td style="font-size:13px;color:var(--text-secondary);">Entry date <span style="color:var(--text-muted);font-family:monospace;font-size:12px;">(data_entrada)</span></td></tr>
+                <tr><td><select class="select-input" style="width:180px;font-size:13px;padding:6px 10px;" onchange="checkDateComplete()"><option value="">Select Clara field…</option><option>Accounting Date</option><option>Operation Date</option><option>Transaction Date</option></select></td><td class="mapping-arrow">→</td><td style="font-size:13px;color:var(--text-secondary);">Forecast date <span style="color:var(--text-muted);font-family:monospace;font-size:12px;">(data_previsao)</span></td></tr>
+                <tr><td><select class="select-input" style="width:180px;font-size:13px;padding:6px 10px;" onchange="checkDateComplete()"><option value="">Select Clara field…</option><option>Transaction Date</option><option>Operation Date</option><option>Accounting Date</option></select></td><td class="mapping-arrow">→</td><td style="font-size:13px;color:var(--text-secondary);">Due date <span style="color:var(--text-muted);font-family:monospace;font-size:12px;">(data_vencimento)</span></td></tr>
               </table>
             </div>
           </div>
@@ -4309,6 +4309,17 @@ function checkCatalogComplete() {
   checkStep3Ready();
 }
 
+function checkDateComplete() {
+  const dateSelects = document.querySelectorAll('#sec3 select');
+  const filled = Array.from(dateSelects).filter(s => s.value).length;
+  const total = dateSelects.length;
+  const badge = document.getElementById('sec3badge');
+  if (filled === total) { badge.textContent = 'Completed'; badge.className = 'mapping-badge completed'; }
+  else if (filled > 0)  { badge.textContent = 'Partially completed'; badge.className = 'mapping-badge partial'; }
+  else                  { badge.textContent = 'Missing'; badge.className = 'mapping-badge missing'; }
+  checkStep3Ready();
+}
+
 function checkStep3Ready() {
   if (currentStep !== 3) return;
   const required = ['cat', 'sup', 'bank'];
@@ -4317,7 +4328,6 @@ function checkStep3Ready() {
     const sel = document.querySelector(`#dimopt-default-${d} .catalog-required-select`);
     return sel && sel.value;
   });
-  // Date selects always have a pre-selected value — check none are blank just in case
   const dateSelects = document.querySelectorAll('#sec3 select');
   const dateDone = Array.from(dateSelects).every(s => s.value);
   const nextBtn = document.getElementById('wizardNext');

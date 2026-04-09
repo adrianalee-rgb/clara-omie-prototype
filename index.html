@@ -2789,6 +2789,217 @@
     flex-shrink: 0;
   }
 
+  /* ── Sync logs overlay ── */
+  #syncLogsOverlay {
+    position: fixed; inset: 0; z-index: 400;
+    background: var(--bg-page);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  #syncLogsOverlay.hidden { display: none; }
+
+  .logs-filter-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-highlight);
+    border-radius: var(--radius-md);
+    padding: 3px;
+  }
+  .logs-filter-tab {
+    padding: 5px 14px;
+    border-radius: 6px;
+    border: none;
+    background: none;
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    font-weight: 500;
+    color: var(--content-medium);
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .logs-filter-tab.active {
+    background: var(--bg-surface);
+    color: var(--content-high);
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+
+  .logs-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 48px;
+    max-width: 860px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .logs-summary {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 32px;
+    background: var(--bg-surface);
+  }
+  .logs-summary-stat {
+    flex: 1;
+    padding: 20px 24px;
+    border-right: 1px solid var(--border);
+  }
+  .logs-summary-stat:last-child { border-right: none; }
+  .logs-summary-value {
+    font-size: var(--h3-size);
+    font-weight: var(--h3-w);
+    line-height: var(--h3-lh);
+    color: var(--content-high);
+    margin-bottom: 2px;
+  }
+  .logs-summary-label {
+    font-size: var(--cap-size);
+    color: var(--content-low);
+  }
+
+  .logs-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--bg-surface);
+  }
+
+  .log-entry {
+    border-bottom: 1px solid var(--border);
+  }
+  .log-entry:last-child { border-bottom: none; }
+  .log-entry-error { cursor: pointer; }
+  .log-entry-error:hover { background: var(--bg-highlight); }
+
+  .log-entry-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+
+  .log-status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-success { background: var(--content-success); }
+  .dot-error   { background: var(--content-critical); }
+  .dot-warning { background: #c8850a; }
+
+  .log-entry-info { flex: 1; }
+  .log-entry-title {
+    font-size: var(--b2-size);
+    font-weight: 600;
+    color: var(--content-high);
+    line-height: var(--b2-lh);
+  }
+  .log-entry-meta {
+    font-size: var(--cap-size);
+    color: var(--content-low);
+    margin-top: 2px;
+  }
+
+  .log-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .log-badge-success { background: var(--bg-success); color: var(--content-success); }
+  .log-badge-error   { background: var(--bg-critical); color: var(--content-critical); }
+  .log-badge-warning { background: var(--bg-warning); color: var(--content-warning); }
+
+  .log-chevron {
+    color: var(--content-low);
+    flex-shrink: 0;
+    transition: transform .2s;
+  }
+  .log-entry.open .log-chevron { transform: rotate(180deg); }
+
+  .log-detail {
+    margin: 0 20px 16px 40px;
+    border: 1px solid var(--border-critical);
+    border-radius: var(--radius-md);
+    background: var(--bg-critical);
+    overflow: hidden;
+  }
+  .log-entry:has(.log-badge-warning) .log-detail {
+    border-color: #c8a84b;
+    background: var(--bg-warning);
+  }
+
+  .log-detail-error-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px 10px;
+    font-size: var(--b2-size);
+    font-weight: 600;
+    color: var(--content-critical);
+  }
+  .log-entry:has(.log-badge-warning) .log-detail-error-title { color: var(--content-warning); }
+
+  .log-detail-desc {
+    padding: 0 16px 12px;
+    font-size: var(--b2-size);
+    color: var(--content-medium);
+    line-height: var(--b2-lh);
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    margin: 0;
+  }
+
+  .log-detail-missing {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+  .log-unmapped-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .log-unmapped-chip {
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    font-size: var(--cap-size);
+    font-weight: 600;
+    color: var(--content-medium);
+  }
+
+  .log-detail-fix { padding: 12px 16px 16px; }
+  .log-detail-fix-label {
+    font-size: var(--cap-size);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--content-low);
+    margin-bottom: 8px;
+  }
+  .log-detail-fix-steps {
+    margin: 0 0 14px 16px;
+    padding: 0;
+    font-size: var(--b2-size);
+    color: var(--content-medium);
+    line-height: 1.7;
+  }
+  .log-detail-cta {
+    display: inline-flex;
+    padding: 8px 16px;
+    background: var(--primary);
+    color: var(--on-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .log-detail-cta:hover { background: var(--primary-hover); }
+
   /* ── Duplicate flow shared ── */
   .dup-wrap {
     display: flex;
@@ -3278,7 +3489,7 @@
           <div class="id-side-title">Actions</div>
           <button class="id-action-btn primary"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Run sync now</button>
           <button class="id-action-btn" onclick="openEditConfig()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit configuration</button>
-          <button class="id-action-btn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>View sync logs</button>
+          <button class="id-action-btn" onclick="openSyncLogs()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>View sync logs</button>
         </div>
       </div>
 
@@ -4898,6 +5109,40 @@ function switchPageTab(tab) {
 }
 
 
+// ─── SYNC LOGS OVERLAY ───
+function openSyncLogs() {
+  document.getElementById('syncLogsOverlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSyncLogs() {
+  document.getElementById('syncLogsOverlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function toggleLogDetail(entry) {
+  const detail = entry.querySelector('.log-detail');
+  const isOpen = entry.classList.contains('open');
+  // Close all others
+  document.querySelectorAll('.log-entry.open').forEach(e => {
+    e.classList.remove('open');
+    e.querySelector('.log-detail').classList.add('hidden');
+  });
+  if (!isOpen) {
+    entry.classList.add('open');
+    detail.classList.remove('hidden');
+  }
+}
+
+function filterLogs(status, btn) {
+  document.querySelectorAll('.logs-filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.log-entry').forEach(entry => {
+    const match = status === 'all' || entry.dataset.status === status;
+    entry.style.display = match ? '' : 'none';
+  });
+}
+
 // ─── EDIT CONFIG OVERLAY ───
 function openEditConfig() {
   const overlay = document.getElementById('editConfigOverlay');
@@ -4949,6 +5194,214 @@ const style = document.createElement('style');
 style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
 document.head.appendChild(style);
 </script>
+
+<div id="syncLogsOverlay" class="hidden">
+  <div class="ecfg-topbar">
+    <button class="ecfg-close" onclick="closeSyncLogs()" style="margin-right:4px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+    </button>
+    <div class="ecfg-topbar-title">Sync logs</div>
+    <span class="ecfg-topbar-badge">Omie ERP</span>
+    <div style="flex:1;"></div>
+    <!-- Filter tabs -->
+    <div class="logs-filter-tabs">
+      <button class="logs-filter-tab active" onclick="filterLogs('all', this)">All</button>
+      <button class="logs-filter-tab" onclick="filterLogs('success', this)">Success</button>
+      <button class="logs-filter-tab" onclick="filterLogs('error', this)">Errors</button>
+    </div>
+  </div>
+
+  <div class="logs-body">
+
+    <!-- Summary row -->
+    <div class="logs-summary">
+      <div class="logs-summary-stat">
+        <div class="logs-summary-value">14</div>
+        <div class="logs-summary-label">Total runs</div>
+      </div>
+      <div class="logs-summary-stat">
+        <div class="logs-summary-value" style="color:var(--content-success);">11</div>
+        <div class="logs-summary-label">Successful</div>
+      </div>
+      <div class="logs-summary-stat">
+        <div class="logs-summary-value" style="color:var(--content-critical);">3</div>
+        <div class="logs-summary-label">With errors</div>
+      </div>
+      <div class="logs-summary-stat">
+        <div class="logs-summary-value">521</div>
+        <div class="logs-summary-label">Records synced</div>
+      </div>
+    </div>
+
+    <!-- Log list -->
+    <div class="logs-list" id="logsList">
+
+      <!-- Entry: Success -->
+      <div class="log-entry" data-status="success">
+        <div class="log-entry-main">
+          <div class="log-status-dot dot-success"></div>
+          <div class="log-entry-info">
+            <div class="log-entry-title">Apr 9, 2026 — 06:00 AM</div>
+            <div class="log-entry-meta">47 records synced · 12s · Contas a pagar</div>
+          </div>
+          <span class="log-badge log-badge-success">Success</span>
+        </div>
+      </div>
+
+      <!-- Entry: Success -->
+      <div class="log-entry" data-status="success">
+        <div class="log-entry-main">
+          <div class="log-status-dot dot-success"></div>
+          <div class="log-entry-info">
+            <div class="log-entry-title">Apr 8, 2026 — 06:00 AM</div>
+            <div class="log-entry-meta">31 records synced · 9s · Contas a pagar</div>
+          </div>
+          <span class="log-badge log-badge-success">Success</span>
+        </div>
+      </div>
+
+      <!-- Entry: Error (expandable) -->
+      <div class="log-entry log-entry-error" data-status="error" onclick="toggleLogDetail(this)">
+        <div class="log-entry-main">
+          <div class="log-status-dot dot-error"></div>
+          <div class="log-entry-info">
+            <div class="log-entry-title">Apr 7, 2026 — 06:00 AM</div>
+            <div class="log-entry-meta">0 records synced · Failed · Contas a pagar</div>
+          </div>
+          <span class="log-badge log-badge-error">Error</span>
+          <svg class="log-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="log-detail hidden">
+          <div class="log-detail-error-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Authentication failed — Invalid App Secret
+          </div>
+          <p class="log-detail-desc">The App Secret used for this sync was rejected by Omie's API. This usually happens when the secret has been rotated or revoked in the Omie developer portal.</p>
+          <div class="log-detail-fix">
+            <div class="log-detail-fix-label">How to fix</div>
+            <ol class="log-detail-fix-steps">
+              <li>Go to <strong>developer.omie.com.br</strong> and log in.</li>
+              <li>Open your app and copy the current <strong>App Secret</strong>.</li>
+              <li>Return here and click <strong>Edit configuration → Credentials</strong> to update it.</li>
+            </ol>
+            <button class="log-detail-cta" onclick="event.stopPropagation(); openEditConfig()">Update credentials →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entry: Success -->
+      <div class="log-entry" data-status="success">
+        <div class="log-entry-main">
+          <div class="log-status-dot dot-success"></div>
+          <div class="log-entry-info">
+            <div class="log-entry-title">Apr 6, 2026 — 06:00 AM</div>
+            <div class="log-entry-meta">58 records synced · 15s · Contas a pagar</div>
+          </div>
+          <span class="log-badge log-badge-success">Success</span>
+        </div>
+      </div>
+
+      <!-- Entry: Partial error (expandable) -->
+      <div class="log-entry log-entry-error" data-status="error" onclick="toggleLogDetail(this)">
+        <div class="log-entry-main">
+          <div class="log-status-dot dot-warning"></div>
+          <div class="log-entry-info">
+            <div class="log-entry-title">Apr 5, 2026 — 06:00 AM</div>
+            <div class="log-entry-meta">39 of 52 records synced · Contas a pagar</div>
+          </div>
+          <span class="log-badge log-badge-warning">Partial</span>
+          <svg class="log-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="log-detail hidden">
+          <div class="log-detail-error-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            13 records skipped — Unmapped category value
+          </div>
+          <p class="log-detail-desc">13 transactions had a Clara category that has no corresponding Omie value in your mapping. These records were skipped and not sent to Omie.</p>
+          <div class="log-detail-missing">
+            <div class="log-detail-fix-label">Unmapped values</div>
+            <div class="log-unmapped-chips">
+              <span class="log-unmapped-chip">Outros</span>
+              <span class="log-unmapped-chip">Sem categoria</span>
+            </div>
+          </div>
+          <div class="log-detail-fix">
+            <div class="log-detail-fix-label">How to fix</div>
+            <ol class="log-detail-fix-steps">
+              <li>Go to <strong>Edit configuration → Field mapping → Catalog mappings</strong>.</li>
+              <li>Under <strong>Categories</strong>, add a row for each unmapped value above.</li>
+              <li>Map each to its corresponding Omie category and save.</li>
+            </ol>
+            <button class="log-detail-cta" onclick="event.stopPropagation(); openEditConfig()">Go to field mapping →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entry: Success -->
+      <div class="log-entry" data-status="success">
+        <div class="log-entry-main">
+          <div class="log-status-dot dot-success"></div>
+          <div class="log-entry-info">
+            <div class="log-entry-title">Apr 4, 2026 — 06:00 AM</div>
+            <div class="log-entry-meta">44 records synced · 11s · Contas a pagar</div>
+          </div>
+          <span class="log-badge log-badge-success">Success</span>
+        </div>
+      </div>
+
+      <!-- Entry: Error (expandable) -->
+      <div class="log-entry log-entry-error" data-status="error" onclick="toggleLogDetail(this)">
+        <div class="log-entry-main">
+          <div class="log-status-dot dot-error"></div>
+          <div class="log-entry-info">
+            <div class="log-entry-title">Apr 3, 2026 — 06:00 AM</div>
+            <div class="log-entry-meta">0 records synced · Failed · Contas a pagar</div>
+          </div>
+          <span class="log-badge log-badge-error">Error</span>
+          <svg class="log-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="log-detail hidden">
+          <div class="log-detail-error-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Omie API timeout — Request exceeded 30s limit
+          </div>
+          <p class="log-detail-desc">Omie's API did not respond within the allowed time window. This is typically a temporary issue on Omie's side and usually resolves on the next scheduled sync.</p>
+          <div class="log-detail-fix">
+            <div class="log-detail-fix-label">How to fix</div>
+            <ol class="log-detail-fix-steps">
+              <li>Wait for the next scheduled sync — it will retry automatically.</li>
+              <li>If the issue persists for more than 2 consecutive runs, check <strong>status.omie.com.br</strong> for ongoing incidents.</li>
+              <li>You can also trigger a manual sync using <strong>Run sync now</strong>.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- More successes -->
+      <div class="log-entry" data-status="success">
+        <div class="log-entry-main">
+          <div class="log-status-dot dot-success"></div>
+          <div class="log-entry-info">
+            <div class="log-entry-title">Apr 2, 2026 — 06:00 AM</div>
+            <div class="log-entry-meta">29 records synced · 8s · Contas a pagar</div>
+          </div>
+          <span class="log-badge log-badge-success">Success</span>
+        </div>
+      </div>
+      <div class="log-entry" data-status="success">
+        <div class="log-entry-main">
+          <div class="log-status-dot dot-success"></div>
+          <div class="log-entry-info">
+            <div class="log-entry-title">Apr 1, 2026 — 06:00 AM</div>
+            <div class="log-entry-meta">63 records synced · 18s · Contas a pagar</div>
+          </div>
+          <span class="log-badge log-badge-success">Success</span>
+        </div>
+      </div>
+
+    </div><!-- /logs-list -->
+  </div><!-- /logs-body -->
+</div>
 
 <div id="editConfigOverlay" class="hidden">
   <div class="ecfg-topbar">

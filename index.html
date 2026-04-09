@@ -2940,6 +2940,118 @@
     letter-spacing: .02em;
     margin-bottom: 10px;
   }
+
+  /* ── Frequency radio list ── */
+  .freq-radio-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .freq-radio-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font);
+  }
+  .freq-radio-option:last-of-type { border-bottom: none; }
+  .freq-radio-option input[type="radio"] {
+    width: 18px; height: 18px;
+    accent-color: var(--primary);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .freq-radio-label {
+    font-size: var(--b1-size);
+    font-weight: 400;
+    color: var(--content-high);
+    line-height: var(--b1-lh);
+  }
+  .freq-radio-panel {
+    padding: 0 0 16px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .freq-radio-panel.hidden { display: none; }
+  .freq-sub-label {
+    display: block;
+    font-size: var(--b2-size);
+    font-weight: 600;
+    color: var(--content-high);
+    margin-bottom: 8px;
+    line-height: var(--b2-lh);
+  }
+  .freq-time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .freq-sel { flex: 1; min-width: 0; }
+  .freq-colon {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--content-medium);
+    flex-shrink: 0;
+  }
+  .freq-time-row, .freq-tz-row, .freq-grace-row { display: flex; flex-direction: column; }
+  .freq-day-chips-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .freq-day-chip {
+    padding: 8px 12px;
+    border: 1.5px solid var(--border-interactive);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    font-weight: 500;
+    color: var(--content-medium);
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+    min-width: 48px;
+    text-align: center;
+  }
+  .freq-day-chip.active {
+    border-color: var(--primary);
+    background: var(--accent-light);
+    color: var(--primary);
+    font-weight: 600;
+  }
+  .freq-day-chip:hover:not(.active) { border-color: var(--primary-outline); background: var(--bg-hover); }
+  .freq-day-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+  }
+  .freq-day-grid .freq-day-chip { min-width: 0; padding: 8px 4px; }
+
+  /* ── Extra stepper item (second flow) ── */
+  .stepper-connector-extra {
+    border-left: 2px dashed var(--border-interactive);
+    margin-left: 15px;
+  }
+  .stepper-item-extra {
+    opacity: 0.75;
+  }
+  .stepper-item-extra.active { opacity: 1; background: var(--bg-info); }
+  .stepper-dot-extra {
+    background: var(--bg-surface) !important;
+    border: 2px dashed var(--border-interactive) !important;
+    color: var(--content-low) !important;
+    font-size: 14px !important;
+  }
+  .stepper-item-extra.active .stepper-dot-extra {
+    background: var(--bg-info) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+  }
+  .stepper-item-extra .stepper-item-name { color: var(--content-low); }
+  .stepper-item-extra.active .stepper-item-name { color: var(--primary); }
 </style>
 </head>
 <body>
@@ -3312,6 +3424,14 @@
           <div class="stepper-item-text">
             <div class="stepper-item-name">Sync schedule</div>
             <div class="stepper-item-sub">Set when data syncs</div>
+          </div>
+        </div>
+        <div class="stepper-connector stepper-connector-extra hidden" id="stepSecond-connector"></div>
+        <div class="stepper-item stepper-item-extra hidden" id="stepSecond-nav">
+          <div class="stepper-dot stepper-dot-extra">+</div>
+          <div class="stepper-item-text">
+            <div class="stepper-item-name" id="stepSecond-nav-name">Set up Contas a receber</div>
+            <div class="stepper-item-sub">Duplicate or new mapping</div>
           </div>
         </div>
       </aside>
@@ -3938,44 +4058,142 @@
         <div id="step4" class="hidden">
           <div class="step-heading">Set your sync schedule</div>
           <p class="step-subtext">Define when Clara automatically pushes data to Omie.</p>
+
           <div class="sync-inline-card">
-            <div class="sync-form-row">
-              <label class="field-label">Sync name</label>
-              <input class="text-input" type="text" id="syncName" value="Daily card sync" placeholder="e.g. Daily card sync" />
-            </div>
+            <!-- Historical data -->
             <div class="sync-form-row">
               <label class="field-label">Historical data</label>
               <select class="select-input" id="syncHistorical">
+                <option value="">Select range…</option>
                 <option>Current month</option>
                 <option>Last 30 days</option>
                 <option>Last 90 days</option>
                 <option>Custom date range</option>
               </select>
             </div>
-            <div class="sync-form-row">
-              <label class="field-label">Frequency</label>
-              <div class="frequency-options">
-                <button class="freq-btn active" onclick="selectFreq(this)">Daily</button>
-                <button class="freq-btn" onclick="selectFreq(this)">Weekly</button>
-                <button class="freq-btn" onclick="selectFreq(this)">Monthly</button>
-                <button class="freq-btn" onclick="selectFreq(this)">Custom</button>
-              </div>
-            </div>
-            <div class="sync-form-row">
-              <label class="field-label">Run time</label>
-              <div style="display:flex;gap:10px;">
-                <input class="text-input" type="time" value="06:00" style="width:130px;" />
-                <select class="select-input" style="flex:1;">
-                  <option>America/Sao_Paulo</option>
-                  <option>America/Mexico_City</option>
-                  <option>UTC</option>
-                </select>
-              </div>
-            </div>
+
+            <!-- Frequency -->
             <div class="sync-form-row" style="margin-bottom:0;">
-              <label class="field-label">Days of grace</label>
-              <input class="text-input" type="number" value="2" min="0" max="30" style="width:100px;" />
-              <div class="field-hint">Clara will look back this many days before each run to capture late-posted transactions.</div>
+              <label class="field-label">Frequency</label>
+              <div class="freq-radio-list">
+
+                <!-- Daily -->
+                <label class="freq-radio-option">
+                  <input type="radio" name="sync-freq" value="daily" onchange="selectFreqRadio('daily')" />
+                  <span class="freq-radio-label">Daily</span>
+                </label>
+                <div class="freq-radio-panel hidden" id="freq-panel-daily">
+                  <div class="freq-time-row">
+                    <span class="freq-sub-label">Time</span>
+                    <div class="freq-time-inputs">
+                      <select class="select-input freq-sel"><option value="">Hour</option><option>12</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option></select>
+                      <span class="freq-colon">:</span>
+                      <select class="select-input freq-sel"><option value="">Min</option><option>00</option><option>15</option><option>30</option><option>45</option></select>
+                      <select class="select-input freq-sel"><option value="">AM/PM</option><option>AM</option><option>PM</option></select>
+                    </div>
+                  </div>
+                  <div class="freq-tz-row">
+                    <span class="freq-sub-label">Timezone</span>
+                    <select class="select-input" style="width:100%;"><option value="">Select timezone</option><option>America/Sao_Paulo (BRT)</option><option>America/Mexico_City (CST)</option><option>America/New_York (EST)</option><option>UTC</option></select>
+                  </div>
+                  <div class="freq-grace-row">
+                    <input class="text-input" type="number" placeholder="Days of grace" min="0" max="30" style="width:100%;" />
+                    <div class="field-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>I.e: 2 grace days = data is extracted up to 2 days before each execution.</div>
+                  </div>
+                </div>
+
+                <!-- Weekly -->
+                <label class="freq-radio-option">
+                  <input type="radio" name="sync-freq" value="weekly" onchange="selectFreqRadio('weekly')" />
+                  <span class="freq-radio-label">Weekly</span>
+                </label>
+                <div class="freq-radio-panel hidden" id="freq-panel-weekly">
+                  <div class="freq-day-chips-row">
+                    <button class="freq-day-chip active" onclick="toggleDayChip(this)">Mon</button>
+                    <button class="freq-day-chip" onclick="toggleDayChip(this)">Tue</button>
+                    <button class="freq-day-chip" onclick="toggleDayChip(this)">Wed</button>
+                    <button class="freq-day-chip" onclick="toggleDayChip(this)">Thu</button>
+                    <button class="freq-day-chip" onclick="toggleDayChip(this)">Fri</button>
+                    <button class="freq-day-chip" onclick="toggleDayChip(this)">Sat</button>
+                    <button class="freq-day-chip" onclick="toggleDayChip(this)">Sun</button>
+                  </div>
+                  <div class="freq-time-row">
+                    <span class="freq-sub-label">Time</span>
+                    <div class="freq-time-inputs">
+                      <select class="select-input freq-sel"><option value="">Hour</option><option>12</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option></select>
+                      <span class="freq-colon">:</span>
+                      <select class="select-input freq-sel"><option value="">Min</option><option>00</option><option>15</option><option>30</option><option>45</option></select>
+                      <select class="select-input freq-sel"><option value="">AM/PM</option><option>AM</option><option>PM</option></select>
+                    </div>
+                  </div>
+                  <div class="freq-tz-row">
+                    <span class="freq-sub-label">Timezone</span>
+                    <select class="select-input" style="width:100%;"><option value="">Select timezone</option><option>America/Sao_Paulo (BRT)</option><option>America/Mexico_City (CST)</option><option>America/New_York (EST)</option><option>UTC</option></select>
+                  </div>
+                  <div class="freq-grace-row">
+                    <input class="text-input" type="number" placeholder="Days of grace" min="0" max="30" style="width:100%;" />
+                    <div class="field-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>I.e: 2 grace days = data is extracted up to 2 days before each execution.</div>
+                  </div>
+                </div>
+
+                <!-- Monthly -->
+                <label class="freq-radio-option">
+                  <input type="radio" name="sync-freq" value="monthly" onchange="selectFreqRadio('monthly')" />
+                  <span class="freq-radio-label">Monthly</span>
+                </label>
+                <div class="freq-radio-panel hidden" id="freq-panel-monthly">
+                  <div class="freq-tz-row">
+                    <span class="freq-sub-label">Select day of month</span>
+                    <select class="select-input" style="width:100%;"><option value="">Select day…</option><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option><option>6th</option><option>7th</option><option>8th</option><option>9th</option><option>10th</option><option>11th</option><option>12th</option><option>13th</option><option>14th</option><option>15th</option><option>16th</option><option>17th</option><option>18th</option><option>19th</option><option>20th</option><option>21st</option><option>22nd</option><option>23rd</option><option>24th</option><option>25th</option><option>26th</option><option>27th</option><option>28th</option><option>29th</option><option>30th</option><option>31st</option><option>Last day</option></select>
+                  </div>
+                  <div class="freq-time-row">
+                    <span class="freq-sub-label">Time</span>
+                    <div class="freq-time-inputs">
+                      <select class="select-input freq-sel"><option value="">Hour</option><option>12</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option></select>
+                      <span class="freq-colon">:</span>
+                      <select class="select-input freq-sel"><option value="">Min</option><option>00</option><option>15</option><option>30</option><option>45</option></select>
+                      <select class="select-input freq-sel"><option value="">AM/PM</option><option>AM</option><option>PM</option></select>
+                    </div>
+                  </div>
+                  <div class="freq-tz-row">
+                    <span class="freq-sub-label">Timezone</span>
+                    <select class="select-input" style="width:100%;"><option value="">Select timezone</option><option>America/Sao_Paulo (BRT)</option><option>America/Mexico_City (CST)</option><option>America/New_York (EST)</option><option>UTC</option></select>
+                  </div>
+                  <div class="freq-grace-row">
+                    <input class="text-input" type="number" placeholder="Days of grace" min="0" max="30" style="width:100%;" />
+                    <div class="field-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>I.e: 2 grace days = data is extracted up to 2 days before each execution.</div>
+                  </div>
+                </div>
+
+                <!-- Custom -->
+                <label class="freq-radio-option">
+                  <input type="radio" name="sync-freq" value="custom" onchange="selectFreqRadio('custom')" />
+                  <span class="freq-radio-label">Custom</span>
+                </label>
+                <div class="freq-radio-panel hidden" id="freq-panel-custom">
+                  <div class="freq-day-grid">
+                    <button class="freq-day-chip active" onclick="toggleDayChip(this)">1</button><button class="freq-day-chip" onclick="toggleDayChip(this)">2</button><button class="freq-day-chip" onclick="toggleDayChip(this)">3</button><button class="freq-day-chip" onclick="toggleDayChip(this)">4</button><button class="freq-day-chip" onclick="toggleDayChip(this)">5</button><button class="freq-day-chip" onclick="toggleDayChip(this)">6</button><button class="freq-day-chip" onclick="toggleDayChip(this)">7</button><button class="freq-day-chip" onclick="toggleDayChip(this)">8</button><button class="freq-day-chip" onclick="toggleDayChip(this)">9</button><button class="freq-day-chip" onclick="toggleDayChip(this)">10</button><button class="freq-day-chip" onclick="toggleDayChip(this)">11</button><button class="freq-day-chip" onclick="toggleDayChip(this)">12</button><button class="freq-day-chip" onclick="toggleDayChip(this)">13</button><button class="freq-day-chip" onclick="toggleDayChip(this)">14</button><button class="freq-day-chip" onclick="toggleDayChip(this)">15</button><button class="freq-day-chip" onclick="toggleDayChip(this)">16</button><button class="freq-day-chip" onclick="toggleDayChip(this)">17</button><button class="freq-day-chip" onclick="toggleDayChip(this)">18</button><button class="freq-day-chip" onclick="toggleDayChip(this)">19</button><button class="freq-day-chip" onclick="toggleDayChip(this)">20</button><button class="freq-day-chip" onclick="toggleDayChip(this)">21</button><button class="freq-day-chip" onclick="toggleDayChip(this)">22</button><button class="freq-day-chip" onclick="toggleDayChip(this)">23</button><button class="freq-day-chip" onclick="toggleDayChip(this)">24</button><button class="freq-day-chip" onclick="toggleDayChip(this)">25</button><button class="freq-day-chip" onclick="toggleDayChip(this)">26</button><button class="freq-day-chip" onclick="toggleDayChip(this)">27</button><button class="freq-day-chip" onclick="toggleDayChip(this)">28</button><button class="freq-day-chip" onclick="toggleDayChip(this)">29</button><button class="freq-day-chip" onclick="toggleDayChip(this)">30</button><button class="freq-day-chip" onclick="toggleDayChip(this)">31</button>
+                  </div>
+                  <div class="freq-time-row">
+                    <span class="freq-sub-label">Time</span>
+                    <div class="freq-time-inputs">
+                      <select class="select-input freq-sel"><option value="">Hour</option><option>12</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option></select>
+                      <span class="freq-colon">:</span>
+                      <select class="select-input freq-sel"><option value="">Min</option><option>00</option><option>15</option><option>30</option><option>45</option></select>
+                      <select class="select-input freq-sel"><option value="">AM/PM</option><option>AM</option><option>PM</option></select>
+                    </div>
+                  </div>
+                  <div class="freq-tz-row">
+                    <span class="freq-sub-label">Timezone</span>
+                    <select class="select-input" style="width:100%;"><option value="">Select timezone</option><option>America/Sao_Paulo (BRT)</option><option>America/Mexico_City (CST)</option><option>America/New_York (EST)</option><option>UTC</option></select>
+                  </div>
+                  <div class="freq-grace-row">
+                    <input class="text-input" type="number" placeholder="Days of grace" min="0" max="30" style="width:100%;" />
+                    <div class="field-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>I.e: 2 grace days = data is extracted up to 2 days before each execution.</div>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>
@@ -4506,9 +4724,14 @@ function updateCustomState() {
 }
 
 // ─── SYNC ───
-function selectFreq(btn) {
-  btn.closest('.frequency-options').querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+function selectFreqRadio(val) {
+  ['daily','weekly','monthly','custom'].forEach(v => {
+    document.getElementById('freq-panel-' + v).classList.toggle('hidden', v !== val);
+  });
+}
+
+function toggleDayChip(btn) {
+  btn.classList.toggle('active');
 }
 
 // ─── SAVE ───
@@ -4584,6 +4807,12 @@ function openSecondMapping(mode) {
   document.getElementById('secondMappingBadge').textContent = other;
   document.getElementById('stepSecondMapping').classList.remove('hidden');
 
+  // Show extra stepper item
+  document.getElementById('stepSecond-nav-name').textContent = 'Set up ' + other;
+  document.getElementById('stepSecond-connector').classList.remove('hidden');
+  document.getElementById('stepSecond-nav').classList.remove('hidden');
+  document.getElementById('stepSecond-nav').classList.add('active');
+
   // Footer: Back + Save
   const footer = document.getElementById('wizardFooter');
   footer.classList.remove('hidden');
@@ -4606,6 +4835,8 @@ function backToHowChoice() {
 
 function saveSecondMapping() {
   _restoreStep3();
+  document.getElementById('stepSecond-connector').classList.add('hidden');
+  document.getElementById('stepSecond-nav').classList.add('hidden');
   document.getElementById('stepSecondMapping').classList.add('hidden');
   document.getElementById('wizardFooter').classList.add('hidden');
   const name = getIntegrationName() || 'Omie ERP Integration';
@@ -4617,6 +4848,7 @@ function _restoreStep3() {
   const step4 = document.getElementById('step4');
   step3.classList.add('hidden');
   step4.parentNode.insertBefore(step3, step4);
+  document.getElementById('stepSecond-nav').classList.remove('active');
 }
 
 function skipDuplicate() {

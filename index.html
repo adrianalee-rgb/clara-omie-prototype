@@ -2789,6 +2789,101 @@
     flex-shrink: 0;
   }
 
+  /* ── Prototype navigator ── */
+  #protoNav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    font-family: var(--font);
+  }
+  #protoNavToggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    background: var(--content-high);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,.22);
+    transition: background .15s;
+  }
+  #protoNavToggle:hover { background: #000; }
+  #protoNavPanel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 32px rgba(0,0,0,.16);
+    width: 240px;
+    overflow: hidden;
+  }
+  #protoNavPanel.hidden { display: none; }
+  .proto-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .proto-nav-title {
+    font-size: var(--cap-size);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--content-low);
+  }
+  .proto-nav-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--content-low);
+    cursor: pointer;
+    padding: 0 2px;
+  }
+  .proto-nav-close:hover { color: var(--content-high); }
+  .proto-nav-section-label {
+    padding: 10px 16px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--content-low);
+  }
+  .proto-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    color: var(--content-medium);
+    text-align: left;
+    cursor: pointer;
+    transition: background .12s, color .12s;
+  }
+  .proto-nav-item:hover { background: var(--bg-hover); color: var(--content-high); }
+  .proto-nav-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .proto-dot-grey  { background: var(--content-disabled); }
+  .proto-dot-blue  { background: var(--primary); }
+  .proto-dot-green { background: var(--content-success); }
+
   /* ── Flow mapping tabs (Omie ERP tab) ── */
   .ro-flow-tabs-wrap {
     margin-bottom: 16px;
@@ -5188,6 +5283,125 @@ function switchPageTab(tab) {
 }
 
 
+// ─── PROTOTYPE NAVIGATOR ───
+function toggleProtoNav() {
+  document.getElementById('protoNavPanel').classList.toggle('hidden');
+}
+
+function jumpTo(screen) {
+  // Close all overlays
+  document.getElementById('wizardOverlay').classList.remove('open');
+  document.getElementById('syncLogsOverlay').classList.add('hidden');
+  document.getElementById('editConfigOverlay').classList.add('hidden');
+  document.body.style.overflow = '';
+
+  // Restore step3 if it was adopted into an overlay
+  const step3 = document.getElementById('step3');
+  const step4 = document.getElementById('step4');
+  if (!step3.closest('#wizardStepContent, .wizard-step-content')) {
+    step3.classList.add('hidden');
+    step4.parentNode.insertBefore(step3, step4);
+  }
+
+  // Reset wizard state
+  omieConnected = false;
+  currentStep = 1;
+  document.getElementById('omieAppKey').value = '';
+  document.getElementById('omieAppSecret').value = '';
+  const badge = document.getElementById('omieConnectBadge');
+  badge.className = 'auth-block-badge badge-pending';
+  badge.textContent = 'Not connected';
+  document.getElementById('testConnectionBtn').style.display = '';
+
+  // Reset integration tab visibility
+  const tabs = document.getElementById('pageIntegTabs');
+
+  const makeIntegrationLive = () => {
+    tabs.classList.remove('hidden');
+    switchPageTab('omie');
+    const omieCard = document.getElementById('omieCard');
+    let cardBadge = omieCard.querySelector('.card-status-badge');
+    if (!cardBadge) {
+      cardBadge = document.createElement('span');
+      cardBadge.className = 'card-status-badge';
+      omieCard.querySelector('.card-header').appendChild(cardBadge);
+    }
+    cardBadge.className = 'card-status-badge status-active';
+    cardBadge.textContent = 'Active';
+    document.getElementById('ro-name').textContent = 'Card transactions — Omie';
+  };
+
+  switch (screen) {
+    case 'initial':
+      tabs.classList.add('hidden');
+      switchPageTab('overview');
+      break;
+
+    case 'step1':
+      tabs.classList.add('hidden');
+      document.getElementById('wizardOverlay').classList.add('open');
+      showStep(1);
+      break;
+
+    case 'step2':
+      tabs.classList.add('hidden');
+      document.getElementById('wizardOverlay').classList.add('open');
+      currentStep = 2;
+      showStep(2);
+      break;
+
+    case 'step2-connected':
+      tabs.classList.add('hidden');
+      document.getElementById('wizardOverlay').classList.add('open');
+      currentStep = 2;
+      showStep(2);
+      // Pre-fill and mark connected
+      document.getElementById('omieAppKey').value = '18234761902837465';
+      document.getElementById('omieAppSecret').value = 'a9f3c2e1b847d056f3a2c9e1b847d056';
+      omieConnected = true;
+      badge.className = 'auth-block-badge badge-connected';
+      badge.innerHTML = checkSvg + ' Connected';
+      document.getElementById('testConnectionBtn').style.display = 'none';
+      const nb2 = document.getElementById('wizardNext');
+      nb2.disabled = false;
+      nb2.innerHTML = 'Continue ' + arrowSvg;
+      break;
+
+    case 'step3':
+      tabs.classList.add('hidden');
+      document.getElementById('wizardOverlay').classList.add('open');
+      currentStep = 3;
+      omieConnected = true;
+      showStep(3);
+      break;
+
+    case 'step4':
+      tabs.classList.add('hidden');
+      document.getElementById('wizardOverlay').classList.add('open');
+      currentStep = 4;
+      omieConnected = true;
+      showStep(4);
+      break;
+
+    case 'live':
+      makeIntegrationLive();
+      break;
+
+    case 'sync-logs':
+      makeIntegrationLive();
+      setTimeout(() => openSyncLogs(), 50);
+      break;
+
+    case 'edit-config':
+      makeIntegrationLive();
+      setTimeout(() => openEditConfig(), 50);
+      break;
+  }
+
+  // Close the nav panel after jumping
+  document.getElementById('protoNavPanel').classList.add('hidden');
+}
+
 // ─── SYNC LOGS OVERLAY ───
 function openSyncLogs() {
   document.getElementById('syncLogsOverlay').classList.remove('hidden');
@@ -5273,6 +5487,59 @@ const style = document.createElement('style');
 style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
 document.head.appendChild(style);
 </script>
+
+<!-- ─── PROTOTYPE NAVIGATOR ─── -->
+<div id="protoNav">
+  <button id="protoNavToggle" onclick="toggleProtoNav()" title="Prototype navigator">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    <span>Prototype</span>
+  </button>
+  <div id="protoNavPanel" class="hidden">
+    <div class="proto-nav-header">
+      <span class="proto-nav-title">Jump to screen</span>
+      <button class="proto-nav-close" onclick="toggleProtoNav()">×</button>
+    </div>
+    <div class="proto-nav-section-label">Before setup</div>
+    <button class="proto-nav-item" onclick="jumpTo('initial')">
+      <span class="proto-nav-dot proto-dot-grey"></span>
+      Integrations — not set up
+    </button>
+    <div class="proto-nav-section-label">Setup wizard</div>
+    <button class="proto-nav-item" onclick="jumpTo('step1')">
+      <span class="proto-nav-dot proto-dot-blue"></span>
+      Step 1 — Use case
+    </button>
+    <button class="proto-nav-item" onclick="jumpTo('step2')">
+      <span class="proto-nav-dot proto-dot-blue"></span>
+      Step 2 — Omie credentials
+    </button>
+    <button class="proto-nav-item" onclick="jumpTo('step2-connected')">
+      <span class="proto-nav-dot proto-dot-blue"></span>
+      Step 2 — Connected
+    </button>
+    <button class="proto-nav-item" onclick="jumpTo('step3')">
+      <span class="proto-nav-dot proto-dot-blue"></span>
+      Step 3 — Field mapping
+    </button>
+    <button class="proto-nav-item" onclick="jumpTo('step4')">
+      <span class="proto-nav-dot proto-dot-blue"></span>
+      Step 4 — Sync schedule
+    </button>
+    <div class="proto-nav-section-label">After setup</div>
+    <button class="proto-nav-item" onclick="jumpTo('live')">
+      <span class="proto-nav-dot proto-dot-green"></span>
+      Integration live
+    </button>
+    <button class="proto-nav-item" onclick="jumpTo('sync-logs')">
+      <span class="proto-nav-dot proto-dot-green"></span>
+      Sync logs
+    </button>
+    <button class="proto-nav-item" onclick="jumpTo('edit-config')">
+      <span class="proto-nav-dot proto-dot-green"></span>
+      Edit configuration
+    </button>
+  </div>
+</div>
 
 <div id="syncLogsOverlay" class="hidden">
   <div class="ecfg-topbar">

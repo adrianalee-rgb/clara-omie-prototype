@@ -1647,19 +1647,7 @@
 
   .dim-omie-select-wrap:focus-within { border-color: var(--accent); }
 
-  .dim-omie-badge {
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    background: var(--bg-highlight);
-    color: var(--content-low);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .06em;
-    border-right: 1.5px solid var(--border);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
+  .dim-omie-badge { display: none; }
 
   .dim-omie-select-wrap .select-input,
   .dim-omie-select-wrap .text-input {
@@ -3239,7 +3227,6 @@
         <div class="ro-card">
           <div class="ro-card-header"><div class="ro-card-title">Sync schedule</div></div>
           <div class="ro-card-body">
-            <div class="ro-row"><span class="ro-label">Sync name</span><span class="ro-value" id="ro-sync-name">Daily card sync</span></div>
             <div class="ro-row"><span class="ro-label">Frequency</span><span class="ro-value" id="ro-freq">Daily</span></div>
             <div class="ro-row"><span class="ro-label">Run time</span><span class="ro-value">06:00 AM — America/Sao_Paulo</span></div>
             <div class="ro-row"><span class="ro-label">Historical data</span><span class="ro-value" id="ro-hist">Current month</span></div>
@@ -3656,7 +3643,7 @@
                       <div>
                         <div class="dim-system-label"><span class="dim-dot omie"></span>Omie</div>
                         <div class="dim-omie-select-wrap">
-                          <span class="dim-omie-badge">OMIE</span>
+
                           <select class="select-input catalog-required-select" id="omie-select-cat" onchange="checkCatalogComplete()"><option value="">Select an Omie value</option><option>1.01 — Serviços</option><option>2.01 — Produtos</option><option>3.01 — Despesas operacionais</option></select>
                         </div>
                       </div>
@@ -3701,7 +3688,7 @@
                       <div>
                         <div class="dim-system-label"><span class="dim-dot omie"></span>Omie</div>
                         <div class="dim-omie-select-wrap">
-                          <span class="dim-omie-badge">OMIE</span>
+
                           <select class="select-input catalog-required-select" id="omie-select-sup" onchange="checkCatalogComplete()"><option value="">Select an Omie value</option><option>Fornecedor Genérico</option><option>Claro Brasil</option><option>99 Tecnologia</option></select>
                         </div>
                       </div>
@@ -3746,7 +3733,7 @@
                       <div>
                         <div class="dim-system-label"><span class="dim-dot omie"></span>Omie</div>
                         <div class="dim-omie-select-wrap">
-                          <span class="dim-omie-badge">OMIE</span>
+
                           <select class="select-input catalog-required-select" id="omie-select-bank" onchange="checkCatalogComplete()"><option value="">Select an Omie value</option><option>Conta Principal — 001</option><option>Conta Despesas — 002</option></select>
                         </div>
                       </div>
@@ -3802,7 +3789,7 @@
                       <div>
                         <div class="dim-system-label"><span class="dim-dot omie"></span>Omie</div>
                         <div class="dim-omie-select-wrap">
-                          <span class="dim-omie-badge">OMIE</span>
+
                           <select class="select-input" id="omie-select-dept"><option value="">Select an Omie value</option><option>Financeiro</option><option>Comercial</option><option>Operações</option></select>
                         </div>
                       </div>
@@ -3960,7 +3947,7 @@
                       <div>
                         <div class="dim-system-label"><span class="dim-dot omie"></span>Omie destination field</div>
                         <div class="dim-omie-select-wrap">
-                          <span class="dim-omie-badge">OMIE</span>
+
                           <select class="select-input" id="nmf-omie-standard-select">
                             <option value="">Select Omie field…</option>
                             <option>Valor Documento</option><option>Número do Documento</option>
@@ -3989,7 +3976,7 @@
                       <div>
                         <div class="dim-system-label"><span class="dim-dot omie"></span>Omie destination field</div>
                         <div class="dim-omie-select-wrap">
-                          <span class="dim-omie-badge">OMIE</span>
+
                           <select class="select-input" id="nmf-omie-variable-select">
                             <option value="">Select Omie field…</option>
                             <option>Valor Documento</option><option>Número do Documento</option>
@@ -4892,10 +4879,10 @@ function finishWizard() {
 
   // Populate read-only fields
   document.getElementById('ro-name').textContent = getIntegrationName() || 'Omie ERP Integration';
-  document.getElementById('ro-sync-name').textContent = document.getElementById('syncName').value || 'Daily card sync';
-  const freqBtn = document.querySelector('#step4 .freq-btn.active');
-  document.getElementById('ro-freq').textContent = freqBtn ? freqBtn.textContent : 'Daily';
-  document.getElementById('ro-hist').textContent = document.getElementById('syncHistorical').value || 'Current month';
+  const freqRadio = document.querySelector('input[name="sync-freq"]:checked');
+  document.getElementById('ro-freq').textContent = freqRadio ? freqRadio.value.charAt(0).toUpperCase() + freqRadio.value.slice(1) : '—';
+  const histEl = document.getElementById('syncHistorical');
+  document.getElementById('ro-hist').textContent = histEl && histEl.value ? histEl.value : '—';
 
   // Show page tabs and switch to Omie ERP tab
   document.getElementById('pageIntegTabs').classList.remove('hidden');

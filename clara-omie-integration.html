@@ -4157,6 +4157,10 @@ function showStep(n) {
     nextBtn.innerHTML = omieConnected
       ? 'Continue ' + arrowIcon
       : plugIcon + ' Connect &amp; continue';
+  } else if (n === 3) {
+    nextBtn.disabled = false;
+    nextBtn.innerHTML = 'Continue ' + arrowIcon;
+    checkStep3Ready();
   } else if (n === 4) {
     nextBtn.disabled = false;
     nextBtn.innerHTML = 'Save integration ' + arrowIcon;
@@ -4302,6 +4306,22 @@ function checkCatalogComplete() {
   if (filled === 3) { badge.textContent = 'Completed'; badge.className = 'mapping-badge completed'; }
   else if (filled > 0) { badge.textContent = 'Partially completed'; badge.className = 'mapping-badge partial'; }
   else { badge.textContent = 'Missing'; badge.className = 'mapping-badge missing'; }
+  checkStep3Ready();
+}
+
+function checkStep3Ready() {
+  if (currentStep !== 3) return;
+  const required = ['cat', 'sup', 'bank'];
+  const catalogDone = required.every(d => {
+    if (dimModes[d] === 'individual') return true;
+    const sel = document.querySelector(`#dimopt-default-${d} .catalog-required-select`);
+    return sel && sel.value;
+  });
+  // Date selects always have a pre-selected value — check none are blank just in case
+  const dateSelects = document.querySelectorAll('#sec3 select');
+  const dateDone = Array.from(dateSelects).every(s => s.value);
+  const nextBtn = document.getElementById('wizardNext');
+  nextBtn.disabled = !(catalogDone && dateDone);
 }
 
 function addMappingRow(dimId, omieLabel, omieOpts, claraOpts) {

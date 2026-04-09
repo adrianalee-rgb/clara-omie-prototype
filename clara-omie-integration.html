@@ -2789,6 +2789,37 @@
     flex-shrink: 0;
   }
 
+  /* ── Flow mapping tabs (Omie ERP tab) ── */
+  .ro-flow-tabs-wrap {
+    margin-bottom: 16px;
+  }
+  .ro-flow-tabs {
+    display: inline-flex;
+    background: var(--bg-highlight);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 3px;
+    gap: 2px;
+  }
+  .ro-flow-tab {
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: none;
+    background: none;
+    font-family: var(--font);
+    font-size: var(--b2-size);
+    font-weight: 500;
+    color: var(--content-medium);
+    cursor: pointer;
+    transition: background .15s, color .15s, box-shadow .15s;
+  }
+  .ro-flow-tab.active {
+    background: var(--bg-surface);
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+
   /* ── Sync logs overlay ── */
   #syncLogsOverlay {
     position: fixed; inset: 0; z-index: 400;
@@ -3444,31 +3475,72 @@
             <div class="ro-row"><span class="ro-label">Days of grace</span><span class="ro-value">2 days</span></div>
           </div>
         </div>
-        <div class="ro-card">
-          <div class="ro-card-header"><div class="ro-card-title">Fixed mappings <span class="ro-locked-badge">Locked</span></div></div>
-          <div class="ro-card-body">
-            <div class="ro-mapping-pair"><span class="ro-tag clara">Amount</span><span class="ro-arrow">→</span><span class="ro-tag omie">Valor</span></div>
-            <div class="ro-mapping-pair"><span class="ro-tag clara">Merchant Name</span><span class="ro-arrow">→</span><span class="ro-tag omie">Nome Fornecedor</span></div>
-            <div class="ro-mapping-pair"><span class="ro-tag clara">Transaction Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Data Lançamento</span></div>
-            <div class="ro-mapping-pair"><span class="ro-tag clara">Currency</span><span class="ro-arrow">→</span><span class="ro-tag omie">Moeda</span></div>
-            <div class="ro-mapping-pair"><span class="ro-tag clara">Card last 4</span><span class="ro-arrow">→</span><span class="ro-tag omie">Número do Cartão</span></div>
+        <!-- Flow mapping tabs -->
+        <div class="ro-flow-tabs-wrap">
+          <div class="ro-flow-tabs">
+            <button class="ro-flow-tab active" onclick="switchFlowTab('pagar', this)">Contas a pagar</button>
+            <button class="ro-flow-tab" onclick="switchFlowTab('receber', this)">Contas a receber</button>
           </div>
         </div>
-        <div class="ro-card">
-          <div class="ro-card-header"><div class="ro-card-title">Catalog mappings</div></div>
-          <div class="ro-card-body">
-            <div class="ro-mapping-pair"><span class="ro-tag clara">All categories, labels, and fields</span><span class="ro-arrow">→</span><span class="ro-tag omie">Categorias</span><span class="ro-default-badge">default</span></div>
-            <div class="ro-mapping-pair"><span class="ro-tag clara">All suppliers</span><span class="ro-arrow">→</span><span class="ro-tag omie">Clientes/Fornecedores</span><span class="ro-default-badge">default</span></div>
-            <div class="ro-mapping-pair"><span class="ro-tag clara">All bank accounts</span><span class="ro-arrow">→</span><span class="ro-tag omie">Conta Corrente</span><span class="ro-default-badge">default</span></div>
+
+        <!-- Contas a pagar mappings -->
+        <div id="ro-flow-pagar">
+          <div class="ro-card">
+            <div class="ro-card-header"><div class="ro-card-title">Fixed mappings <span class="ro-locked-badge">Locked</span></div></div>
+            <div class="ro-card-body">
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Amount</span><span class="ro-arrow">→</span><span class="ro-tag omie">Valor</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Merchant Name</span><span class="ro-arrow">→</span><span class="ro-tag omie">Nome Fornecedor</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Transaction Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Data Lançamento</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Currency</span><span class="ro-arrow">→</span><span class="ro-tag omie">Moeda</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Transaction type</span><span class="ro-arrow">→</span><span class="ro-tag omie">Contas a pagar</span></div>
+            </div>
+          </div>
+          <div class="ro-card">
+            <div class="ro-card-header"><div class="ro-card-title">Catalog mappings</div></div>
+            <div class="ro-card-body">
+              <div class="ro-mapping-pair"><span class="ro-tag clara">All categories, labels, and fields</span><span class="ro-arrow">→</span><span class="ro-tag omie">Categorias</span><span class="ro-default-badge">default</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">All suppliers</span><span class="ro-arrow">→</span><span class="ro-tag omie">Clientes/Fornecedores</span><span class="ro-default-badge">default</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">All bank accounts</span><span class="ro-arrow">→</span><span class="ro-tag omie">Conta Corrente</span><span class="ro-default-badge">default</span></div>
+            </div>
+          </div>
+          <div class="ro-card">
+            <div class="ro-card-header"><div class="ro-card-title">Date mappings</div></div>
+            <div class="ro-card-body">
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Transaction Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Competência</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Posting Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Data de Pagamento</span></div>
+            </div>
           </div>
         </div>
-        <div class="ro-card">
-          <div class="ro-card-header"><div class="ro-card-title">Date mappings</div></div>
-          <div class="ro-card-body">
-            <div class="ro-mapping-pair"><span class="ro-tag clara">Transaction Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Competência</span></div>
-            <div class="ro-mapping-pair"><span class="ro-tag clara">Posting Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Data de Pagamento</span></div>
+
+        <!-- Contas a receber mappings -->
+        <div id="ro-flow-receber" class="hidden">
+          <div class="ro-card">
+            <div class="ro-card-header"><div class="ro-card-title">Fixed mappings <span class="ro-locked-badge">Locked</span></div></div>
+            <div class="ro-card-body">
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Amount</span><span class="ro-arrow">→</span><span class="ro-tag omie">Valor</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Merchant Name</span><span class="ro-arrow">→</span><span class="ro-tag omie">Nome Fornecedor</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Transaction Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Data Lançamento</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Currency</span><span class="ro-arrow">→</span><span class="ro-tag omie">Moeda</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Transaction type</span><span class="ro-arrow">→</span><span class="ro-tag omie">Contas a receber</span></div>
+            </div>
+          </div>
+          <div class="ro-card">
+            <div class="ro-card-header"><div class="ro-card-title">Catalog mappings</div></div>
+            <div class="ro-card-body">
+              <div class="ro-mapping-pair"><span class="ro-tag clara">All categories, labels, and fields</span><span class="ro-arrow">→</span><span class="ro-tag omie">Categorias</span><span class="ro-default-badge">default</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">All suppliers</span><span class="ro-arrow">→</span><span class="ro-tag omie">Clientes/Fornecedores</span><span class="ro-default-badge">default</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">All bank accounts</span><span class="ro-arrow">→</span><span class="ro-tag omie">Conta Corrente</span><span class="ro-default-badge">default</span></div>
+            </div>
+          </div>
+          <div class="ro-card">
+            <div class="ro-card-header"><div class="ro-card-title">Date mappings</div></div>
+            <div class="ro-card-body">
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Transaction Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Competência</span></div>
+              <div class="ro-mapping-pair"><span class="ro-tag clara">Posting Date</span><span class="ro-arrow">→</span><span class="ro-tag omie">Data de Pagamento</span></div>
+            </div>
           </div>
         </div>
+
       </div>
 
       <!-- Right sidebar -->
@@ -5099,6 +5171,13 @@ function finishWizard() {
   document.getElementById('pageIntegTabs').classList.remove('hidden');
   switchPageTab('omie');
   showToast('🎉 Omie ERP integration is live!');
+}
+
+function switchFlowTab(flow, btn) {
+  document.querySelectorAll('.ro-flow-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ro-flow-pagar').classList.toggle('hidden', flow !== 'pagar');
+  document.getElementById('ro-flow-receber').classList.toggle('hidden', flow !== 'receber');
 }
 
 function switchPageTab(tab) {

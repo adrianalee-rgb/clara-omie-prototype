@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clara Header Exploration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Design tokens ─────────────────────────────────── */
+    :root {
+      --primary:        #335894;
+      --primary-hover:  #294676;
+      --primary-active: #1f3559;
+      --primary-outline:#859bbf;
+      --bg-page:        #fbfcfd;
+      --bg-alt:         #ffffff;
+      --bg-highlight:   #f7f9fa;
+      --bg-hover:       #f1f5f8;
+      --bg-active:      #ebeef4;
+      --bg-disabled:    #f3f5f6;
+      --bg-advice:      #efe7fe;
+      --content-high:   #1f2223;
+      --content-med:    #404344;
+      --content-low:    #737677;
+      --content-disabled:#9c9fa0;
+      --content-advice: #663db0;
+      --border-default: #dfe1e2;
+      --border-interactive: #bbbebf;
+      --border-hover:   #737677;
+      --sidebar-bg:     #1f304b;
+      --ai-from:        #5353fa;
+      --ai-to:          #e122f6;
+      --ai-icon:        #8618f1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #e8ecf0;
+      color: var(--content-high);
+      padding: 40px 32px;
+      min-height: 100vh;
+    }
+
+    /* ─── Page layout ───────────────────────────────────── */
+    .page-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--content-low);
+      margin-bottom: 8px;
+    }
+
+    .variant-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--content-low);
+      margin-bottom: 4px;
+    }
+
+    .variant-desc {
+      font-size: 13px;
+      color: var(--content-med);
+      margin-bottom: 12px;
+      line-height: 1.5;
+      max-width: 640px;
+    }
+
+    .variant-block {
+      margin-bottom: 48px;
+    }
+
+    .header-frame {
+      background: var(--bg-alt);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+    }
+
+    /* ─── Shared pieces ─────────────────────────────────── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      height: 44px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border-default);
+      gap: 8px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 24px 8px;
+      gap: 16px;
+    }
+
+    .page-title-h1 {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.020em;
+      color: var(--content-high);
+      flex: 1;
+    }
+
+    .tabs-bar {
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 0;
+      border-bottom: 1px solid var(--border-default);
+    }
+
+    .tab {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--content-med);
+      padding: 10px 16px;
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px 2px 0 0;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      padding: 12px 24px;
+      gap: 8px;
+      background: var(--bg-page);
+    }
+
+    /* ─── Top-bar atoms ─────────────────────────────────── */
+    .company-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--content-high);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .company-chip:hover { background: var(--bg-hover); }
+
+    .company-avatar {
+      width: 24px; height: 24px;
+      background: var(--primary);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+
+    .spacer { flex: 1; }
+
+    .icon-btn {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500;
+      color: var(--content-med);
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .icon-btn:hover { background: var(--bg-hover); color: var(--content-high); }
+
+    .icon-btn svg { flex-shrink: 0; }
+
+    .ai-btn {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500;
+      background: var(--bg-advice);
+      color: var(--content-advice);
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .ai-icon {
+      width: 14px; height: 14px;
+      background: linear-gradient(135deg, var(--ai-from), var(--ai-to));
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .ai-icon svg { width: 8px; height: 8px; }
+
+    .avatar-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      flex-shrink: 0;
+      border: 2px solid var(--border-default);
+      transition: border-color 0.15s;
+      background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; color: #fff;
+    }
+    .avatar-btn:hover { border-color: var(--primary); }
+
+    .avatar-photo {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #f97316 0%, #ec4899 100%);
+      border-radius: 50%;
+    }
+
+    .divider-v {
+      width: 1px; height: 16px;
+      background: var(--border-default);
+      flex-shrink: 0;
+    }
+
+    /* ─── CTA button ─────────────────────────────────────── */
+    .btn-primary {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 14px; font-weight: 500;
+      letter-spacing: -0.011em;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-secondary {
+      display: flex; align-items: center; gap: 6px;
+      background: transparent;
+      color: var(--content-med);
+      font-size: 14px; font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-interactive);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-secondary:hover { border-color: var(--border-hover); color: var(--content-high); }
+
+    .btn-ghost {
+      display: flex; align-items: center; gap: 6px;
+      background: transparent;
+      color: var(--content-med);
+      font-size: 14px; font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-ghost:hover { background: var(--bg-hover); }
+
+    .icon-square-btn {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border-interactive);
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--content-med);
+      flex-shrink: 0;
+    }
+    .icon-square-btn:hover { border-color: var(--border-hover); color: var(--content-high); }
+
+    /* ─── Search ─────────────────────────────────────────── */
+    .search-field {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border-interactive);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 14px;
+      color: var(--content-low);
+      cursor: text;
+      transition: border-color 0.15s;
+    }
+    .search-field:hover { border-color: var(--border-hover); }
+    .search-field.wide { flex: 1; max-width: 480px; }
+    .search-field.full { flex: 1; }
+    .search-field span { font-size: 14px; color: var(--content-low); }
+
+    /* ─── Filter chips ───────────────────────────────────── */
+    .chip-row {
+      display: flex; align-items: center; gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      display: flex; align-items: center; gap: 4px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border-interactive);
+      border-radius: 100px;
+      font-size: 12px; font-weight: 500;
+      color: var(--content-med);
+      padding: 4px 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); background: #f0f4fa; }
+    .chip.active {
+      background: var(--bg-active);
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .chip-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .chip-remove {
+      width: 14px; height: 14px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      opacity: 0.6;
+      margin-left: 2px;
+    }
+    .chip-more {
+      font-size: 12px; font-weight: 500;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+    }
+    .chip-more:hover { background: var(--bg-active); }
+
+    /* ─── Search row with chips below ──────────────────── */
+    .search-block {
+      display: flex; flex-direction: column; gap: 8px; flex: 1;
+    }
+
+    /* ─── Annotations ────────────────────────────────────── */
+    .annotations {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-top: 12px;
+    }
+    .note {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .note.added   { background: #e8f6e5; color: #356d29; }
+    .note.removed { background: #fce0e0; color: #b00020; }
+    .note.changed { background: #e2eafe; color: #244eb0; }
+    .note.insight { background: #efe7fe; color: #663db0; }
+
+    /* ─── Section divider ────────────────────────────────── */
+    .section-sep {
+      border: none;
+      border-top: 1px dashed #c8cdd5;
+      margin: 40px 0;
+    }
+
+    /* ─── Comparison note-callout ────────────────────────── */
+    .callout {
+      background: #fff9e3;
+      border: 1px solid #f5d76e;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #483c10;
+      margin-top: 12px;
+      line-height: 1.5;
+      max-width: 720px;
+    }
+
+    /* ─── Page chrome (sidebar illusion) ─────────────────── */
+    .chrome {
+      display: flex;
+      background: var(--bg-page);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+    }
+    .sidebar-stub {
+      width: 56px;
+      background: var(--sidebar-bg);
+      flex-shrink: 0;
+    }
+    .content-area { flex: 1; }
+
+    /* ─── SVG icons (inline) ─────────────────────────────── */
+    .ico { display: inline-flex; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════════════ -->
+<p class="page-title" style="margin-bottom:32px;">Clara Header — Design Exploration &nbsp;/&nbsp; April 2026</p>
+
+<!-- ══════════════════════════════════════════════════════
+     CURRENT (baseline reference)
+══════════════════════════════════════════════════════ -->
+<div class="variant-block">
+  <p class="variant-label">Current baseline</p>
+  <p class="variant-desc">As-is hi-fi for reference. Language exposed in top bar, search is narrow, filters collapsed behind a button, avatar is initials only.</p>
+
+  <div class="chrome">
+    <div class="sidebar-stub"></div>
+    <div class="content-area">
+      <div class="header-frame" style="border-radius:0; box-shadow:none;">
+
+        <!-- Top bar -->
+        <div class="top-bar">
+          <div class="company-chip">
+            <div class="company-avatar">CN</div>
+            Company name, Inc.
+            <svg width="12" height="12" fill="none" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="spacer"></div>
+          <!-- AI -->
+          <div class="ai-btn">
+            <div class="ai-icon">
+              <svg viewBox="0 0 8 8" fill="none"><path d="M4 1v6M1 4h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            Financial Analyst
+          </div>
+          <!-- Language (exposed) -->
+          <div class="icon-btn">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><ellipse cx="7" cy="7" rx="2.2" ry="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 7h11" stroke="currentColor" stroke-width="1.2"/></svg>
+            English
+            <svg width="10" height="10" fill="none" viewBox="0 0 10 10"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <!-- Help -->
+          <div class="icon-btn">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5.3A1.5 1.5 0 017 4a1.5 1.5 0 01.5 2.9c-.3.1-.5.4-.5.7v.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="9.5" r=".5" fill="currentColor"/></svg>
+            Help
+          </div>
+          <!-- Profile (initials) -->
+          <div class="icon-btn" style="gap:6px;">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><circle cx="7" cy="5" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            My profile
+          </div>
+        </div>
+
+        <!-- Page header -->
+        <div class="page-header">
+          <span class="page-title-h1">Cards</span>
+          <div class="btn-primary">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M7 2v10M2 7h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Request a card
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-bar">
+          <div class="tab active">Overview</div>
+          <div class="tab">My requests</div>
+          <div class="tab">Pending approval</div>
+          <div class="tab">Templates</div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <div class="search-field" style="width:260px;">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5l-2-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <span>Search by card or alias</span>
+          </div>
+          <div class="btn-secondary">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M2 4h10M4 7h6M6 10h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            More filters
+          </div>
+          <div class="spacer"></div>
+          <div class="icon-square-btn">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><rect x="2" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <span class="note insight">↑ 50% growth in My Profile clicks — users seeking company info</span>
+    <span class="note insight">Language: only 4 total interactions across 271 sessions</span>
+    <span class="note insight">Search: 3% usage but 100% success rate</span>
+    <span class="note insight">Filters: 40% of interactions are removing pre-applied filter</span>
+  </div>
+</div>
+
+<hr class="section-sep" />
+
+<!-- ══════════════════════════════════════════════════════
+     VARIANT A — Streamlined top bar
+══════════════════════════════════════════════════════ -->
+<div class="variant-block">
+  <p class="variant-label">Variant A &nbsp;·&nbsp; Streamlined top bar</p>
+  <p class="variant-desc">Language moves into the Profile menu. Avatar becomes a real photo (Google/Microsoft SSO). Company info shortcut added to profile. Top bar is quieter with only critical actions visible.</p>
+
+  <div class="chrome">
+    <div class="sidebar-stub"></div>
+    <div class="content-area">
+      <div class="header-frame" style="border-radius:0; box-shadow:none;">
+
+        <!-- Top bar -->
+        <div class="top-bar">
+          <div class="company-chip">
+            <div class="company-avatar">CN</div>
+            Company name, Inc.
+            <svg width="12" height="12" fill="none" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="spacer"></div>
+          <!-- AI -->
+          <div class="ai-btn">
+            <div class="ai-icon">
+              <svg viewBox="0 0 8 8" fill="none"><path d="M4 1v6M1 4h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            Financial Analyst
+          </div>
+          <!-- Help (icon only for density) -->
+          <div class="icon-btn" title="Help Center">
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M6.3 6.3A1.7 1.7 0 018 5.3a1.7 1.7 0 01.5 3.3c-.3.1-.5.4-.5.7v.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="11" r=".6" fill="currentColor"/></svg>
+            Help
+          </div>
+          <!-- Avatar with photo -->
+          <div class="avatar-btn" title="My profile · Language · Company info">
+            <div class="avatar-photo"></div>
+          </div>
+        </div>
+
+        <!-- Page header -->
+        <div class="page-header">
+          <span class="page-title-h1">Cards</span>
+          <div class="btn-primary">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M7 2v10M2 7h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Request a card
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-bar">
+          <div class="tab active">Overview</div>
+          <div class="tab">My requests</div>
+          <div class="tab">Pending approval</div>
+          <div class="tab">Templates</div>
+        </div>
+
+        <!-- Toolbar: wider search -->
+        <div class="toolbar">
+          <div class="search-field wide">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5l-2-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <span>Search by card or alias</span>
+          </div>
+          <div class="btn-secondary">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M2 4h10M4 7h6M6 10h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            More filters
+          </div>
+          <div class="spacer"></div>
+          <div class="icon-square-btn">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><rect x="2" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <span class="note removed">Language removed from top bar → inside profile</span>
+    <span class="note added">Avatar → real photo (SSO)</span>
+    <span class="note added">Company info shortcut in profile menu</span>
+    <span class="note changed">Search wider but still same row</span>
+  </div>
+</div>
+
+<hr class="section-sep" />
+
+<!-- ══════════════════════════════════════════════════════
+     VARIANT B — Search forward + smart filter chips
+══════════════════════════════════════════════════════ -->
+<div class="variant-block">
+  <p class="variant-label">Variant B &nbsp;·&nbsp; Search-forward with smart filter chips</p>
+  <p class="variant-desc">Search becomes the hero of the toolbar row — full-width with a subtle shortcut hint. Suggested filter chips sit inline to the right of search, replacing the collapsed "More filters" button. Chips show most relevant presets; overflow goes to "More". Filters can still be removed directly on the chip.</p>
+
+  <div class="chrome">
+    <div class="sidebar-stub"></div>
+    <div class="content-area">
+      <div class="header-frame" style="border-radius:0; box-shadow:none;">
+
+        <!-- Top bar (streamlined) -->
+        <div class="top-bar">
+          <div class="company-chip">
+            <div class="company-avatar">CN</div>
+            Company name, Inc.
+            <svg width="12" height="12" fill="none" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="spacer"></div>
+          <div class="ai-btn">
+            <div class="ai-icon">
+              <svg viewBox="0 0 8 8" fill="none"><path d="M4 1v6M1 4h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            Financial Analyst
+          </div>
+          <div class="icon-btn">
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M6.3 6.3A1.7 1.7 0 018 5.3a1.7 1.7 0 01.5 3.3c-.3.1-.5.4-.5.7v.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="11" r=".6" fill="currentColor"/></svg>
+            Help
+          </div>
+          <div class="avatar-btn">
+            <div class="avatar-photo"></div>
+          </div>
+        </div>
+
+        <!-- Page header -->
+        <div class="page-header">
+          <span class="page-title-h1">Cards</span>
+          <div class="btn-primary">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M7 2v10M2 7h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Request a card
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-bar">
+          <div class="tab active">Overview</div>
+          <div class="tab">My requests</div>
+          <div class="tab">Pending approval</div>
+          <div class="tab">Templates</div>
+        </div>
+
+        <!-- Toolbar: search + inline chips -->
+        <div class="toolbar" style="align-items:flex-start; padding-top:12px; padding-bottom:12px;">
+          <!-- Search -->
+          <div class="search-field" style="width:280px; flex-shrink:0; height:36px;">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5l-2-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <span style="flex:1;">Search by card or alias</span>
+            <span style="font-size:11px; color:var(--content-disabled); background:var(--bg-highlight); padding:1px 5px; border-radius:3px; font-weight:500;">⌘K</span>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider-v" style="margin:8px 4px 0;"></div>
+
+          <!-- Suggested filter chips -->
+          <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+            <div class="chip-row">
+              <span style="font-size:11px; color:var(--content-disabled); white-space:nowrap; font-weight:500;">Filters:</span>
+              <div class="chip">
+                <span class="chip-dot" style="background:#356d29;"></span>
+                Active
+              </div>
+              <div class="chip">My cards</div>
+              <div class="chip">Physical</div>
+              <div class="chip active">
+                Virtual
+                <svg class="chip-remove" viewBox="0 0 14 14" fill="none"><path d="M4.5 4.5l5 5M9.5 4.5l-5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              </div>
+              <div class="chip">This month</div>
+              <span class="chip-more">+3 more</span>
+            </div>
+          </div>
+
+          <!-- Right actions -->
+          <div style="display:flex; gap:8px; flex-shrink:0;">
+            <div class="icon-square-btn">
+              <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><rect x="2" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <span class="note added">Search gets ⌘K shortcut hint → boosts 3% usage</span>
+    <span class="note added">Inline filter chips → no extra click to see/apply filters</span>
+    <span class="note changed">Active chip shows ✕ directly → reduces "remove filter" confusion (currently 40% of filter interactions)</span>
+    <span class="note removed">Collapsed "More filters" button gone</span>
+    <span class="note insight">Filter state is always visible — no hidden state</span>
+  </div>
+
+  <div class="callout">
+    <strong>Decision note:</strong> Chips avoid horizontal scroll (Mercury pattern flagged as confusing). If more than ~5 chips needed, overflow goes to "+ N more" which expands a second row rather than scrolling.
+  </div>
+</div>
+
+<hr class="section-sep" />
+
+<!-- ══════════════════════════════════════════════════════
+     VARIANT C — Unified action bar (merged tabs + toolbar)
+══════════════════════════════════════════════════════ -->
+<div class="variant-block">
+  <p class="variant-label">Variant C &nbsp;·&nbsp; Unified action bar</p>
+  <p class="variant-desc">Collapses the tabs row and toolbar into a single action bar. Tabs are on the left, search + tab-specific actions on the right. Saves one full row of vertical real estate. Search is still prominent. Best for sections with few tabs.</p>
+
+  <div class="chrome">
+    <div class="sidebar-stub"></div>
+    <div class="content-area">
+      <div class="header-frame" style="border-radius:0; box-shadow:none;">
+
+        <!-- Top bar (streamlined) -->
+        <div class="top-bar">
+          <div class="company-chip">
+            <div class="company-avatar">CN</div>
+            Company name, Inc.
+            <svg width="12" height="12" fill="none" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="spacer"></div>
+          <div class="ai-btn">
+            <div class="ai-icon">
+              <svg viewBox="0 0 8 8" fill="none"><path d="M4 1v6M1 4h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            Financial Analyst
+          </div>
+          <div class="icon-btn">
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M6.3 6.3A1.7 1.7 0 018 5.3a1.7 1.7 0 01.5 3.3c-.3.1-.5.4-.5.7v.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="11" r=".6" fill="currentColor"/></svg>
+            Help
+          </div>
+          <div class="avatar-btn">
+            <div class="avatar-photo"></div>
+          </div>
+        </div>
+
+        <!-- Page header -->
+        <div class="page-header">
+          <span class="page-title-h1">Cards</span>
+          <div class="btn-primary">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M7 2v10M2 7h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Request a card
+          </div>
+        </div>
+
+        <!-- Unified action bar: tabs left, search+actions right -->
+        <div style="display:flex; align-items:center; border-bottom: 1px solid var(--border-default); padding: 0 24px; gap:8px; background:var(--bg-page);">
+          <!-- Tabs -->
+          <div style="display:flex; align-items:center; flex:1;">
+            <div class="tab active" style="padding-left:0;">Overview</div>
+            <div class="tab">My requests</div>
+            <div class="tab">Pending approval</div>
+            <div class="tab">Templates</div>
+          </div>
+
+          <!-- Search + actions (right) -->
+          <div style="display:flex; align-items:center; gap:8px; padding: 6px 0;">
+            <div class="search-field" style="width:240px;">
+              <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5l-2-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              <span>Search</span>
+              <span style="font-size:11px; color:var(--content-disabled); background:var(--bg-highlight); padding:1px 5px; border-radius:3px; font-weight:500;">⌘K</span>
+            </div>
+            <div class="btn-ghost" style="font-size:13px; padding:6px 8px;">
+              <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M2 4h10M4 7h6M6 10h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Filters
+            </div>
+            <div class="icon-square-btn" style="border:none; width:28px; height:28px;">
+              <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><rect x="2" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <span class="note changed">Tabs + toolbar merged into 1 row → saves ~44px vertical</span>
+    <span class="note insight">Tabs still clearly readable left-aligned</span>
+    <span class="note removed">Separate toolbar row removed</span>
+  </div>
+
+  <div class="callout">
+    <strong>Tradeoff:</strong> Works great when tabs have short labels (Overview, My requests…). May feel cramped with 5+ tabs or very long tab names. Best validated against the busiest sections.
+  </div>
+</div>
+
+<hr class="section-sep" />
+
+<!-- ══════════════════════════════════════════════════════
+     VARIANT D — AI-integrated search bar
+══════════════════════════════════════════════════════ -->
+<div class="variant-block">
+  <p class="variant-label">Variant D &nbsp;·&nbsp; AI integrated into search</p>
+  <p class="variant-desc">Hides the AI entry point inside the search bar itself (Ramp pattern, adapted). The search expands to a command palette that also offers AI-generated answers. Reduces top-bar clutter while keeping AI accessible. Requires resolving the current performance issues before surfacing prominently.</p>
+
+  <div class="chrome">
+    <div class="sidebar-stub"></div>
+    <div class="content-area">
+      <div class="header-frame" style="border-radius:0; box-shadow:none;">
+
+        <!-- Top bar: very minimal -->
+        <div class="top-bar">
+          <div class="company-chip">
+            <div class="company-avatar">CN</div>
+            Company name, Inc.
+            <svg width="12" height="12" fill="none" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="spacer"></div>
+          <div class="icon-btn">
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M6.3 6.3A1.7 1.7 0 018 5.3a1.7 1.7 0 01.5 3.3c-.3.1-.5.4-.5.7v.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="11" r=".6" fill="currentColor"/></svg>
+            Help
+          </div>
+          <div class="avatar-btn">
+            <div class="avatar-photo"></div>
+          </div>
+        </div>
+
+        <!-- Page header -->
+        <div class="page-header">
+          <span class="page-title-h1">Cards</span>
+          <div class="btn-primary">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M7 2v10M2 7h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Request a card
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-bar">
+          <div class="tab active">Overview</div>
+          <div class="tab">My requests</div>
+          <div class="tab">Pending approval</div>
+          <div class="tab">Templates</div>
+        </div>
+
+        <!-- Toolbar: AI-infused search -->
+        <div class="toolbar">
+          <!-- Search with AI badge -->
+          <div class="search-field wide" style="max-width:560px; border-color: #c4b5fc; background: linear-gradient(var(--bg-alt),var(--bg-alt)) padding-box, linear-gradient(90deg,#5353fa22,#e122f611) border-box; border-width:1px;">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><circle cx="6" cy="6" r="4" stroke="var(--content-low)" stroke-width="1.3"/><path d="M10.5 10.5l-2-2" stroke="var(--content-low)" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <span style="flex:1;">Search cards, ask a question…</span>
+            <!-- AI badge pill inside search -->
+            <div style="display:flex; align-items:center; gap:4px; background: var(--bg-advice); border-radius: 100px; padding: 2px 8px;">
+              <div class="ai-icon" style="width:10px; height:10px; border-radius:2px;">
+                <svg viewBox="0 0 8 8" fill="none"><path d="M4 1v6M1 4h6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <span style="font-size:11px; font-weight:600; color:var(--content-advice);">Ask AI</span>
+            </div>
+            <span style="font-size:11px; color:var(--content-disabled); background:var(--bg-highlight); padding:1px 5px; border-radius:3px; font-weight:500;">⌘K</span>
+          </div>
+
+          <!-- Inline chips -->
+          <div class="chip-row" style="flex:1;">
+            <div class="chip">
+              <span class="chip-dot" style="background:#356d29;"></span>
+              Active
+            </div>
+            <div class="chip">My cards</div>
+            <span class="chip-more">+4 more</span>
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <div class="icon-square-btn">
+              <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><rect x="2" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="2" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="annotations">
+    <span class="note removed">Financial Analyst removed from top bar</span>
+    <span class="note added">AI accessible via search (Ramp-inspired, minimizable)</span>
+    <span class="note changed">Search placeholder signals dual-purpose: filter + AI query</span>
+    <span class="note insight">⚠ Flagged in meeting: AI has performance issues → gate behind feature flag</span>
+  </div>
+
+  <div class="callout">
+    <strong>Dependency:</strong> This variant is only recommended once the AI performance issues (slowness, freezes) are resolved. The team discussed hiding AI when it's not reliable — this pattern keeps it accessible without being front-and-center.
+  </div>
+</div>
+
+<hr class="section-sep" />
+
+<!-- ══════════════════════════════════════════════════════
+     QUICK DECISION MATRIX
+══════════════════════════════════════════════════════ -->
+<div class="variant-block">
+  <p class="variant-label">Decision matrix</p>
+  <p class="variant-desc">Quick comparison across the four variants to guide the exploration conversation with Diego before his paternity leave.</p>
+
+  <div style="background:var(--bg-alt); border:1px solid var(--border-default); border-radius:8px; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse; font-size:13px;">
+      <thead>
+        <tr style="background:var(--bg-highlight);">
+          <th style="padding:10px 16px; text-align:left; font-weight:600; color:var(--content-high); border-bottom:1px solid var(--border-default);">Criterion</th>
+          <th style="padding:10px 16px; text-align:center; font-weight:600; color:var(--content-med); border-bottom:1px solid var(--border-default);">Current</th>
+          <th style="padding:10px 16px; text-align:center; font-weight:600; color:var(--primary); border-bottom:1px solid var(--border-default);">A — Streamlined</th>
+          <th style="padding:10px 16px; text-align:center; font-weight:600; color:var(--primary); border-bottom:1px solid var(--border-default);">B — Search-forward</th>
+          <th style="padding:10px 16px; text-align:center; font-weight:600; color:var(--primary); border-bottom:1px solid var(--border-default);">C — Unified bar</th>
+          <th style="padding:10px 16px; text-align:center; font-weight:600; color:var(--content-advice); border-bottom:1px solid var(--border-default);">D — AI search</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border-default);">
+          <td style="padding:10px 16px; color:var(--content-med);">Language in top bar</td>
+          <td style="padding:10px 16px; text-align:center;">✓ exposed</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">→ profile</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">→ profile</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">→ profile</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">→ profile</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-default); background:var(--bg-page);">
+          <td style="padding:10px 16px; color:var(--content-med);">Avatar photo (SSO)</td>
+          <td style="padding:10px 16px; text-align:center;">initials</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">✓</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">✓</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">✓</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">✓</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-default);">
+          <td style="padding:10px 16px; color:var(--content-med);">Search prominence</td>
+          <td style="padding:10px 16px; text-align:center;">low</td>
+          <td style="padding:10px 16px; text-align:center;">medium</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">high</td>
+          <td style="padding:10px 16px; text-align:center;">medium</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">high</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-default); background:var(--bg-page);">
+          <td style="padding:10px 16px; color:var(--content-med);">Filter discoverability</td>
+          <td style="padding:10px 16px; text-align:center;">collapsed</td>
+          <td style="padding:10px 16px; text-align:center;">collapsed</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">chips visible</td>
+          <td style="padding:10px 16px; text-align:center;">collapsed</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">chips visible</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border-default);">
+          <td style="padding:10px 16px; color:var(--content-med);">Vertical space saved</td>
+          <td style="padding:10px 16px; text-align:center;">baseline</td>
+          <td style="padding:10px 16px; text-align:center;">none</td>
+          <td style="padding:10px 16px; text-align:center;">none</td>
+          <td style="padding:10px 16px; text-align:center; color:#356d29;">~44px</td>
+          <td style="padding:10px 16px; text-align:center;">none</td>
+        </tr>
+        <tr style="background:var(--bg-page);">
+          <td style="padding:10px 16px; color:var(--content-med);">AI dependency</td>
+          <td style="padding:10px 16px; text-align:center;">visible</td>
+          <td style="padding:10px 16px; text-align:center;">visible</td>
+          <td style="padding:10px 16px; text-align:center;">visible</td>
+          <td style="padding:10px 16px; text-align:center;">visible</td>
+          <td style="padding:10px 16px; text-align:center; color:#b00020;">gate needed</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-size:12px; color:var(--content-low); margin-top:10px;">All variants assume Language → Profile and Avatar photo. Variants B and D offer the most gain on the two highest-impact findings (search usage + filter confusion).</p>
+</div>
+
+</body>
+</html>

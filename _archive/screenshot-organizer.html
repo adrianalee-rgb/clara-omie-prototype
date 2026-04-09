@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SnapSort – Screenshot Organizer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #0f172a; }
+
+    /* Category colors */
+    .cat-shopping  { --c: #f59e0b; --bg: #fef3c7; --text: #92400e; }
+    .cat-places    { --c: #10b981; --bg: #d1fae5; --text: #065f46; }
+    .cat-events    { --c: #3b82f6; --bg: #dbeafe; --text: #1e40af; }
+    .cat-recipes   { --c: #ef4444; --bg: #fee2e2; --text: #991b1b; }
+    .cat-other     { --c: #8b5cf6; --bg: #ede9fe; --text: #5b21b6; }
+
+    .cat-badge {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+    }
+    .tab-active {
+      background: var(--c, #6366f1);
+      color: white;
+    }
+
+    /* Drop zone */
+    .drop-active { border-color: #6366f1 !important; background: #eef2ff !important; }
+
+    /* Card hover */
+    .screenshot-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .screenshot-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+
+    /* Shimmer loading */
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position: 600px 0; }
+    }
+    .shimmer {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 600px 100%;
+      animation: shimmer 1.4s infinite linear;
+    }
+
+    /* Spin */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 0.8s linear infinite; }
+
+    /* Fade in */
+    @keyframes fadeIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
+    .fade-in { animation: fadeIn 0.3s ease; }
+
+    /* Modal backdrop */
+    .modal-bg { backdrop-filter: blur(4px); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+
+    /* Input focus */
+    input:focus { outline: 2px solid #6366f1; outline-offset: 2px; }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800">
+
+  <!-- ══════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════ -->
+  <header class="sticky top-0 z-30 bg-slate-900/95 backdrop-blur border-b border-slate-700/60">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold shadow-lg">
+          S
+        </div>
+        <span class="text-white font-semibold text-lg tracking-tight">SnapSort</span>
+        <span class="hidden sm:inline text-xs text-slate-500 font-medium bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">prototype</span>
+      </div>
+
+      <!-- Right side -->
+      <div class="flex items-center gap-3">
+        <!-- Screenshot count -->
+        <span id="count-badge" class="hidden text-xs text-slate-400 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700"></span>
+        <!-- API Key button -->
+        <button id="api-key-btn" onclick="showApiKeyModal()"
+          class="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-xl border transition-all
+                 text-slate-300 border-slate-700 bg-slate-800 hover:bg-slate-700 hover:border-slate-500">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+          </svg>
+          <span id="api-key-label">Add API Key</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       HERO (shown when no screenshots)
+  ══════════════════════════════════════════ -->
+  <div id="hero" class="max-w-6xl mx-auto px-4 pt-16 pb-8 text-center hidden">
+    <div class="inline-flex items-center gap-2 text-indigo-400 bg-indigo-950/50 border border-indigo-800/50 text-sm px-4 py-1.5 rounded-full mb-6">
+      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 2a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 2z"/>
+        <path fill-rule="evenodd" d="M10 4a6 6 0 100 12A6 6 0 0010 4zm0 1.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9z" clip-rule="evenodd"/>
+      </svg>
+      AI-powered screenshot organizer
+    </div>
+    <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+      Never lose track of a<br/>
+      <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">saved screenshot</span>
+    </h1>
+    <p class="text-slate-400 text-lg max-w-xl mx-auto mb-3">
+      Drop your screenshots and Claude AI instantly categorizes them into
+      Shopping, Places, Events, and Recipes — with key details extracted.
+    </p>
+    <p class="text-slate-500 text-sm">Everything stays local. No data leaves your browser except to analyze images.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════ -->
+  <main class="max-w-6xl mx-auto px-4 pb-24">
+
+    <!-- Upload zone (prominent when empty) -->
+    <div id="upload-zone"
+      class="hidden mt-6 border-2 border-dashed border-slate-600 rounded-2xl bg-slate-800/40 transition-all cursor-pointer"
+      onclick="document.getElementById('file-input').click()"
+      ondragover="handleDragOver(event)"
+      ondragleave="handleDragLeave(event)"
+      ondrop="handleDrop(event)">
+      <div class="py-16 px-8 text-center pointer-events-none">
+        <div class="w-16 h-16 rounded-2xl bg-slate-700/80 mx-auto mb-5 flex items-center justify-center">
+          <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <p class="text-white font-semibold text-lg mb-1">Drop screenshots here</p>
+        <p class="text-slate-400 text-sm mb-4">or click to browse — PNG, JPG, WebP supported</p>
+        <span class="inline-flex items-center gap-1.5 text-xs text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1.5 rounded-full">
+          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+          </svg>
+          Analyzed by Claude Opus — results in ~3 seconds
+        </span>
+      </div>
+    </div>
+
+    <!-- Category tabs + search bar -->
+    <div id="tabs-bar" class="hidden mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <!-- Category tabs -->
+      <div class="flex items-center gap-1.5 bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm flex-wrap">
+        <button onclick="setCategory('all')"   data-cat="all"      class="cat-tab cat-all      px-4 py-2 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-slate-100">📋 All</button>
+        <button onclick="setCategory('shopping')" data-cat="shopping" class="cat-tab cat-shopping px-4 py-2 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-amber-50">🛍️ Shopping</button>
+        <button onclick="setCategory('places')"   data-cat="places"   class="cat-tab cat-places   px-4 py-2 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-emerald-50">📍 Places</button>
+        <button onclick="setCategory('events')"   data-cat="events"   class="cat-tab cat-events   px-4 py-2 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-blue-50">📅 Events</button>
+        <button onclick="setCategory('recipes')"  data-cat="recipes"  class="cat-tab cat-recipes  px-4 py-2 rounded-xl text-sm font-medium transition-all text-slate-600 hover:bg-red-50">🍳 Recipes</button>
+      </div>
+
+      <!-- Search -->
+      <div class="relative flex-1 min-w-0 max-w-xs sm:ml-auto">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input id="search-input" type="text" placeholder="Search screenshots…"
+          class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-slate-700 placeholder-slate-400 shadow-sm"
+          oninput="renderGrid()" />
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div id="grid" class="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+    <!-- Empty state for filtered view -->
+    <div id="empty-filter" class="hidden mt-20 text-center">
+      <div class="text-5xl mb-4">🔍</div>
+      <p class="text-slate-500 font-medium">No screenshots in this category yet</p>
+      <p class="text-slate-400 text-sm mt-1">Try uploading some or switch categories</p>
+    </div>
+  </main>
+
+  <!-- Floating upload button (when screenshots exist) -->
+  <button id="fab"
+    onclick="document.getElementById('file-input').click()"
+    class="hidden fixed bottom-6 right-6 z-20 w-14 h-14 rounded-2xl shadow-xl
+           bg-gradient-to-br from-indigo-500 to-purple-600 text-white
+           flex items-center justify-center transition-all hover:scale-110 active:scale-95">
+    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+    </svg>
+  </button>
+
+  <!-- Drop mini zone (when screenshots exist) -->
+  <div id="mini-drop"
+    class="hidden fixed bottom-6 left-6 z-20 bg-slate-800/90 backdrop-blur border border-slate-600 text-slate-300
+           text-xs px-3 py-2 rounded-xl pointer-events-none opacity-0 transition-opacity duration-300">
+    Drop to analyze
+  </div>
+
+  <!-- Hidden file input -->
+  <input id="file-input" type="file" accept="image/*" multiple class="hidden"
+    onchange="handleFileInputChange(event)" />
+
+  <!-- ══════════════════════════════════════════
+       API KEY MODAL
+  ══════════════════════════════════════════ -->
+  <div id="api-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-bg bg-black/60 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 fade-in">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
+          <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="font-bold text-slate-900 text-lg">Anthropic API Key</h2>
+          <p class="text-slate-500 text-sm">Required to analyze screenshots with Claude</p>
+        </div>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 mb-5 text-sm text-amber-800 flex gap-2.5">
+        <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+        </svg>
+        <span>This is a prototype — your key is stored only in your browser's local storage and used only to call the Anthropic API.</span>
+      </div>
+
+      <label class="block text-sm font-medium text-slate-700 mb-2">API Key</label>
+      <input id="api-key-input" type="password" placeholder="sk-ant-api03-..."
+        class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-5"
+        onkeydown="if(event.key==='Enter') saveApiKey()" />
+
+      <div class="flex gap-3">
+        <button onclick="hideApiKeyModal()"
+          class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">
+          Cancel
+        </button>
+        <button onclick="saveApiKey()"
+          class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors">
+          Save Key
+        </button>
+      </div>
+
+      <p class="text-center text-xs text-slate-400 mt-4">
+        Get your key at
+        <a href="https://console.anthropic.com" target="_blank" class="text-indigo-500 hover:underline">console.anthropic.com</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       DETAIL MODAL
+  ══════════════════════════════════════════ -->
+  <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-bg bg-black/60 hidden"
+    onclick="closeDetailIfBackdrop(event)">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden fade-in max-h-[90vh] flex flex-col">
+      <!-- Modal image -->
+      <div class="relative bg-slate-100 flex-shrink-0">
+        <img id="modal-img" src="" alt="" class="w-full max-h-72 object-contain" />
+        <button onclick="closeDetailModal()"
+          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-black/60 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal content -->
+      <div class="p-6 overflow-y-auto">
+        <div class="flex items-start justify-between gap-4 mb-4">
+          <div class="flex-1">
+            <div id="modal-cat-badge" class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full mb-2 cat-badge"></div>
+            <h3 id="modal-title" class="text-xl font-bold text-slate-900"></h3>
+          </div>
+          <button id="modal-delete"
+            class="shrink-0 flex items-center gap-1.5 text-sm text-red-500 hover:text-red-600 border border-red-100 hover:border-red-200 px-3 py-1.5 rounded-xl transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            Delete
+          </button>
+        </div>
+
+        <p id="modal-desc" class="text-slate-600 text-sm mb-5 leading-relaxed"></p>
+
+        <!-- Key info grid -->
+        <div id="modal-details" class="grid grid-cols-2 gap-3 mb-5"></div>
+
+        <!-- Tags -->
+        <div id="modal-tags-section" class="hidden">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Tags</p>
+          <div id="modal-tags" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- Date -->
+        <p id="modal-date" class="text-xs text-slate-400 mt-4"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       GLOBAL DROP OVERLAY
+  ══════════════════════════════════════════ -->
+  <div id="drop-overlay" class="fixed inset-0 z-40 pointer-events-none hidden">
+    <div class="absolute inset-4 border-2 border-dashed border-indigo-400 rounded-3xl bg-indigo-900/20 flex items-center justify-center">
+      <div class="text-center">
+        <div class="text-5xl mb-3">📸</div>
+        <p class="text-white font-semibold text-xl">Drop to analyze</p>
+        <p class="text-indigo-300 text-sm mt-1">Claude will categorize automatically</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCRIPT
+  ══════════════════════════════════════════ -->
+  <script>
+  // ────────────────────────────────────────────
+  // STATE
+  // ────────────────────────────────────────────
+  const state = {
+    screenshots: [],       // { id, imageData, category, title, description, detail, tags, dateAdded, status, error }
+    currentCategory: 'all',
+    apiKey: '',
+    analyzing: 0,          // count of in-progress analyses
+  };
+
+  // ────────────────────────────────────────────
+  // INDEXED DB
+  // ────────────────────────────────────────────
+  const DB = (() => {
+    let _db = null;
+    const NAME = 'snapsort_v1', STORE = 'screenshots';
+
+    async function open() {
+      if (_db) return _db;
+      return new Promise((res, rej) => {
+        const req = indexedDB.open(NAME, 1);
+        req.onupgradeneeded = e => e.target.result.createObjectStore(STORE, { keyPath: 'id' });
+        req.onsuccess = e => { _db = e.target.result; res(_db); };
+        req.onerror = rej;
+      });
+    }
+    async function getAll() {
+      await open();
+      return new Promise((res, rej) => {
+        const req = _db.transaction(STORE, 'readonly').objectStore(STORE).getAll();
+        req.onsuccess = e => res(e.target.result || []);
+        req.onerror = rej;
+      });
+    }
+    async function put(item) {
+      await open();
+      return new Promise((res, rej) => {
+        const req = _db.transaction(STORE, 'readwrite').objectStore(STORE).put(item);
+        req.onsuccess = res; req.onerror = rej;
+      });
+    }
+    async function del(id) {
+      await open();
+      return new Promise((res, rej) => {
+        const req = _db.transaction(STORE, 'readwrite').objectStore(STORE).delete(id);
+        req.onsuccess = res; req.onerror = rej;
+      });
+    }
+    return { getAll, put, del };
+  })();
+
+  // ────────────────────────────────────────────
+  // INIT
+  // ────────────────────────────────────────────
+  async function init() {
+    state.apiKey = localStorage.getItem('snapsort_key') || '';
+    updateKeyButton();
+
+    try {
+      state.screenshots = await DB.getAll();
+      state.screenshots.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+    } catch (e) {
+      state.screenshots = [];
+    }
+
+    // Global drop handlers
+    document.addEventListener('dragover', globalDragOver);
+    document.addEventListener('dragleave', globalDragLeave);
+    document.addEventListener('drop', globalDrop);
+
+    updateLayout();
+    setCategory('all');
+  }
+
+  // ────────────────────────────────────────────
+  // LAYOUT HELPERS
+  // ────────────────────────────────────────────
+  function updateLayout() {
+    const hasItems = state.screenshots.length > 0;
+    document.getElementById('hero').classList.toggle('hidden', hasItems);
+    document.getElementById('upload-zone').classList.toggle('hidden', hasItems);
+    document.getElementById('tabs-bar').classList.toggle('hidden', !hasItems);
+    document.getElementById('fab').classList.toggle('hidden', !hasItems);
+
+    const n = state.screenshots.length;
+    const badge = document.getElementById('count-badge');
+    if (n > 0) {
+      badge.classList.remove('hidden');
+      badge.textContent = `${n} screenshot${n !== 1 ? 's' : ''}`;
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+
+  // ────────────────────────────────────────────
+  // CATEGORY
+  // ────────────────────────────────────────────
+  const CAT_META = {
+    all:      { label: '📋 All',      color: '#6366f1', tab: 'bg-indigo-600 text-white' },
+    shopping: { label: '🛍️ Shopping', color: '#f59e0b', tab: 'bg-amber-500 text-white' },
+    places:   { label: '📍 Places',   color: '#10b981', tab: 'bg-emerald-500 text-white' },
+    events:   { label: '📅 Events',   color: '#3b82f6', tab: 'bg-blue-500 text-white' },
+    recipes:  { label: '🍳 Recipes',  color: '#ef4444', tab: 'bg-red-500 text-white' },
+    other:    { label: '📌 Other',    color: '#8b5cf6', tab: 'bg-purple-500 text-white' },
+  };
+
+  function setCategory(cat) {
+    state.currentCategory = cat;
+    document.querySelectorAll('.cat-tab').forEach(btn => {
+      const isActive = btn.dataset.cat === cat;
+      btn.className = btn.className.replace(/bg-\S+|text-white|text-slate-\d+/g, '').trim();
+      if (isActive) {
+        const m = CAT_META[cat] || CAT_META.other;
+        btn.classList.add(...m.tab.split(' '));
+      } else {
+        btn.classList.add('text-slate-600');
+      }
+    });
+    renderGrid();
+  }
+
+  // ────────────────────────────────────────────
+  // RENDER GRID
+  // ────────────────────────────────────────────
+  function renderGrid() {
+    const grid = document.getElementById('grid');
+    const emptyFilter = document.getElementById('empty-filter');
+    const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+
+    let items = state.screenshots.filter(s => {
+      const catMatch = state.currentCategory === 'all' || s.category === state.currentCategory;
+      if (!catMatch) return false;
+      if (!q) return true;
+      return (
+        (s.title || '').toLowerCase().includes(q) ||
+        (s.description || '').toLowerCase().includes(q) ||
+        (s.detail || '').toLowerCase().includes(q) ||
+        (s.tags || []).some(t => t.toLowerCase().includes(q))
+      );
+    });
+
+    if (items.length === 0 && state.screenshots.length > 0) {
+      grid.innerHTML = '';
+      emptyFilter.classList.remove('hidden');
+      return;
+    }
+    emptyFilter.classList.add('hidden');
+    grid.innerHTML = items.map(s => cardHTML(s)).join('');
+  }
+
+  function cardHTML(s) {
+    const meta = CAT_META[s.category] || CAT_META.other;
+    const catClass = `cat-${s.category || 'other'}`;
+    const dateStr = s.dateAdded ? new Date(s.dateAdded).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
+
+    if (s.status === 'analyzing') {
+      return `
+        <div class="screenshot-card bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden fade-in">
+          <div class="h-44 shimmer"></div>
+          <div class="p-4">
+            <div class="shimmer h-4 rounded w-1/3 mb-3"></div>
+            <div class="shimmer h-5 rounded w-3/4 mb-2"></div>
+            <div class="shimmer h-4 rounded w-1/2 mb-4"></div>
+            <div class="flex items-center gap-2 text-slate-500 text-xs">
+              <div class="w-4 h-4 rounded-full border-2 border-indigo-300 border-t-indigo-600 spin"></div>
+              Analyzing with Claude…
+            </div>
+          </div>
+        </div>`;
+    }
+
+    if (s.status === 'error') {
+      return `
+        <div class="screenshot-card bg-white rounded-2xl border border-red-100 shadow-sm overflow-hidden fade-in cursor-pointer"
+          onclick="openDetail('${s.id}')">
+          <div class="h-44 bg-slate-50 flex items-center justify-center overflow-hidden">
+            <img src="${s.imageData}" alt="" class="w-full h-full object-cover opacity-50" />
+          </div>
+          <div class="p-4">
+            <span class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 text-red-600 border border-red-100 mb-2">⚠️ Error</span>
+            <p class="text-xs text-slate-500">${s.error || 'Analysis failed'}</p>
+          </div>
+        </div>`;
+    }
+
+    return `
+      <div class="screenshot-card bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden cursor-pointer fade-in"
+        onclick="openDetail('${s.id}')">
+        <!-- Thumbnail -->
+        <div class="h-44 bg-slate-50 overflow-hidden relative">
+          <img src="${s.imageData}" alt="${escapeHtml(s.title || '')}"
+            class="w-full h-full object-cover" loading="lazy" />
+          <!-- Gradient overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+        </div>
+        <!-- Card body -->
+        <div class="p-4">
+          <span class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full mb-2.5 cat-badge ${catClass}">
+            ${meta.label}
+          </span>
+          <h3 class="font-semibold text-slate-900 text-sm leading-snug mb-1 line-clamp-2">${escapeHtml(s.title || 'Untitled')}</h3>
+          ${s.detail ? `<p class="text-xs text-slate-500 mb-3 truncate">${escapeHtml(s.detail)}</p>` : '<div class="mb-3"></div>'}
+          <p class="text-xs text-slate-400">${dateStr}</p>
+        </div>
+      </div>`;
+  }
+
+  // ────────────────────────────────────────────
+  // DETAIL MODAL
+  // ────────────────────────────────────────────
+  let _openId = null;
+
+  function openDetail(id) {
+    const s = state.screenshots.find(x => x.id === id);
+    if (!s) return;
+    _openId = id;
+
+    const meta = CAT_META[s.category] || CAT_META.other;
+    const catClass = `cat-${s.category || 'other'}`;
+
+    document.getElementById('modal-img').src = s.imageData;
+    document.getElementById('modal-cat-badge').className =
+      `inline-block text-xs font-semibold px-2.5 py-1 rounded-full mb-2 cat-badge ${catClass}`;
+    document.getElementById('modal-cat-badge').textContent = meta.label;
+    document.getElementById('modal-title').textContent = s.title || 'Untitled';
+    document.getElementById('modal-desc').textContent = s.description || '';
+    document.getElementById('modal-date').textContent =
+      s.dateAdded ? 'Added ' + new Date(s.dateAdded).toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '';
+
+    // Detail grid
+    const detailItems = [];
+    if (s.detail) detailItems.push(['Key Info', s.detail]);
+    if (s.extra) {
+      Object.entries(s.extra).forEach(([k, v]) => {
+        if (v) detailItems.push([k, v]);
+      });
+    }
+    document.getElementById('modal-details').innerHTML = detailItems.map(([k, v]) => `
+      <div class="bg-slate-50 rounded-xl p-3">
+        <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-0.5">${escapeHtml(k)}</p>
+        <p class="text-sm font-semibold text-slate-800">${escapeHtml(v)}</p>
+      </div>`).join('');
+
+    // Tags
+    const tags = s.tags || [];
+    const tagsSection = document.getElementById('modal-tags-section');
+    if (tags.length > 0) {
+      tagsSection.classList.remove('hidden');
+      document.getElementById('modal-tags').innerHTML = tags.map(t =>
+        `<span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">${escapeHtml(t)}</span>`
+      ).join('');
+    } else {
+      tagsSection.classList.add('hidden');
+    }
+
+    document.getElementById('modal-delete').onclick = () => deleteScreenshot(id);
+    document.getElementById('detail-modal').classList.remove('hidden');
+  }
+
+  function closeDetailModal() {
+    document.getElementById('detail-modal').classList.add('hidden');
+    _openId = null;
+  }
+
+  function closeDetailIfBackdrop(e) {
+    if (e.target === document.getElementById('detail-modal')) closeDetailModal();
+  }
+
+  async function deleteScreenshot(id) {
+    if (!confirm('Remove this screenshot?')) return;
+    closeDetailModal();
+    state.screenshots = state.screenshots.filter(s => s.id !== id);
+    try { await DB.del(id); } catch (e) {}
+    updateLayout();
+    renderGrid();
+  }
+
+  // ────────────────────────────────────────────
+  // FILE HANDLING
+  // ────────────────────────────────────────────
+  function handleDragOver(e) {
+    e.preventDefault();
+    document.getElementById('upload-zone').classList.add('drop-active');
+  }
+  function handleDragLeave(e) {
+    document.getElementById('upload-zone').classList.remove('drop-active');
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('upload-zone').classList.remove('drop-active');
+    processFiles(e.dataTransfer.files);
+  }
+  function handleFileInputChange(e) {
+    processFiles(e.target.files);
+    e.target.value = '';
+  }
+
+  // Global drop (when grid is shown)
+  let _dragCount = 0;
+  function globalDragOver(e) {
+    e.preventDefault();
+    document.getElementById('drop-overlay').classList.remove('hidden');
+  }
+  function globalDragLeave(e) {
+    _dragCount = Math.max(0, _dragCount - 1);
+    if (_dragCount === 0) document.getElementById('drop-overlay').classList.add('hidden');
+  }
+  function globalDrop(e) {
+    e.preventDefault();
+    _dragCount = 0;
+    document.getElementById('drop-overlay').classList.add('hidden');
+    processFiles(e.dataTransfer.files);
+  }
+
+  function processFiles(files) {
+    if (!state.apiKey) {
+      showApiKeyModal();
+      return;
+    }
+    Array.from(files)
+      .filter(f => f.type.startsWith('image/'))
+      .forEach(f => processFile(f));
+  }
+
+  async function processFile(file) {
+    const id = 'sc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+
+    // Compress image
+    const imageData = await compressImage(file);
+
+    // Add placeholder card immediately
+    const placeholder = {
+      id, imageData, status: 'analyzing',
+      dateAdded: new Date().toISOString(),
+    };
+    state.screenshots.unshift(placeholder);
+    updateLayout();
+    renderGrid();
+
+    // Call Claude
+    try {
+      const result = await analyzeWithClaude(imageData);
+      const full = { ...placeholder, ...result, status: 'done' };
+      const idx = state.screenshots.findIndex(s => s.id === id);
+      if (idx !== -1) state.screenshots[idx] = full;
+      await DB.put(full);
+    } catch (err) {
+      const idx = state.screenshots.findIndex(s => s.id === id);
+      if (idx !== -1) {
+        state.screenshots[idx] = { ...placeholder, status: 'error', error: err.message };
+        await DB.put(state.screenshots[idx]);
+      }
+    }
+
+    renderGrid();
+  }
+
+  // ────────────────────────────────────────────
+  // IMAGE COMPRESSION
+  // ────────────────────────────────────────────
+  function compressImage(file) {
+    return new Promise(res => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const MAX = 1400;
+        const ratio = Math.min(1, MAX / Math.max(img.width, img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * ratio);
+        canvas.height = Math.round(img.height * ratio);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        res(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = url;
+    });
+  }
+
+  // ────────────────────────────────────────────
+  // CLAUDE API CALL
+  // ────────────────────────────────────────────
+  async function analyzeWithClaude(imageData) {
+    const base64 = imageData.split(',')[1];
+    const mimeType = imageData.split(';')[0].split(':')[1] || 'image/jpeg';
+
+    const prompt = `Analyze this screenshot carefully and return ONLY a valid JSON object (no markdown, no explanation) with this exact structure:
+
+{
+  "category": "shopping" | "places" | "events" | "recipes" | "other",
+  "title": "concise title, 3-6 words",
+  "description": "one sentence describing what this screenshot shows and why someone saved it",
+  "detail": "the single most important detail: for shopping=brand & price, for places=location name & city, for events=event name & date, for recipes=dish name & cuisine",
+  "extra": {
+    "key1": "value1",
+    "key2": "value2"
+  },
+  "tags": ["tag1", "tag2", "tag3"]
+}
+
+Rules:
+- category MUST be one of: shopping, places, events, recipes, other
+- detail should be concise (under 40 chars)
+- extra: 1-3 additional relevant fields (e.g. "Price": "$49.99", "Location": "Paris", "Date": "Dec 15", "Servings": "4")
+- tags: 2-4 lowercase keywords
+- Return ONLY the JSON object, nothing else`;
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': state.apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-6',
+        max_tokens: 512,
+        thinking: { type: 'adaptive' },
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: mimeType, data: base64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `API error ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const text = data.content.find(b => b.type === 'text')?.text || '';
+
+    // Parse JSON from response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Could not parse AI response');
+    const parsed = JSON.parse(jsonMatch[0]);
+
+    return {
+      category: parsed.category || 'other',
+      title: parsed.title || 'Screenshot',
+      description: parsed.description || '',
+      detail: parsed.detail || '',
+      extra: parsed.extra || {},
+      tags: Array.isArray(parsed.tags) ? parsed.tags : [],
+    };
+  }
+
+  // ────────────────────────────────────────────
+  // API KEY MODAL
+  // ────────────────────────────────────────────
+  function showApiKeyModal() {
+    document.getElementById('api-key-input').value = state.apiKey || '';
+    document.getElementById('api-modal').classList.remove('hidden');
+    setTimeout(() => document.getElementById('api-key-input').focus(), 100);
+  }
+
+  function hideApiKeyModal() {
+    document.getElementById('api-modal').classList.add('hidden');
+  }
+
+  function saveApiKey() {
+    const key = document.getElementById('api-key-input').value.trim();
+    if (!key) return;
+    state.apiKey = key;
+    localStorage.setItem('snapsort_key', key);
+    updateKeyButton();
+    hideApiKeyModal();
+  }
+
+  function updateKeyButton() {
+    const btn = document.getElementById('api-key-btn');
+    const label = document.getElementById('api-key-label');
+    if (state.apiKey) {
+      label.textContent = 'API Key ✓';
+      btn.classList.remove('border-slate-700', 'text-slate-300');
+      btn.classList.add('border-emerald-700', 'text-emerald-400');
+    } else {
+      label.textContent = 'Add API Key';
+      btn.classList.add('border-slate-700', 'text-slate-300');
+      btn.classList.remove('border-emerald-700', 'text-emerald-400');
+    }
+  }
+
+  // ────────────────────────────────────────────
+  // UTILS
+  // ────────────────────────────────────────────
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // Close modals with Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      hideApiKeyModal();
+      closeDetailModal();
+    }
+  });
+
+  // Show API modal if no key on first visit
+  window.addEventListener('load', () => {
+    init().then(() => {
+      if (!state.apiKey) showApiKeyModal();
+    });
+  });
+  </script>
+</body>
+</html>

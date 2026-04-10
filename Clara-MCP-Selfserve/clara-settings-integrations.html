@@ -891,121 +891,103 @@
       </div>
 
       <div class="int-grid" id="int-grid">
-        <div class="int-card" onclick="openMcpSidesheet()">
-          <div class="card-logo-clara" style="position:relative;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M12 3C7.03 3 3 7.03 3 12C3 16.97 7.03 21 12 21C14.6 21 16.97 19.9 18.63 18.12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="19" cy="10" r="3" fill="#DBFFDD"/>
-            </svg>
+
+        <!-- ── Clara MCP card (real, interactive) ── -->
+        <div class="int-card" onclick="openMcpSidesheet()" style="gap:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="width:40px;height:40px;border-radius:9999px;background:#000;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2 Q12.8 7.2 14.8 9.2 Q16.8 11.2 22 12 Q16.8 12.8 14.8 14.8 Q12.8 16.8 12 22 Q11.2 16.8 9.2 14.8 Q7.2 12.8 2 12 Q7.2 11.2 9.2 9.2 Q11.2 7.2 12 2 Z" fill="white"/>
+              </svg>
+            </div>
+            <span style="font-size:13px;font-weight:500;padding:5px 16px;border-radius:9999px;background:#efe7fe;color:#663db0;">New</span>
           </div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <div class="card-title">MCP Integration</div>
-            <span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:9999px;background:var(--teal);color:white;letter-spacing:0.3px;">New</span>
-          </div>
-          <div class="card-desc">Connect AI agents and external tools to Clara via Model Context Protocol.</div>
-          <div class="card-plans">
-            <span class="plan-pill pill-pro">Pro</span>
-            <span class="plan-divider"></span>
-            <span class="plan-pill pill-enterprise">Enterprise</span>
-          </div>
+          <div class="card-title" style="font-size:18px;font-weight:700;letter-spacing:-0.3px;">Clara MCP</div>
+          <div class="card-desc">Connect AI agents and external tools to Clara.</div>
+          <div style="font-size:13px;font-weight:700;color:var(--content-high);margin-top:auto;">Available for all plans</div>
         </div>
 
-        <div class="int-card" onclick="openIntegration('API Integration')">
-          <div class="card-logo-clara">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M12 3C7.03 3 3 7.03 3 12C3 16.97 7.03 21 12 21C14.6 21 16.97 19.9 18.63 18.12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="19" cy="10" r="3" fill="#DBFFDD"/>
-            </svg>
+        <!-- ── Placeholder cards ── -->
+        <div class="int-card" style="cursor:default;gap:16px;">
+          <div style="width:40px;height:40px;border-radius:9999px;background:#ebeef4;flex-shrink:0;"></div>
+          <div style="height:14px;width:58%;background:#ebeef4;border-radius:6px;"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+            <div style="height:10px;width:92%;background:#f3f5f6;border-radius:4px;"></div>
+            <div style="height:10px;width:75%;background:#f3f5f6;border-radius:4px;"></div>
           </div>
-          <div class="card-title">API Integration</div>
-          <div class="card-desc">Connect your own systems to Clara using our REST API and webhooks.</div>
-          <div class="card-plans">
-            <span class="plan-pill pill-pro">Pro</span>
-            <span class="plan-divider"></span>
-            <span class="plan-pill pill-enterprise">Enterprise</span>
-          </div>
+          <div style="height:10px;width:44%;background:#ebeef4;border-radius:4px;margin-top:auto;"></div>
         </div>
 
-        <div class="int-card coming" onclick="">
-          <span class="coming-badge">Coming soon</span>
-          <div class="card-logo-clara">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M12 3C7.03 3 3 7.03 3 12C3 16.97 7.03 21 12 21C14.6 21 16.97 19.9 18.63 18.12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="19" cy="10" r="3" fill="#DBFFDD"/>
-            </svg>
+        <div class="int-card" style="cursor:default;gap:16px;">
+          <div style="width:40px;height:40px;border-radius:9999px;background:#ebeef4;flex-shrink:0;"></div>
+          <div style="height:14px;width:72%;background:#ebeef4;border-radius:6px;"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+            <div style="height:10px;width:85%;background:#f3f5f6;border-radius:4px;"></div>
+            <div style="height:10px;width:60%;background:#f3f5f6;border-radius:4px;"></div>
           </div>
-          <div class="card-title">ERP Integration</div>
-          <div class="card-desc">Sync your ERP system with Clara for automated reconciliation.</div>
-          <div class="card-plans">
-            <span class="plan-pill pill-enterprise">Enterprise</span>
-          </div>
+          <div style="height:10px;width:52%;background:#ebeef4;border-radius:4px;margin-top:auto;"></div>
         </div>
 
-        <div class="int-card" onclick="openIntegration('SAP Concur')">
-          <div class="card-logo-initials">SC</div>
-          <div class="card-title">SAP Concur</div>
-          <div class="card-desc">Sync expense reports, travel requests and approvals automatically.</div>
-          <div class="card-plans">
-            <span class="plan-pill pill-pro">Pro</span>
-            <span class="plan-divider"></span>
-            <span class="plan-pill pill-enterprise">Enterprise</span>
+        <div class="int-card" style="cursor:default;gap:16px;">
+          <div style="width:40px;height:40px;border-radius:9999px;background:#ebeef4;flex-shrink:0;"></div>
+          <div style="height:14px;width:64%;background:#ebeef4;border-radius:6px;"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+            <div style="height:10px;width:90%;background:#f3f5f6;border-radius:4px;"></div>
+            <div style="height:10px;width:68%;background:#f3f5f6;border-radius:4px;"></div>
           </div>
+          <div style="height:10px;width:38%;background:#ebeef4;border-radius:4px;margin-top:auto;"></div>
         </div>
 
-        <div class="int-card" onclick="openIntegration('Google Workspace')">
-          <div class="card-logo-initials">GW</div>
-          <div class="card-title">Google Workspace</div>
-          <div class="card-desc">Import receipts from Gmail and attach Drive documents to expenses.</div>
-          <div class="card-plans">
-            <span class="plan-pill pill-pro">Pro</span>
-            <span class="plan-divider"></span>
-            <span class="plan-pill pill-enterprise">Enterprise</span>
+        <div class="int-card" style="cursor:default;gap:16px;">
+          <div style="width:40px;height:40px;border-radius:9999px;background:#ebeef4;flex-shrink:0;"></div>
+          <div style="height:14px;width:50%;background:#ebeef4;border-radius:6px;"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+            <div style="height:10px;width:88%;background:#f3f5f6;border-radius:4px;"></div>
+            <div style="height:10px;width:72%;background:#f3f5f6;border-radius:4px;"></div>
           </div>
+          <div style="height:10px;width:48%;background:#ebeef4;border-radius:4px;margin-top:auto;"></div>
         </div>
 
-        <div class="int-card" onclick="openIntegration('Slack')">
-          <div class="card-logo-initials">SL</div>
-          <div class="card-title">Slack</div>
-          <div class="card-desc">Receive payment alerts and approval requests in your Slack channels.</div>
-          <div class="card-plans">
-            <span class="plan-pill pill-pro">Pro</span>
-            <span class="plan-divider"></span>
-            <span class="plan-pill pill-enterprise">Enterprise</span>
+        <div class="int-card" style="cursor:default;gap:16px;">
+          <div style="width:40px;height:40px;border-radius:9999px;background:#ebeef4;flex-shrink:0;"></div>
+          <div style="height:14px;width:66%;background:#ebeef4;border-radius:6px;"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+            <div style="height:10px;width:80%;background:#f3f5f6;border-radius:4px;"></div>
+            <div style="height:10px;width:55%;background:#f3f5f6;border-radius:4px;"></div>
           </div>
+          <div style="height:10px;width:42%;background:#ebeef4;border-radius:4px;margin-top:auto;"></div>
         </div>
 
-        <div class="int-card" onclick="openIntegration('Xero')">
-          <div class="card-logo-initials">XR</div>
-          <div class="card-title">Xero</div>
-          <div class="card-desc">Automatically export transactions and invoices to your Xero account.</div>
-          <div class="card-plans">
-            <span class="plan-pill pill-pro">Pro</span>
-            <span class="plan-divider"></span>
-            <span class="plan-pill pill-enterprise">Enterprise</span>
+        <div class="int-card" style="cursor:default;gap:16px;">
+          <div style="width:40px;height:40px;border-radius:9999px;background:#ebeef4;flex-shrink:0;"></div>
+          <div style="height:14px;width:55%;background:#ebeef4;border-radius:6px;"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+            <div style="height:10px;width:94%;background:#f3f5f6;border-radius:4px;"></div>
+            <div style="height:10px;width:78%;background:#f3f5f6;border-radius:4px;"></div>
           </div>
+          <div style="height:10px;width:36%;background:#ebeef4;border-radius:4px;margin-top:auto;"></div>
         </div>
 
-        <div class="int-card" onclick="openIntegration('QuickBooks')">
-          <div class="card-logo-initials">QB</div>
-          <div class="card-title">QuickBooks</div>
-          <div class="card-desc">Keep your books in sync by pushing Clara transactions to QuickBooks.</div>
-          <div class="card-plans">
-            <span class="plan-pill pill-pro">Pro</span>
-            <span class="plan-divider"></span>
-            <span class="plan-pill pill-enterprise">Enterprise</span>
+        <div class="int-card" style="cursor:default;gap:16px;">
+          <div style="width:40px;height:40px;border-radius:9999px;background:#ebeef4;flex-shrink:0;"></div>
+          <div style="height:14px;width:78%;background:#ebeef4;border-radius:6px;"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+            <div style="height:10px;width:82%;background:#f3f5f6;border-radius:4px;"></div>
+            <div style="height:10px;width:63%;background:#f3f5f6;border-radius:4px;"></div>
           </div>
+          <div style="height:10px;width:50%;background:#ebeef4;border-radius:4px;margin-top:auto;"></div>
         </div>
 
-        <div class="int-card" onclick="openIntegration('Jira')">
-          <div class="card-logo-initials">JR</div>
-          <div class="card-title">Jira</div>
-          <div class="card-desc">Link purchase orders and payment approvals to Jira project tickets.</div>
-          <div class="card-plans">
-            <span class="plan-pill pill-pro">Pro</span>
-            <span class="plan-divider"></span>
-            <span class="plan-pill pill-enterprise">Enterprise</span>
+        <div class="int-card" style="cursor:default;gap:16px;">
+          <div style="width:40px;height:40px;border-radius:9999px;background:#ebeef4;flex-shrink:0;"></div>
+          <div style="height:14px;width:62%;background:#ebeef4;border-radius:6px;"></div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+            <div style="height:10px;width:87%;background:#f3f5f6;border-radius:4px;"></div>
+            <div style="height:10px;width:70%;background:#f3f5f6;border-radius:4px;"></div>
           </div>
+          <div style="height:10px;width:46%;background:#ebeef4;border-radius:4px;margin-top:auto;"></div>
         </div>
+
       </div>
     </div>
 
@@ -1273,187 +1255,286 @@
   <div id="mcp-sidesheet" style="display:none;position:fixed;top:0;right:-480px;width:480px;height:100vh;background:var(--bg-surface);z-index:1000;box-shadow:-8px 0 24px rgba(0,0,0,0.12);border-radius:0;transition:right 300ms ease;flex-direction:column;overflow:hidden;">
 
     <!-- ══ STEP 1: Get Started (intro) ══ -->
-    <div id="ss-step-intro" style="display:flex;flex-direction:column;height:100%;">
+    <div id="ss-step-intro" style="display:flex;flex-direction:column;height:100%;overflow:hidden;">
+      <!-- Scrollable body -->
+      <div style="flex:1;min-height:0;overflow-y:auto;">
+      <!-- Close button -->
       <div style="display:flex;justify-content:flex-end;padding:16px 20px 0;flex-shrink:0;">
         <button style="border:none;background:none;cursor:pointer;padding:4px;color:var(--content-medium);" onclick="closeMcpSidesheet()">
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div style="flex:1;min-height:0;overflow-y:auto;padding:0 24px 32px;display:flex;flex-direction:column;align-items:center;">
-        <!-- Icon -->
-        <div style="width:72px;height:72px;border-radius:9999px;background:var(--content-high);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
-          <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white" stroke="white" stroke-width="1"/></svg>
+      <!-- Hero screenshot -->
+      <div style="padding:8px 20px 0;flex-shrink:0;">
+        <div style="background:#CDD5E2;border-radius:12px;overflow:hidden;height:240px;">
+          <svg width="100%" height="240" viewBox="0 0 440 240" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs><clipPath id="mcp-hero-clip"><rect width="440" height="240" rx="12"/></clipPath></defs>
+            <g clip-path="url(#mcp-hero-clip)">
+              <rect width="440" height="240" fill="#CDD5E2"/>
+              <!-- App frame -->
+              <rect x="28" y="18" width="406" height="240" rx="6" fill="white"/>
+              <!-- Sidebar -->
+              <rect x="28" y="18" width="88" height="240" fill="#1f304b"/>
+              <!-- Sidebar logo area -->
+              <rect x="42" y="28" width="14" height="14" rx="3" fill="rgba(255,255,255,0.55)"/>
+              <rect x="60" y="32" width="38" height="5" rx="2.5" fill="rgba(255,255,255,0.35)"/>
+              <!-- Nav items: icon + text bar -->
+              <rect x="38" y="54" width="9" height="9" rx="2" fill="rgba(255,255,255,0.3)"/>
+              <rect x="52" y="56" width="34" height="4" rx="2" fill="rgba(255,255,255,0.5)"/>
+              <rect x="38" y="71" width="9" height="9" rx="2" fill="rgba(255,255,255,0.3)"/>
+              <rect x="52" y="73" width="46" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+              <rect x="38" y="88" width="9" height="9" rx="2" fill="rgba(255,255,255,0.3)"/>
+              <rect x="52" y="90" width="50" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+              <rect x="104" y="90" width="6" height="4" rx="1" fill="rgba(255,255,255,0.2)"/>
+              <rect x="38" y="105" width="9" height="9" rx="2" fill="rgba(255,255,255,0.3)"/>
+              <rect x="52" y="107" width="38" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+              <rect x="92" y="107" width="6" height="4" rx="1" fill="rgba(255,255,255,0.2)"/>
+              <rect x="38" y="122" width="9" height="9" rx="2" fill="rgba(255,255,255,0.3)"/>
+              <rect x="52" y="124" width="32" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+              <!-- Top nav bar -->
+              <rect x="116" y="18" width="318" height="28" fill="white"/>
+              <rect x="116" y="46" width="318" height="1" fill="#dfe1e2"/>
+              <rect x="126" y="28" width="64" height="5" rx="2.5" fill="#404344"/>
+              <rect x="194" y="30" width="6" height="3" rx="1" fill="#9c9fa0"/>
+              <rect x="268" y="28" width="22" height="5" rx="2.5" fill="#dfe1e2"/>
+              <rect x="298" y="28" width="4" height="5" rx="1" fill="#dfe1e2"/>
+              <rect x="308" y="28" width="18" height="5" rx="2.5" fill="#dfe1e2"/>
+              <rect x="334" y="28" width="28" height="5" rx="2.5" fill="#dfe1e2"/>
+              <rect x="370" y="28" width="18" height="5" rx="2.5" fill="#dfe1e2"/>
+              <rect x="396" y="28" width="24" height="5" rx="2.5" fill="#dfe1e2"/>
+              <!-- Main content -->
+              <rect x="116" y="47" width="318" height="211" fill="#fbfcfd"/>
+              <!-- "Integrations" heading -->
+              <rect x="130" y="59" width="74" height="8" rx="3" fill="#1f2223"/>
+              <!-- Search bar -->
+              <rect x="130" y="74" width="152" height="15" rx="5" fill="white" stroke="#dfe1e2" stroke-width="1"/>
+              <rect x="142" y="79" width="74" height="4" rx="2" fill="#bbbebf"/>
+              <!-- "Coming soon" badge (top right of content) -->
+              <rect x="376" y="73" width="50" height="17" rx="6" fill="#f3f5f6"/>
+              <rect x="381" y="78" width="39" height="4" rx="2" fill="#9c9fa0"/>
+              <!-- Card 1: API Integration -->
+              <rect x="130" y="100" width="92" height="105" rx="6" fill="white" stroke="#dfe1e2" stroke-width="1"/>
+              <circle cx="144" cy="115" r="8" fill="#f3f5f6" stroke="#dfe1e2" stroke-width="0.8"/>
+              <line x1="144" y1="111" x2="144" y2="119" stroke="#9c9fa0" stroke-width="1.5"/>
+              <line x1="140" y1="115" x2="148" y2="115" stroke="#9c9fa0" stroke-width="1.5"/>
+              <rect x="138" y="129" width="66" height="5" rx="2.5" fill="#1f2223"/>
+              <rect x="138" y="139" width="76" height="4" rx="2" fill="#dfe1e2"/>
+              <rect x="138" y="146" width="64" height="4" rx="2" fill="#dfe1e2"/>
+              <rect x="130" y="158" width="92" height="1" fill="#dfe1e2"/>
+              <rect x="138" y="164" width="26" height="11" rx="3" fill="#f3f5f6"/>
+              <rect x="141" y="168" width="20" height="3" rx="1.5" fill="#9c9fa0"/>
+              <rect x="168" y="164" width="36" height="11" rx="3" fill="#f3f5f6"/>
+              <rect x="171" y="168" width="30" height="3" rx="1.5" fill="#9c9fa0"/>
+              <rect x="130" y="212" width="54" height="4" rx="2" fill="#9c9fa0"/>
+              <!-- Card 2: ERP Integration + play -->
+              <rect x="230" y="100" width="92" height="105" rx="6" fill="white" stroke="#dfe1e2" stroke-width="1"/>
+              <circle cx="244" cy="115" r="8" fill="#f3f5f6" stroke="#dfe1e2" stroke-width="0.8"/>
+              <line x1="244" y1="111" x2="244" y2="119" stroke="#9c9fa0" stroke-width="1.5"/>
+              <line x1="240" y1="115" x2="248" y2="115" stroke="#9c9fa0" stroke-width="1.5"/>
+              <rect x="238" y="129" width="58" height="5" rx="2.5" fill="#1f2223"/>
+              <rect x="238" y="139" width="76" height="4" rx="2" fill="#dfe1e2"/>
+              <rect x="238" y="146" width="64" height="4" rx="2" fill="#dfe1e2"/>
+              <rect x="230" y="158" width="92" height="1" fill="#dfe1e2"/>
+              <rect x="238" y="164" width="36" height="11" rx="3" fill="#f3f5f6"/>
+              <rect x="241" y="168" width="30" height="3" rx="1.5" fill="#9c9fa0"/>
+              <circle cx="276" cy="152" r="18" fill="rgba(51,88,148,0.85)"/>
+              <polygon points="271,145 271,159 284,152" fill="white"/>
+              <rect x="230" y="212" width="54" height="4" rx="2" fill="#9c9fa0"/>
+              <!-- Card 3: New feature + coming soon -->
+              <rect x="330" y="100" width="92" height="105" rx="6" fill="white" stroke="#dfe1e2" stroke-width="1"/>
+              <circle cx="344" cy="115" r="8" fill="#f3f5f6" stroke="#dfe1e2" stroke-width="0.8"/>
+              <line x1="344" y1="111" x2="344" y2="119" stroke="#9c9fa0" stroke-width="1.5"/>
+              <line x1="340" y1="115" x2="348" y2="115" stroke="#9c9fa0" stroke-width="1.5"/>
+              <rect x="360" y="104" width="54" height="12" rx="4" fill="#f3f5f6"/>
+              <rect x="363" y="108" width="46" height="4" rx="2" fill="#9c9fa0"/>
+              <rect x="338" y="129" width="72" height="5" rx="2.5" fill="#1f2223"/>
+              <rect x="338" y="139" width="76" height="4" rx="2" fill="#dfe1e2"/>
+              <rect x="338" y="146" width="64" height="4" rx="2" fill="#dfe1e2"/>
+              <rect x="330" y="158" width="92" height="1" fill="#dfe1e2"/>
+              <rect x="338" y="164" width="36" height="11" rx="3" fill="#f3f5f6"/>
+              <rect x="341" y="168" width="30" height="3" rx="1.5" fill="#9c9fa0"/>
+              <rect x="330" y="212" width="54" height="4" rx="2" fill="#9c9fa0"/>
+            </g>
+          </svg>
         </div>
-        <!-- Title + chips -->
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-          <div style="font-weight:600;font-size:24px;letter-spacing:-0.5px;color:var(--content-high);">Clara MCP</div>
-          <span style="font-size:12px;font-weight:500;padding:3px 10px;border-radius:9999px;background:var(--info-bg);color:var(--info-fg);">New</span>
-          <span style="font-size:12px;font-weight:500;padding:3px 10px;border-radius:9999px;background:var(--bg-highlight);color:var(--content-medium);">Beta</span>
+      </div>
+      <!-- Content -->
+      <div style="padding:32px 24px 32px;">
+        <!-- Title + badges -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;">
+          <span style="font-family:var(--font);font-weight:700;font-size:32px;letter-spacing:-0.64px;color:var(--content-high);line-height:1.2;">Clara MCP</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+            <span style="font-size:13px;font-weight:500;padding:5px 16px;border-radius:9999px;background:#efe7fe;color:#663db0;">New</span>
+            <span style="font-size:13px;font-weight:500;padding:5px 16px;border-radius:9999px;background:#e8e8f8;color:#5353fa;">Beta</span>
+          </div>
         </div>
-        <!-- Get started section -->
-        <div style="width:100%;margin-top:24px;">
-          <div style="font-weight:700;font-size:18px;letter-spacing:-0.252px;color:var(--content-high);margin-bottom:4px;">Get started</div>
-          <div style="font-size:14px;color:var(--content-low);line-height:22px;margin-bottom:16px;">Watch this short video to see how the integration works.</div>
-          <!-- Video -->
-          <div style="background:#E0E4EA;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;width:100%;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:28px;" onclick="toast('info','Playing video…')">
-            <svg width="100" height="75" viewBox="0 0 100 75" fill="none" style="opacity:0.5;">
-              <rect x="5" y="5" width="90" height="65" rx="6" fill="white" stroke="#DFE1E2"/>
-              <rect x="5" y="5" width="20" height="65" fill="#1A2B45"/>
-              <rect x="30" y="10" width="30" height="5" rx="2.5" fill="#DFE1E2"/>
-              <rect x="30" y="20" width="60" height="4" rx="2" fill="#E2EAFE"/>
-              <rect x="30" y="27" width="60" height="4" rx="2" fill="#E2EAFE"/>
-              <rect x="30" y="34" width="40" height="4" rx="2" fill="#E2EAFE"/>
-            </svg>
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
-              <div style="width:48px;height:48px;border-radius:9999px;background:rgba(31,34,35,0.65);display:flex;align-items:center;justify-content:center;">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><polygon points="9,6 19,12 9,18" fill="white"/></svg>
-              </div>
+        <!-- Description -->
+        <p style="font-family:var(--font);font-size:16px;line-height:26px;color:var(--content-medium);margin:0 0 32px;letter-spacing:-0.011em;">Connect your AI assistant directly to Clara — ask questions, take action, and manage finances through chat.</p>
+        <!-- Features -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:9999px;background:var(--bg-highlight);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="var(--content-low)" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            </div>
+            <div>
+              <div style="font-family:var(--font);font-size:15px;font-weight:700;color:var(--content-high);margin-bottom:3px;">Instant answers</div>
+              <div style="font-family:var(--font);font-size:14px;line-height:22px;color:var(--content-medium);">"Who are our top 5 vendors this quarter?", just ask.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:9999px;background:var(--bg-highlight);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="var(--content-low)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/></svg>
+            </div>
+            <div>
+              <div style="font-family:var(--font);font-size:15px;font-weight:700;color:var(--content-high);margin-bottom:3px;">Act without switching tabs</div>
+              <div style="font-family:var(--font);font-size:14px;line-height:22px;color:var(--content-medium);">Block cards, set limits, and review transactions — all from your AI assistant.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:9999px;background:var(--bg-highlight);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="var(--content-low)" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+            <div>
+              <div style="font-family:var(--font);font-size:15px;font-weight:700;color:var(--content-high);margin-bottom:3px;">Works with tools you already use</div>
+              <div style="font-family:var(--font);font-size:14px;line-height:22px;color:var(--content-medium);">Claude, Gemini, or any AI assistant that supports MCP.</div>
             </div>
           </div>
         </div>
-        <!-- Why connect -->
-        <div style="width:100%;">
-          <div style="font-weight:700;font-size:18px;letter-spacing:-0.252px;color:var(--content-high);margin-bottom:4px;">Why connect Clara via MCP</div>
-          <div style="font-size:14px;color:var(--content-low);line-height:22px;margin-bottom:20px;">Ask questions, automate tasks, and work with your financial data in plain language.</div>
-          <div style="display:flex;flex-direction:column;gap:20px;">
-            <div style="display:flex;gap:14px;">
-              <div style="width:32px;height:32px;border-radius:9999px;background:var(--bg-highlight);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--content-low)" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-              </div>
-              <div><div style="font-size:14px;font-weight:600;color:var(--content-high);">Instant answers</div><div style="font-size:14px;color:var(--content-low);margin-top:2px;line-height:22px;">"Who are our top 5 vendors this quarter?", just ask.</div></div>
-            </div>
-            <div style="display:flex;gap:14px;">
-              <div style="width:32px;height:32px;border-radius:9999px;background:var(--bg-highlight);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--content-low)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-              </div>
-              <div><div style="font-size:14px;font-weight:600;color:var(--content-high);">Automate repetitive tasks</div><div style="font-size:14px;color:var(--content-low);margin-top:2px;line-height:22px;">Block cards, set limits, and review transactions, all via chat.</div></div>
-            </div>
-            <div style="display:flex;gap:14px;">
-              <div style="width:32px;height:32px;border-radius:9999px;background:var(--bg-highlight);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--content-low)" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              </div>
-              <div><div style="font-size:14px;font-weight:600;color:var(--content-high);">Works with your existing tools</div><div style="font-size:14px;color:var(--content-low);margin-top:2px;line-height:22px;">Claude, Cursor, or any MCP-compatible client.</div></div>
-            </div>
-          </div>
-        </div>
-        <!-- CTA -->
-        <button onclick="ssGoToCredentials()" style="margin-top:32px;width:280px;padding:14px;background:var(--primary);color:white;border:none;border-radius:12px;font-family:var(--font);font-size:16px;font-weight:500;cursor:pointer;letter-spacing:-0.176px;">Set up credentials</button>
-        <div style="font-size:12px;color:var(--content-low);margin-top:12px;text-align:center;">This integration is in beta and may be updated to better serve you.</div>
+      </div>
+      </div><!-- end scrollable body -->
+      <!-- Fixed footer -->
+      <div style="flex-shrink:0;padding:24px;background:var(--bg-surface);">
+        <button onclick="ssGoToCredentials()" style="width:100%;padding:16px;background:var(--primary);color:white;border:none;border-radius:12px;font-family:var(--font);font-size:16px;font-weight:500;cursor:pointer;letter-spacing:-0.011em;">Set up credentials</button>
+        <div style="font-family:var(--font);font-size:12px;color:var(--content-low);margin-top:12px;text-align:center;">This integration is in beta and may be updated to better serve you.</div>
       </div>
     </div>
 
     <!-- ══ STEP 2: Credentials (setup + generated + done) ══ -->
     <div id="ss-step-credentials" style="display:none;flex-direction:column;height:100%;">
       <!-- Header -->
-      <div id="ss-cred-header" style="padding:24px 24px 20px;display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;transition:box-shadow 200ms;z-index:1;">
+      <div id="ss-cred-header" style="padding:24px 24px 4px;display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;z-index:1;">
         <div style="display:flex;align-items:center;gap:10px;">
-          <div style="font-weight:600;font-size:20px;line-height:32px;letter-spacing:-0.34px;color:var(--content-high);">Clara MCP</div>
-          <span style="font-size:12px;font-weight:500;padding:3px 10px;border-radius:9999px;background:var(--info-bg);color:var(--info-fg);">Beta</span>
+          <div style="font-weight:700;font-size:24px;letter-spacing:-0.5px;color:var(--content-high);">Clara MCP</div>
+          <span style="font-size:13px;font-weight:500;padding:5px 16px;border-radius:9999px;background:#e8e8f8;color:#5353fa;">Beta</span>
         </div>
         <button style="border:none;background:none;cursor:pointer;padding:4px;color:var(--content-medium);margin-top:4px;flex-shrink:0;" onclick="closeMcpSidesheet()">
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div style="font-size:14px;color:var(--content-low);padding:0 24px 16px;letter-spacing:-0.084px;flex-shrink:0;">Connect with AI agents for fast, secure finance tasks</div>
+      <div style="font-size:15px;color:var(--content-medium);padding:6px 24px 20px;letter-spacing:-0.011em;flex-shrink:0;line-height:24px;">Generate a token to connect any AI agents to your Clara account.</div>
 
       <!-- Body -->
       <div id="ss-cred-body" style="flex:1;min-height:0;overflow-y:auto;padding:0 24px 32px;display:flex;flex-direction:column;gap:24px;">
 
-        <!-- Documentation box -->
-        <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;">
-          <div style="flex-shrink:0;color:var(--content-low);">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <!-- Token validity -->
+        <div>
+          <div style="font-weight:700;font-size:18px;letter-spacing:-0.3px;color:var(--content-high);margin-bottom:16px;">Token validity</div>
+          <!-- Dropdown with divider+chevron -->
+          <div id="ss-expiration-section">
+            <div style="position:relative;display:flex;align-items:center;border:1px solid var(--border-interactive);border-radius:10px;overflow:hidden;background:var(--bg-surface);" id="ss-select-wrapper">
+              <select id="ss-mcp-expiry-select" onchange="onSsValidityChange();ssUpdateExpiryNote()" style="flex:1;font-family:var(--font);font-size:16px;color:var(--content-high);padding:14px 56px 14px 16px;border:none;outline:none;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer;">
+                <option value="30" selected>30 days</option>
+                <option value="60">60 days</option>
+                <option value="90">90 days</option>
+                <option value="180">180 days</option>
+              </select>
+              <div style="position:absolute;right:0;top:0;bottom:0;width:48px;display:flex;align-items:center;justify-content:center;border-left:1px solid var(--border-interactive);pointer-events:none;background:var(--bg-surface);">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--content-medium)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+            </div>
+            <div id="ss-expiry-note" style="font-size:13px;color:var(--content-medium);margin-top:8px;">From <b style="color:var(--content-high);">today</b> · Will expire in <b id="ss-expiry-preview" style="color:var(--content-high);">May 2, 2026</b></div>
           </div>
-          <div style="flex:1;">
-            <div style="font-size:14px;font-weight:600;color:var(--content-high);">Documentation</div>
-            <div style="font-size:14px;color:var(--content-low);margin-top:2px;">Step-by-step guides to set up the MCP</div>
-          </div>
-          <a href="https://docs.ramp.com/developer-api/v1/ramp-mcp" target="_blank" style="font-size:14px;font-weight:500;color:var(--link);text-decoration:none;white-space:nowrap;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Read it</a>
         </div>
 
-        <!-- Credentials section -->
-        <div>
-          <div style="font-weight:700;font-size:18px;letter-spacing:-0.252px;color:var(--content-high);margin-bottom:16px;">Credentials</div>
-
-          <!-- Expiration -->
-          <div id="ss-expiration-section">
-            <div style="font-weight:600;font-size:14px;color:var(--content-high);margin-bottom:8px;">Expiration</div>
-            <select id="ss-mcp-expiry-select" onchange="onSsValidityChange();ssUpdateExpiryNote()" style="width:100%;font-family:var(--font);font-size:14px;color:var(--content-high);padding:10px 36px 10px 14px;border:1px solid var(--border-interactive);border-radius:8px;background:var(--bg-surface) url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%23737677%22 stroke-width=%222%22><polyline points=%226 9 12 15 18 9%22/></svg>') no-repeat right 12px center;-webkit-appearance:none;appearance:none;cursor:pointer;">
-              <option value="30" selected>30 days</option>
-              <option value="60">60 days</option>
-              <option value="90">90 days</option>
-              <option value="180">180 days</option>
-            </select>
-            <div id="ss-expiry-note" style="font-size:12px;color:var(--content-low);margin-top:6px;">From <b>today</b> · Will expire in <b id="ss-expiry-preview">May 2, 2026</b></div>
+        <!-- Generate section -->
+        <div id="ss-generate-section">
+          <button id="ss-generate-btn" onclick="ssGenerateToken()" style="width:100%;padding:16px;background:var(--primary);color:white;border:none;border-radius:12px;font-family:var(--font);font-size:16px;font-weight:600;cursor:pointer;letter-spacing:-0.011em;">
+            Generate token
+          </button>
+          <div style="font-size:13px;color:var(--content-low);display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            End-to-end encrypted. Revoke access anytime.
           </div>
+        </div>
 
-          <!-- Generate token button -->
-          <div id="ss-generate-section" style="margin-top:16px;">
-            <button id="ss-generate-btn" onclick="ssGenerateToken()" style="width:100%;padding:14px;background:var(--primary);color:white;border:none;border-radius:12px;font-family:var(--font);font-size:16px;font-weight:500;cursor:pointer;letter-spacing:-0.176px;display:flex;align-items:center;justify-content:center;gap:8px;">
-              Generate token
-            </button>
-            <div style="font-size:12px;color:var(--content-low);display:flex;align-items:center;justify-content:center;gap:5px;margin-top:12px;">
-              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <!-- MCP Access card (shown after token generated) -->
+        <div id="ss-token-card" style="display:none;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+          <!-- Card header -->
+          <div style="padding:14px 20px;display:flex;align-items:center;gap:12px;background:var(--bg-highlight);">
+            <div style="width:32px;height:32px;border-radius:9999px;background:#e2eafe;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#244eb0" stroke-width="2"><circle cx="18" cy="5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><line x1="7.59" y1="13.27" x2="15.41" y2="17.73"/><line x1="15.41" y1="6.27" x2="7.59" y2="10.73"/></svg>
+            </div>
+            <div style="font-size:15px;font-weight:700;color:var(--content-high);flex:1;">MCP Access</div>
+            <div style="font-size:12px;color:var(--content-medium);">Expires in <b id="ss-card-expiry" style="color:var(--content-high);">May 2, 2026</b></div>
+          </div>
+          <div style="height:1px;background:var(--border);"></div>
+          <!-- Card body -->
+          <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+            <!-- Server URL -->
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--content-high);margin-bottom:8px;">Server URL</div>
+              <div style="display:flex;gap:8px;align-items:stretch;">
+                <div style="flex:1;padding:10px 12px;border:1px solid var(--border-interactive);border-radius:8px;font-family:'DM Mono','Fira Code',monospace;font-size:13px;color:var(--content-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;">https://api.clara.team/workflows/mcp-...</div>
+                <button onclick="navigator.clipboard.writeText('https://api.clara.team/workflows/mcp-server/http');this.textContent='Copied!';var b=this;setTimeout(function(){b.textContent='Copy'},2000)" style="padding:10px 18px;border:1.5px solid var(--primary);border-radius:8px;background:transparent;color:var(--primary);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0;">Copy</button>
+              </div>
+            </div>
+            <!-- MCP token -->
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--content-high);margin-bottom:8px;">MCP token</div>
+              <div style="display:flex;gap:8px;align-items:stretch;">
+                <div id="ss-token-input" style="flex:1;padding:10px 12px;border:1px solid var(--border-interactive);border-radius:8px;font-family:'DM Mono','Fira Code',monospace;font-size:13px;color:var(--content-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;transition:background 200ms,border-color 200ms;">
+                  <span id="ss-mcp-token-display">clara-mcp-ymx</span>
+                </div>
+                <button id="ss-copy-token-btn" onclick="copySsToken()" style="padding:10px 18px;border:1.5px solid var(--primary);border-radius:8px;background:transparent;color:var(--primary);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0;">Copy</button>
+              </div>
+            </div>
+            <!-- Security warning (one-time visibility, shown before Done) -->
+            <div id="ss-token-warning" style="display:none;gap:8px;align-items:flex-start;">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--warning-fg)" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span style="font-size:13px;color:var(--content-medium);line-height:20px;">For security, your token will only be visible once. Make sure to copy and store it safely.</span>
+            </div>
+            <!-- Done button -->
+            <button id="ss-done-btn" onclick="ssDoneToken()" style="display:none;width:100%;padding:14px;background:var(--primary);color:white;border:none;border-radius:10px;font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;">Done</button>
+            <!-- Revoke button -->
+            <div id="ss-revoke-row" style="display:none;">
+              <button onclick="showRevokeConfirm()" style="width:100%;padding:12px;background:transparent;border:1.5px solid var(--primary);border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;">Revoke</button>
+            </div>
+            <!-- Revoke confirmation frame -->
+            <div id="ss-revoke-confirm" style="display:none;border:1px solid var(--border);border-radius:10px;padding:16px;flex-direction:column;gap:12px;">
+              <div style="display:flex;align-items:flex-start;gap:12px;">
+                <div style="width:32px;height:32px;border-radius:9999px;background:#fce0e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#b00020" stroke-width="2"><circle cx="18" cy="5" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="19" r="2"/><line x1="7.59" y1="13.27" x2="15.41" y2="17.73"/><line x1="15.41" y1="6.27" x2="7.59" y2="10.73"/><line x1="4" y1="4" x2="20" y2="20" stroke="#b00020" stroke-width="2"/></svg>
+                </div>
+                <div>
+                  <div style="font-family:var(--font);font-size:15px;font-weight:700;color:var(--content-high);margin-bottom:4px;">Revoke this token?</div>
+                  <div style="font-family:var(--font);font-size:13px;line-height:20px;color:var(--content-medium);">This will immediately disconnect all tools using this token. This action cannot be undone.</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="cancelRevoke()" style="flex:1;padding:11px;background:transparent;border:1.5px solid var(--primary);border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;">Cancel</button>
+                <button onclick="confirmRevoke()" style="flex:1;padding:11px;background:var(--primary);border:none;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;color:white;cursor:pointer;">Yes, revoke</button>
+              </div>
+            </div>
+            <!-- Security footnote -->
+            <div id="ss-token-security-note" style="font-size:12px;color:var(--content-low);display:flex;align-items:center;justify-content:center;gap:5px;">
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              End-to-end encrypted. Revoke access anytime.
+            </div>
+            <div id="ss-token-metadata" style="display:none;font-size:12px;color:var(--content-low);align-items:center;justify-content:center;gap:5px;">
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               End-to-end encrypted. Revoke access anytime.
             </div>
           </div>
-
-          <!-- MCP Access card (shown after token generated) -->
-          <div id="ss-token-card" style="display:none;margin-top:16px;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
-            <!-- Card header -->
-            <div style="padding:14px 20px;display:flex;align-items:center;gap:10px;">
-              <div style="width:32px;height:32px;border-radius:8px;background:var(--info-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--primary)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-              </div>
-              <div style="font-size:14px;font-weight:600;color:var(--content-high);flex:1;">MCP Access</div>
-              <div style="font-size:12px;color:var(--content-low);">Expires in <b id="ss-card-expiry">May 2, 2026</b></div>
-            </div>
-            <!-- Card body -->
-            <div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:14px;">
-              <!-- Server URL -->
-              <div>
-                <div style="font-weight:600;font-size:13px;color:var(--content-high);margin-bottom:6px;">Server URL</div>
-                <div style="display:flex;gap:8px;align-items:stretch;">
-                  <div style="flex:1;padding:10px 12px;border:1px solid var(--border-interactive);border-radius:8px;font-family:'DM Mono','Fira Code',monospace;font-size:13px;color:var(--content-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;">https://api.clara.team/workflows/mcp-...</div>
-                  <button class="copy-btn" onclick="navigator.clipboard.writeText('https://api.clara.team/workflows/mcp-server/http');this.textContent='Copied!';var b=this;setTimeout(function(){b.innerHTML='<svg width=12 height=12 fill=none viewBox=&quot;0 0 24 24&quot; stroke=currentColor stroke-width=2><rect x=9 y=9 width=13 height=13 rx=2/><path d=&quot;M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1&quot;/></svg> Copy'},2000)" style="flex-shrink:0;">
-                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                    Copy
-                  </button>
-                </div>
-              </div>
-              <!-- MCP token -->
-              <div>
-                <div style="font-weight:600;font-size:13px;color:var(--content-high);margin-bottom:6px;">MCP token</div>
-                <div style="display:flex;gap:8px;align-items:stretch;">
-                  <div id="ss-token-input" style="flex:1;padding:10px 12px;border:1px solid var(--border-interactive);border-radius:8px;font-family:'DM Mono','Fira Code',monospace;font-size:13px;color:var(--content-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;">
-                    <span id="ss-mcp-token-display">clara-mcp-ymx</span>
-                  </div>
-                  <button id="ss-copy-token-btn" onclick="copySsToken()" class="copy-btn" style="flex-shrink:0;min-width:72px;justify-content:center;">
-                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                    Copy
-                  </button>
-                </div>
-              </div>
-              <!-- Security warning -->
-              <div id="ss-token-warning" style="display:flex;gap:8px;align-items:flex-start;">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--warning-fg)" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                <span style="font-size:13px;color:var(--content-medium);line-height:20px;">For security, your token will only be visible once. Make sure to copy and store it safely.</span>
-              </div>
-              <!-- Done button (visible initially) -->
-              <button id="ss-done-btn" onclick="ssDoneToken()" style="width:100%;padding:12px;background:var(--primary);color:white;border:none;border-radius:10px;font-family:var(--font);font-size:15px;font-weight:500;cursor:pointer;">Done</button>
-              <!-- Revoke + Regenerate (hidden until Done) -->
-              <div id="ss-revoke-row" style="display:none;flex-direction:row;gap:8px;">
-                <button onclick="revokeSsToken()" style="flex:1;padding:10px;background:transparent;border:1px solid var(--primary);border-radius:8px;font-family:var(--font);font-size:14px;font-weight:500;color:var(--primary);cursor:pointer;">Revoke</button>
-                <button onclick="regenerateMcpToken()" style="flex:1;padding:10px;background:transparent;border:1px solid var(--primary);border-radius:8px;font-family:var(--font);font-size:14px;font-weight:500;color:var(--primary);cursor:pointer;">Regenerate</button>
-              </div>
-              <!-- Footnote -->
-              <div style="font-size:12px;color:var(--content-low);display:flex;align-items:center;justify-content:center;gap:5px;">
-                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                End-to-end encrypted. Revoke access anytime.
-              </div>
-            </div>
-          </div>
         </div>
+
+        <!-- Setup guide link -->
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:28px;height:28px;border-radius:9999px;border:1.5px solid var(--border-interactive);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="var(--content-medium)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <span style="font-size:14px;color:var(--content-medium);">Not sure how to use this? <a href="#" onclick="return false;" style="color:var(--primary);font-weight:600;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">See the setup guide →</a></span>
+        </div>
+
       </div>
     </div>
 
@@ -1820,7 +1901,9 @@
       var prev = document.getElementById('ss-expiry-preview');
       if (cardExp && prev) cardExp.textContent = prev.textContent;
       // Disable select
-      if (sel) { sel.disabled = true; sel.style.opacity = '0.5'; }
+      if (sel) { sel.disabled = true; }
+      var wrapper = document.getElementById('ss-select-wrapper');
+      if (wrapper) { wrapper.style.background = 'var(--bg-highlight)'; wrapper.style.borderColor = 'var(--border)'; }
       // Show token card, hide generate section
       document.getElementById('ss-generate-section').style.display = 'none';
       document.getElementById('ss-token-card').style.display = 'block';
@@ -1857,7 +1940,9 @@
   function ssDoneToken() {
     _maskTokenBoth();
     var inp = document.getElementById('ss-token-input');
-    if (inp) inp.style.opacity = '0.5';
+    if (inp) { inp.style.background = 'var(--bg-highlight)'; inp.style.borderColor = 'var(--border)'; inp.style.color = 'var(--content-low)'; }
+    var copyBtn = document.getElementById('ss-copy-token-btn');
+    if (copyBtn) copyBtn.style.display = 'none';
     document.getElementById('ss-token-warning').style.display = 'none';
     document.getElementById('ss-done-btn').style.display = 'none';
     document.getElementById('ss-revoke-row').style.display = 'flex';
@@ -1871,14 +1956,39 @@
     toast('success', 'Token copied to clipboard.');
   }
 
+  /* ── Show revoke confirmation frame ── */
+  function showRevokeConfirm() {
+    document.getElementById('ss-revoke-row').style.display = 'none';
+    var conf = document.getElementById('ss-revoke-confirm');
+    if (conf) conf.style.display = 'flex';
+  }
+
+  /* ── Cancel revoke — restore Revoke button ── */
+  function cancelRevoke() {
+    document.getElementById('ss-revoke-confirm').style.display = 'none';
+    document.getElementById('ss-revoke-row').style.display = 'block';
+  }
+
+  /* ── Confirm revoke — reset to generate step ── */
+  function confirmRevoke() {
+    document.getElementById('ss-revoke-confirm').style.display = 'none';
+    revokeSsToken();
+  }
+
   /* ── Sidesheet Revoke — reset to expiration step ── */
   function revokeSsToken() {
     document.getElementById('ss-token-card').style.display = 'none';
     document.getElementById('ss-generate-section').style.display = 'block';
     var sel = document.getElementById('ss-mcp-expiry-select');
     if (sel) { sel.disabled = false; sel.style.opacity = ''; }
+    var wrapper = document.getElementById('ss-select-wrapper');
+    if (wrapper) { wrapper.style.background = ''; wrapper.style.borderColor = ''; }
     var btn = document.getElementById('ss-generate-btn');
     if (btn) { btn.innerHTML = 'Generate token'; btn.style.pointerEvents = ''; }
+    var inp = document.getElementById('ss-token-input');
+    if (inp) { inp.style.background = ''; inp.style.borderColor = ''; inp.style.color = ''; }
+    var copyBtn = document.getElementById('ss-copy-token-btn');
+    if (copyBtn) { copyBtn.style.display = ''; copyBtn.textContent = 'Copy'; copyBtn.style.pointerEvents = ''; }
     // Reset tab too
     var tabSetup = document.getElementById('mcp-token-setup');
     var tabGen = document.getElementById('mcp-token-generated');

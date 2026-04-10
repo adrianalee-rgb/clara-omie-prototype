@@ -1960,11 +1960,9 @@
 
   /* ── Sidesheet: Go from intro to credentials step ── */
   function ssGoToCredentials() {
-    // Show credential step in sidesheet
-    document.getElementById('ss-step-intro').style.display = 'none';
-    document.getElementById('ss-step-credentials').style.display = 'flex';
-    ssUpdateExpiryNote();
-    // Also activate the MCP Connections tab credential setup
+    // Close the sidesheet, navigate to MCP Connections tab, show credential setup
+    closeMcpSidesheet();
+    goToConnections();
     var credSetup = document.getElementById('mcp-credential-setup');
     if (credSetup && credSetup.style.display === 'none') {
       setupMcpCredentials();

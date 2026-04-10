@@ -1833,6 +1833,15 @@
   }
 
   function closeMcpSidesheet() {
+    // If token was generated but Done not yet clicked, treat close as Done
+    var tokenCard = document.getElementById('ss-token-card');
+    var revokeRow = document.getElementById('ss-revoke-row');
+    var doneBtn = document.getElementById('ss-done-btn');
+    if (tokenCard && tokenCard.style.display !== 'none' &&
+        revokeRow && revokeRow.style.display === 'none' &&
+        doneBtn && doneBtn.style.display !== 'none') {
+      ssDoneToken();
+    }
     const overlay = document.getElementById('mcp-sidesheet-overlay');
     const sheet = document.getElementById('mcp-sidesheet');
     sheet.style.right = '-480px';
@@ -1946,14 +1955,6 @@
     document.getElementById('ss-token-warning').style.display = 'none';
     document.getElementById('ss-done-btn').style.display = 'none';
     document.getElementById('ss-revoke-row').style.display = 'flex';
-  }
-
-  /* ── Sidesheet copy token ── */
-  function copySsToken() {
-    navigator.clipboard.writeText(_mcpToken).catch(function(){});
-    var btn = document.getElementById('ss-copy-token-btn');
-    if (btn) { btn.innerHTML = '<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copied!'; btn.style.pointerEvents = 'none'; }
-    toast('success', 'Token copied to clipboard.');
   }
 
   /* ── Show revoke confirmation frame ── */
@@ -2368,29 +2369,10 @@
     toast('warning', 'Token revoked. Generate a new one when ready.');
   }
 
-  /* ── Sidesheet Copy → Copied! → Revoke (800ms, smooth) ── */
+  /* ── Sidesheet copy token — copy only, no state change ── */
   function copySsToken() {
-    navigator.clipboard.writeText(_mcpToken).catch(()=>{});
-    var btn = document.getElementById('ss-copy-token-btn');
-    if (btn) {
-      btn.textContent = 'Copied!';
-      btn.style.pointerEvents = 'none';
-    }
+    navigator.clipboard.writeText(_mcpToken).catch(function(){});
     toast('success', 'Token copied to clipboard.');
-    setTimeout(function() {
-      _maskTokenBoth();
-      var input = document.getElementById('ss-token-input');
-      if (input) { input.style.opacity = '0.5'; input.style.pointerEvents = 'none'; }
-      if (btn) {
-        btn.textContent = 'Revoke';
-        btn.style.transition = 'all 200ms ease';
-        btn.style.background = 'transparent';
-        btn.style.border = '1px solid var(--primary)';
-        btn.style.color = 'var(--primary)';
-        btn.style.pointerEvents = '';
-        btn.onclick = function() { revokeSsToken(); };
-      }
-    }, 800);
   }
 
   /* ── Sidesheet Revoke — reset to setup state, keep toggle ON ── */

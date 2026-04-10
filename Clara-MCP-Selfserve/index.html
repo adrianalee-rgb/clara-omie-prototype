@@ -1162,30 +1162,29 @@
                 <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;">
                   <!-- Card header -->
                   <div style="padding:14px 20px;display:flex;align-items:center;gap:12px;background:var(--bg-highlight);border-bottom:1px solid var(--border);">
-                    <div style="width:36px;height:36px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                      <span style="color:white;font-size:15px;font-weight:700;font-family:var(--font);">M</span>
+                    <div style="width:36px;height:36px;border-radius:9999px;background:#e2eafe;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#244eb0" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                     </div>
                     <div style="font-size:15px;font-weight:700;color:var(--content-high);flex:1;">MCP Access</div>
                     <div style="font-size:13px;color:var(--content-medium);">Expires in <b id="tab-card-expiry" style="color:var(--primary);"></b></div>
                   </div>
                   <!-- Card body -->
-                  <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+                  <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
                     <!-- Server URL -->
                     <div>
-                      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;color:var(--content-low);margin-bottom:6px;text-transform:uppercase;">Server URL</div>
-                      <div style="display:flex;align-items:stretch;gap:8px;">
-                        <div style="flex:1;height:40px;padding:0 12px;border:1px solid var(--border-interactive);border-radius:8px;font-family:'DM Mono','Fira Code',monospace;font-size:13px;color:var(--content-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;box-sizing:border-box;">https://api.clara.team/workflows/mcp-server/http</div>
-                        <button onclick="copyTabServerUrl()" style="height:40px;padding:0 14px;border:none;background:transparent;color:var(--primary);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;flex-shrink:0;box-sizing:border-box;">Copy</button>
+                      <div style="font-size:14px;font-weight:700;color:var(--content-high);margin-bottom:8px;">Server URL</div>
+                      <div style="display:flex;align-items:stretch;gap:10px;">
+                        <div style="flex:1;height:40px;padding:0 12px;border:1px solid var(--border-interactive);border-radius:10px;font-family:'DM Mono','Fira Code',monospace;font-size:13px;color:var(--content-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;box-sizing:border-box;">https://api.clara.team/workflows/mcp-server/http</div>
+                        <button onclick="copyTabServerUrl()" style="width:96px;height:40px;border:1.5px solid var(--primary);border-radius:10px;background:transparent;color:var(--primary);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0;box-sizing:border-box;">Copy</button>
                       </div>
                     </div>
                     <!-- MCP Token -->
                     <div>
-                      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;color:var(--content-low);margin-bottom:6px;text-transform:uppercase;">MCP Token</div>
-                      <div style="display:flex;align-items:stretch;gap:8px;">
-                        <div id="tab-token-input" style="flex:1;height:40px;padding:0 12px;border:1px solid var(--border-interactive);border-radius:8px;font-family:'DM Mono','Fira Code',monospace;font-size:13px;color:var(--content-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;transition:background 200ms,border-color 200ms;box-sizing:border-box;"><span id="mcp-token-display">clara-mcp-ymx</span></div>
-                        <button id="mcp-token-copy" onclick="copyTabToken()" style="height:40px;padding:0 18px;border:1.5px solid var(--primary);border-radius:8px;background:transparent;color:var(--primary);font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;flex-shrink:0;box-sizing:border-box;">Copy</button>
-                        <!-- Revoke button inline — shown after Done -->
-                        <button id="tab-revoke-row" onclick="showTabRevokeConfirm()" style="display:none;height:40px;padding:0 16px;background:transparent;border:1.5px solid var(--primary);border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;white-space:nowrap;flex-shrink:0;box-sizing:border-box;">Revoke</button>
+                      <div style="font-size:14px;font-weight:700;color:var(--content-high);margin-bottom:8px;">MCP token</div>
+                      <div style="display:flex;align-items:stretch;gap:10px;">
+                        <div id="tab-token-input" style="flex:1;height:40px;padding:0 12px;border:1px solid var(--border-interactive);border-radius:10px;font-family:'DM Mono','Fira Code',monospace;font-size:13px;color:var(--content-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;transition:background 200ms,border-color 200ms;box-sizing:border-box;"><span id="mcp-token-display">clara-mcp-ymx</span></div>
+                        <button id="mcp-token-copy" onclick="copyTabToken()" style="width:96px;height:40px;border:1.5px solid var(--primary);border-radius:10px;background:transparent;color:var(--primary);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0;box-sizing:border-box;">Copy</button>
+                        <button id="tab-revoke-row" onclick="showTabRevokeConfirm()" style="display:none;width:96px;height:40px;background:transparent;border:1.5px solid var(--primary);border-radius:10px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;flex-shrink:0;box-sizing:border-box;transition:background 150ms,border-color 150ms;">Revoke</button>
                       </div>
                     </div>
                     <!-- Warning banner -->
@@ -1199,24 +1198,24 @@
                     </div>
                     <!-- Done button -->
                     <button id="tab-done-btn" onclick="tabDoneToken()" style="width:100%;padding:14px;background:var(--primary);color:white;border:none;border-radius:10px;font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;">Done</button>
-                    <!-- Revoke confirmation (expanded below, triggered by inline Revoke button) -->
-                    <div id="tab-revoke-confirm" style="display:none;border:1px solid var(--border);border-radius:10px;padding:16px;flex-direction:column;gap:12px;">
-                      <div style="display:flex;align-items:flex-start;gap:12px;">
-                        <div style="width:32px;height:32px;border-radius:9999px;background:#fce0e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#b00020" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                    <!-- Revoke confirmation — expands below MCP token row -->
+                    <div id="tab-revoke-confirm" style="display:none;border:1px solid var(--border);border-radius:10px;overflow:hidden;flex-direction:column;">
+                      <div style="padding:16px 16px 12px;display:flex;align-items:flex-start;gap:12px;">
+                        <div style="width:36px;height:36px;border-radius:9999px;background:#fce0e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#b00020" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
                         </div>
                         <div>
-                          <div style="font-size:15px;font-weight:700;color:var(--content-high);">Revoke this token?</div>
-                          <div style="font-size:13px;color:var(--content-medium);margin-top:2px;line-height:20px;">This will immediately disconnect all tools using this token. This action cannot be undone.</div>
+                          <div style="font-size:15px;font-weight:700;color:var(--content-high);margin-bottom:4px;">Revoke this token?</div>
+                          <div style="font-size:13px;color:var(--content-medium);line-height:20px;">This will immediately disconnect all tools using this token. This action cannot be undone.</div>
                         </div>
                       </div>
-                      <div style="display:flex;gap:8px;">
-                        <button onclick="cancelTabRevoke()" style="flex:1;padding:10px;background:transparent;border:1.5px solid var(--primary);border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;">Cancel</button>
-                        <button onclick="confirmTabRevoke()" style="flex:1;padding:10px;background:var(--primary);border:none;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;color:white;cursor:pointer;">Yes, revoke</button>
+                      <div style="padding:0 16px 16px;display:flex;gap:10px;">
+                        <button onclick="cancelTabRevoke()" style="flex:1;padding:12px;background:transparent;border:1.5px solid var(--primary);border-radius:10px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;">Cancel</button>
+                        <button onclick="confirmTabRevoke()" style="flex:1;padding:12px;background:var(--primary);border:none;border-radius:10px;font-family:var(--font);font-size:14px;font-weight:600;color:white;cursor:pointer;">Yes, revoke</button>
                       </div>
                     </div>
                   </div>
-                </div>
+                </div>                </div>
                 <!-- Caption -->
                 <div style="font-size:13px;color:var(--content-low);display:flex;align-items:center;justify-content:center;gap:6px;">
                   <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -2471,18 +2470,35 @@
     var done = document.getElementById('tab-done-btn');
     if (done) done.style.display = 'none';
     var revoke = document.getElementById('tab-revoke-row');
-    if (revoke) revoke.style.display = 'block';
+    if (revoke) {
+      revoke.style.display = 'block';
+      revoke.style.background = 'transparent';
+      revoke.style.borderColor = 'var(--primary)';
+      revoke.onclick = function() { showTabRevokeConfirm(); };
+    }
   }
 
   /* ── Tab revoke flow ── */
   function showTabRevokeConfirm() {
-    document.getElementById('tab-revoke-row').style.display = 'none';
+    // Keep Revoke button visible in active/pressed state
+    var btn = document.getElementById('tab-revoke-row');
+    if (btn) {
+      btn.style.background = '#ebeef4';
+      btn.style.borderColor = '#294676';
+      // Prevent double-triggering
+      btn.onclick = null;
+    }
     var conf = document.getElementById('tab-revoke-confirm');
     if (conf) conf.style.display = 'flex';
   }
   function cancelTabRevoke() {
     document.getElementById('tab-revoke-confirm').style.display = 'none';
-    document.getElementById('tab-revoke-row').style.display = 'block';
+    var btn = document.getElementById('tab-revoke-row');
+    if (btn) {
+      btn.style.background = 'transparent';
+      btn.style.borderColor = 'var(--primary)';
+      btn.onclick = function() { showTabRevokeConfirm(); };
+    }
   }
   function confirmTabRevoke() {
     document.getElementById('tab-revoke-confirm').style.display = 'none';

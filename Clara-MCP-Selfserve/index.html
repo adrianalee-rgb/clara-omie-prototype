@@ -1145,65 +1145,169 @@
         </div>
 
         <div class="mcp-active hidden" id="mcp-active">
-          <!-- Server URL — always visible when toggle is ON -->
-          <div style="display:flex;align-items:center;gap:12px;padding:0 0 16px;">
-            <span style="font-size:14px;font-weight:600;line-height:22px;letter-spacing:-0.084px;color:var(--content-high);white-space:nowrap;min-width:86px;">Server URL</span>
-            <div class="endpoint-box" style="flex:1;">
-              <div class="endpoint-dot"></div>
-              <span class="endpoint-url">https://api.clara.team/workflows/mcp-server/http</span>
-            </div>
-            <button class="copy-btn" id="copy-btn" onclick="copyEndpoint()">
-              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              Copy
-            </button>
-          </div>
+          <!-- Two-column layout: left = credential setup, right = guide card -->
+          <div style="display:flex;gap:24px;align-items:flex-start;">
 
-          <!-- Step 1: Token setup — Time validity + Generate token on same row -->
-          <div id="mcp-token-setup" style="display:flex;flex-direction:column;gap:12px;">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <span style="font-size:14px;font-weight:600;line-height:22px;letter-spacing:-0.084px;color:var(--content-high);white-space:nowrap;min-width:86px;">Time validity</span>
-              <select id="mcp-expiry-select" onchange="onTabValidityChange()" style="flex:1;font-family:var(--font);font-size:14px;font-weight:400;color:var(--content-high);padding:8px 36px 8px 14px;border:1px solid var(--border-interactive);border-radius:8px;background:var(--bg-surface) url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%23737677%22 stroke-width=%222%22><polyline points=%226 9 12 15 18 9%22/></svg>') no-repeat right 12px center;-webkit-appearance:none;appearance:none;cursor:pointer;">
-                <option value="30" selected>30 days</option>
-                <option value="60">60 days</option>
-                <option value="90">90 days</option>
-                <option value="180">180 days</option>
-              </select>
-              <button onclick="createMcpToken()" style="padding:8px 20px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:500;letter-spacing:-0.084px;cursor:pointer;white-space:nowrap;flex-shrink:0;" id="create-token-btn">
-                Generate token
-              </button>
-            </div>
-            <div style="font-size:12px;color:var(--content-low);display:flex;align-items:center;gap:5px;background:var(--bg-highlight);padding:10px 14px;border-radius:8px;">
-              <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              End-to-end encrypted. Revoke access anytime.
-            </div>
-          </div>
+            <!-- ── Left column ── -->
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:16px;">
 
-          <!-- Step 2: Generated token -->
-          <div id="mcp-token-generated" style="display:none;flex-direction:column;gap:12px;">
-            <!-- Token row: label + endpoint-box + Copy/Revoke + Regenerate always inline -->
-            <div id="tab-token-row" style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:14px;font-weight:600;line-height:22px;letter-spacing:-0.084px;color:var(--content-high);white-space:nowrap;min-width:86px;">Token</span>
-              <div id="tab-token-input" class="endpoint-box" style="flex:1;">
-                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="var(--teal)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                <span class="endpoint-url" id="mcp-token-display">clara-mcp-ymx</span>
+              <!-- Token validity (always visible) -->
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--content-high);margin-bottom:8px;">Token validity</div>
+                <div id="tab-select-wrapper" style="position:relative;">
+                  <select id="mcp-expiry-select" onchange="onTabValidityChange();tabUpdateExpiryNote()" style="width:100%;font-family:var(--font);font-size:15px;font-weight:400;color:var(--content-high);padding:12px 40px 12px 14px;border:1px solid var(--border-interactive);border-radius:10px;background:var(--bg-surface) url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%23737677%22 stroke-width=%222%22><polyline points=%226 9 12 15 18 9%22/></svg>') no-repeat right 14px center;-webkit-appearance:none;appearance:none;cursor:pointer;">
+                    <option value="30" selected>30 days</option>
+                    <option value="60">60 days</option>
+                    <option value="90">90 days</option>
+                    <option value="180">180 days</option>
+                  </select>
+                </div>
+                <div id="tab-expiry-note" style="font-size:13px;color:var(--content-medium);margin-top:6px;">From <b style="color:var(--content-high);">today</b> · Will expire in <b id="tab-expiry-preview" style="color:var(--content-high);"></b></div>
               </div>
-              <button id="mcp-token-copy" onclick="copyTabToken()" style="min-width:90px;padding:8px 16px;background:var(--primary);color:white;border:none;border-radius:8px;font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
-                Copy
-              </button>
-              <button id="regen-token-btn" onclick="regenerateMcpToken()" class="copy-btn" style="flex-shrink:0;">
-                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                Regenerate
-              </button>
-            </div>
-            <!-- Security note — visible before copy, tight to token row -->
-            <div id="tab-token-security-note" style="font-size:12px;line-height:16px;color:var(--content-low);margin-top:-8px;">
-              For security, this token will only be shown once.
-            </div>
-            <!-- Metadata — visible after copy, tight to token row -->
-            <div id="tab-token-metadata" style="display:none;font-size:12px;line-height:16px;color:var(--content-low);margin-top:-8px;">
-              Created <span id="mcp-created-date" style="color:var(--content-high);font-weight:700;"></span> · Expires <span id="mcp-expiry-date" style="color:var(--content-high);font-weight:700;"></span>
-            </div>
-          </div>
+
+              <!-- Before generating -->
+              <div id="mcp-token-setup" style="display:flex;flex-direction:column;gap:12px;">
+                <button onclick="createMcpToken()" id="create-token-btn" style="width:100%;padding:14px;background:var(--primary);color:white;border:none;border-radius:10px;font-family:var(--font);font-size:15px;font-weight:600;letter-spacing:-0.011em;cursor:pointer;">Generate token</button>
+                <div style="font-size:13px;color:var(--content-low);display:flex;align-items:center;justify-content:center;gap:6px;">
+                  <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  End-to-end encrypted. Revoke access anytime.
+                </div>
+              </div>
+
+              <!-- After generating: MCP Access card -->
+              <div id="mcp-token-generated" style="display:none;flex-direction:column;gap:12px;">
+                <!-- MCP Access card -->
+                <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+                  <!-- Card header -->
+                  <div style="padding:14px 20px;display:flex;align-items:center;gap:12px;background:var(--bg-highlight);border-bottom:1px solid var(--border);">
+                    <div style="width:36px;height:36px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                      <span style="color:white;font-size:15px;font-weight:700;font-family:var(--font);">M</span>
+                    </div>
+                    <div style="font-size:15px;font-weight:700;color:var(--content-high);flex:1;">MCP Access</div>
+                    <div style="font-size:13px;color:var(--content-medium);">Expires in <b id="tab-card-expiry" style="color:var(--primary);"></b></div>
+                  </div>
+                  <!-- Card body -->
+                  <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+                    <!-- Server URL -->
+                    <div>
+                      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;color:var(--content-low);margin-bottom:6px;text-transform:uppercase;">Server URL</div>
+                      <div style="display:flex;align-items:center;gap:8px;">
+                        <div style="flex:1;padding:10px 12px;border:1px solid var(--border-interactive);border-radius:8px;font-family:'DM Mono','Fira Code',monospace;font-size:13px;color:var(--content-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">https://api.clara.team/workflows/mcp-server/http</div>
+                        <button onclick="copyTabServerUrl()" style="padding:10px 14px;border:none;background:transparent;color:var(--primary);font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;flex-shrink:0;">Copy</button>
+                      </div>
+                    </div>
+                    <!-- MCP Token -->
+                    <div>
+                      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;color:var(--content-low);margin-bottom:6px;text-transform:uppercase;">MCP Token</div>
+                      <div style="display:flex;align-items:center;gap:8px;">
+                        <div id="tab-token-input" style="flex:1;padding:10px 12px;border:1px solid var(--border-interactive);border-radius:8px;font-family:'DM Mono','Fira Code',monospace;font-size:13px;color:var(--content-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:background 200ms,border-color 200ms;"><span id="mcp-token-display">clara-mcp-ymx</span></div>
+                        <button id="mcp-token-copy" onclick="copyTabToken()" style="padding:10px 18px;border:1.5px solid var(--primary);border-radius:8px;background:transparent;color:var(--primary);font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;flex-shrink:0;">Copy</button>
+                      </div>
+                    </div>
+                    <!-- Warning banner -->
+                    <div id="tab-token-security-note" style="display:flex;align-items:flex-start;gap:8px;background:#fff9e3;border:1px solid #f0d060;border-radius:8px;padding:10px 12px;">
+                      <span style="font-size:14px;flex-shrink:0;">⚠️</span>
+                      <span style="font-size:13px;color:#483c10;line-height:20px;">For security, your token will only be visible once. Make sure to copy and store it safely.</span>
+                    </div>
+                    <!-- Metadata — shown after Done -->
+                    <div id="tab-token-metadata" style="display:none;font-size:12px;color:var(--content-low);">
+                      Created <span id="mcp-created-date" style="color:var(--content-high);font-weight:700;"></span> · Expires <span id="mcp-expiry-date" style="color:var(--content-high);font-weight:700;"></span>
+                    </div>
+                    <!-- Done button -->
+                    <button id="tab-done-btn" onclick="tabDoneToken()" style="width:100%;padding:14px;background:var(--primary);color:white;border:none;border-radius:10px;font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;">Done</button>
+                    <!-- Revoke button (shown after Done) -->
+                    <div id="tab-revoke-row" style="display:none;">
+                      <button onclick="showTabRevokeConfirm()" style="width:100%;padding:12px;background:transparent;border:1.5px solid var(--primary);border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;">Revoke</button>
+                    </div>
+                    <!-- Revoke confirmation -->
+                    <div id="tab-revoke-confirm" style="display:none;border:1px solid var(--border);border-radius:10px;padding:16px;flex-direction:column;gap:12px;">
+                      <div style="display:flex;align-items:flex-start;gap:12px;">
+                        <div style="width:32px;height:32px;border-radius:9999px;background:#fce0e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#b00020" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                        </div>
+                        <div>
+                          <div style="font-size:15px;font-weight:700;color:var(--content-high);">Revoke this token?</div>
+                          <div style="font-size:13px;color:var(--content-medium);margin-top:2px;line-height:20px;">This will immediately disconnect all tools using this token. This action cannot be undone.</div>
+                        </div>
+                      </div>
+                      <div style="display:flex;gap:8px;">
+                        <button onclick="cancelTabRevoke()" style="flex:1;padding:10px;background:transparent;border:1.5px solid var(--primary);border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--primary);cursor:pointer;">Cancel</button>
+                        <button onclick="confirmTabRevoke()" style="flex:1;padding:10px;background:var(--primary);border:none;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;color:white;cursor:pointer;">Yes, revoke</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Caption -->
+                <div style="font-size:13px;color:var(--content-low);display:flex;align-items:center;justify-content:center;gap:6px;">
+                  <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  End-to-end encrypted. Revoke access anytime.
+                </div>
+              </div>
+
+            </div><!-- /left column -->
+
+            <!-- ── Right column: How to connect guide ── -->
+            <div style="width:360px;flex-shrink:0;position:sticky;top:24px;">
+              <div style="border:1px solid var(--border);border-radius:16px;padding:24px;background:var(--bg-surface);">
+                <div style="font-size:17px;font-weight:700;color:var(--content-high);margin-bottom:4px;">How to connect</div>
+                <div style="font-size:13px;color:var(--content-medium);margin-bottom:20px;">Paste these into your AI assistant settings</div>
+
+                <!-- Step 1 -->
+                <div style="display:flex;gap:14px;padding:16px 0;">
+                  <div style="width:28px;height:28px;border-radius:9999px;background:#ebeef4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <span style="font-size:13px;font-weight:700;color:var(--content-high);">1</span>
+                  </div>
+                  <div>
+                    <div style="font-size:14px;font-weight:700;color:var(--content-high);margin-bottom:4px;">Generate your token</div>
+                    <div style="font-size:13px;color:var(--content-medium);line-height:20px;">Choose how long you'd like the token to be valid, then click Generate.</div>
+                  </div>
+                </div>
+                <div style="height:1px;background:var(--border);"></div>
+
+                <!-- Step 2 -->
+                <div style="display:flex;gap:14px;padding:16px 0;">
+                  <div style="width:28px;height:28px;border-radius:9999px;background:#ebeef4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <span style="font-size:13px;font-weight:700;color:var(--content-high);">2</span>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-size:14px;font-weight:700;color:var(--content-high);margin-bottom:4px;">Copy the Server URL</div>
+                    <div style="font-size:13px;color:var(--content-medium);line-height:20px;margin-bottom:10px;">Add it as the MCP server endpoint in your AI tool.</div>
+                    <div style="padding:10px 12px;background:#f7f9fa;border:1px solid var(--border);border-radius:8px;font-family:'DM Mono','Fira Code',monospace;font-size:12px;color:var(--content-medium);word-break:break-all;line-height:18px;">https://api.clara.team/workflows/mcp-server/http</div>
+                  </div>
+                </div>
+                <div style="height:1px;background:var(--border);"></div>
+
+                <!-- Step 3 -->
+                <div style="display:flex;gap:14px;padding:16px 0;">
+                  <div style="width:28px;height:28px;border-radius:9999px;background:#ebeef4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <span style="font-size:13px;font-weight:700;color:var(--content-high);">3</span>
+                  </div>
+                  <div>
+                    <div style="font-size:14px;font-weight:700;color:var(--content-high);margin-bottom:4px;">Copy your MCP token</div>
+                    <div style="font-size:13px;color:var(--content-medium);line-height:20px;">Paste it as the auth token. It will only be visible once — store it safely.</div>
+                  </div>
+                </div>
+                <div style="height:1px;background:var(--border);"></div>
+
+                <!-- Step 4 -->
+                <div style="display:flex;gap:14px;padding:16px 0 0;">
+                  <div style="width:28px;height:28px;border-radius:9999px;background:#ebeef4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <span style="font-size:13px;font-weight:700;color:var(--content-high);">4</span>
+                  </div>
+                  <div>
+                    <div style="font-size:14px;font-weight:700;color:var(--content-high);margin-bottom:8px;">Works with</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                      <span style="font-size:13px;font-weight:500;padding:4px 12px;border-radius:9999px;border:1px solid var(--border);color:var(--content-high);background:var(--bg-surface);">Claude</span>
+                      <span style="font-size:13px;font-weight:500;padding:4px 12px;border-radius:9999px;border:1px solid var(--border);color:var(--content-high);background:var(--bg-surface);">Cursor</span>
+                      <span style="font-size:13px;font-weight:500;padding:4px 12px;border-radius:9999px;border:1px solid var(--border);color:var(--content-high);background:var(--bg-surface);">Any MCP client</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- /right column -->
+
+          </div><!-- /two-column layout -->
         </div>
       </div>
 
@@ -2093,35 +2197,43 @@
     if (ssSetup) ssSetup.style.display = 'none';
     if (ssGen) ssGen.style.display = 'flex';
 
-    // Reset copy buttons to primary style
+    // Tab: reset card state — show copy btn, warning, done; hide revoke/confirm
     var tabCopy = document.getElementById('mcp-token-copy');
-    var ssCopy = document.getElementById('ss-copy-token-btn');
-    [tabCopy, ssCopy].forEach(function(btn) {
-      if (!btn) return;
-      btn.textContent = 'Copy';
-      btn.style.pointerEvents = '';
-      btn.style.opacity = '';
-      btn.style.background = 'var(--primary)';
-      btn.style.border = 'none';
-      btn.style.color = 'white';
-      btn.style.transition = '';
-    });
-    if (tabCopy) tabCopy.onclick = function() { copyTabToken(); };
-    if (ssCopy) ssCopy.onclick = function() { copySsToken(); };
-    // Re-enable token input boxes
+    if (tabCopy) { tabCopy.style.display = ''; tabCopy.style.pointerEvents = ''; }
+    var tabWarn = document.getElementById('tab-token-security-note');
+    if (tabWarn) tabWarn.style.display = 'flex';
+    var tabDone = document.getElementById('tab-done-btn');
+    if (tabDone) tabDone.style.display = '';
+    var tabRevRow = document.getElementById('tab-revoke-row');
+    if (tabRevRow) tabRevRow.style.display = 'none';
+    var tabRevConf = document.getElementById('tab-revoke-confirm');
+    if (tabRevConf) tabRevConf.style.display = 'none';
+    // Tab: reset token input styles
     var tabInput = document.getElementById('tab-token-input');
+    if (tabInput) { tabInput.style.background = ''; tabInput.style.borderColor = ''; tabInput.style.color = ''; }
+    // Tab: disable select after generating
+    var tabSelEl = document.getElementById('mcp-expiry-select');
+    if (tabSelEl) { tabSelEl.disabled = true; tabSelEl.style.opacity = '0.5'; }
+    // Tab: set card expiry
+    var tabCardExp = document.getElementById('tab-card-expiry');
+    if (tabCardExp) {
+      var expD = new Date(); expD.setDate(expD.getDate() + days);
+      tabCardExp.textContent = _months[expD.getMonth()] + ' ' + expD.getDate() + ', ' + expD.getFullYear();
+    }
+    // Sidesheet: reset copy button style
+    var ssCopy = document.getElementById('ss-copy-token-btn');
+    if (ssCopy) { ssCopy.style.display = ''; ssCopy.style.pointerEvents = ''; }
+    // Re-enable sidesheet token input
     var ssInput = document.getElementById('ss-token-input');
-    if (tabInput) { tabInput.style.opacity = ''; tabInput.style.pointerEvents = ''; }
     if (ssInput) { ssInput.style.opacity = ''; ssInput.style.pointerEvents = ''; }
-    // Show security notes, hide metadata
-    var tn1 = document.getElementById('tab-token-security-note');
+    // Sidesheet: show security note, hide metadata
     var tn2 = document.getElementById('ss-token-security-note');
-    var tm1 = document.getElementById('tab-token-metadata');
     var tm2 = document.getElementById('ss-token-metadata');
-    if (tn1) tn1.style.display = 'block';
     if (tn2) tn2.style.display = 'block';
-    if (tm1) tm1.style.display = 'none';
     if (tm2) tm2.style.display = 'none';
+    // Tab: hide metadata
+    var tm1 = document.getElementById('tab-token-metadata');
+    if (tm1) tm1.style.display = 'none';
 
     // Sync both expiry selects
     const tabSel = document.getElementById('mcp-expiry-select');
@@ -2286,6 +2398,17 @@
   }
   // Set initial 30-day expiry on load
   setMcpExpiry(30);
+  tabUpdateExpiryNote();
+
+  /* ── Tab expiry helper text ── */
+  function tabUpdateExpiryNote() {
+    var sel = document.getElementById('mcp-expiry-select');
+    var days = sel ? parseInt(sel.value) : 30;
+    var exp = new Date();
+    exp.setDate(exp.getDate() + days);
+    var preview = document.getElementById('tab-expiry-preview');
+    if (preview) preview.textContent = _months[exp.getMonth()] + ' ' + exp.getDate() + ', ' + exp.getFullYear();
+  }
 
   function regenerateEndpoint() {
     const btn = document.getElementById('regen-endpoint-btn');
@@ -2331,37 +2454,69 @@
     if (tm2) tm2.style.display = 'block';
   }
 
-  /* ── Tab Copy → Copied! → Revoke (800ms, smooth) ── */
+  /* ── Tab copy token — copy only, no state change ── */
   function copyTabToken() {
-    navigator.clipboard.writeText(_mcpToken).catch(()=>{});
-    var btn = document.getElementById('mcp-token-copy');
-    if (btn) {
-      btn.textContent = 'Copied!';
-      btn.style.pointerEvents = 'none';
-    }
+    navigator.clipboard.writeText(_mcpToken).catch(function(){});
     toast('success', 'Token copied to clipboard.');
-    setTimeout(function() {
-      _maskTokenBoth();
-      var input = document.getElementById('tab-token-input');
-      if (input) { input.style.opacity = '0.5'; input.style.pointerEvents = 'none'; }
-      if (btn) {
-        btn.textContent = 'Revoke';
-        btn.style.transition = 'all 200ms ease';
-        btn.style.background = 'transparent';
-        btn.style.border = '1px solid var(--primary)';
-        btn.style.color = 'var(--primary)';
-        btn.style.pointerEvents = '';
-        btn.onclick = function() { revokeTabToken(); };
-      }
-    }, 800);
   }
 
-  /* ── Tab Revoke — reset to setup state, keep toggle ON ── */
+  /* ── Tab copy server URL ── */
+  function copyTabServerUrl() {
+    navigator.clipboard.writeText('https://api.clara.team/workflows/mcp-server/http').catch(function(){});
+    toast('success', 'Server URL copied to clipboard.');
+  }
+
+  /* ── Tab Done → mask token, show Revoke ── */
+  function tabDoneToken() {
+    _maskTokenBoth();
+    var inp = document.getElementById('tab-token-input');
+    if (inp) { inp.style.background = 'var(--bg-highlight)'; inp.style.borderColor = 'var(--border)'; inp.style.color = 'var(--content-low)'; }
+    var copyBtn = document.getElementById('mcp-token-copy');
+    if (copyBtn) copyBtn.style.display = 'none';
+    var warn = document.getElementById('tab-token-security-note');
+    if (warn) warn.style.display = 'none';
+    var done = document.getElementById('tab-done-btn');
+    if (done) done.style.display = 'none';
+    var revoke = document.getElementById('tab-revoke-row');
+    if (revoke) revoke.style.display = 'flex';
+  }
+
+  /* ── Tab revoke flow ── */
+  function showTabRevokeConfirm() {
+    document.getElementById('tab-revoke-row').style.display = 'none';
+    var conf = document.getElementById('tab-revoke-confirm');
+    if (conf) conf.style.display = 'flex';
+  }
+  function cancelTabRevoke() {
+    document.getElementById('tab-revoke-confirm').style.display = 'none';
+    document.getElementById('tab-revoke-row').style.display = 'block';
+  }
+  function confirmTabRevoke() {
+    document.getElementById('tab-revoke-confirm').style.display = 'none';
+    revokeTabToken();
+  }
+
+  /* ── Tab Revoke — reset to setup state ── */
   function revokeTabToken() {
     var setup = document.getElementById('mcp-token-setup');
     var gen = document.getElementById('mcp-token-generated');
     if (setup) setup.style.display = 'flex';
     if (gen) gen.style.display = 'none';
+    // Re-enable select
+    var sel = document.getElementById('mcp-expiry-select');
+    if (sel) { sel.disabled = false; sel.style.opacity = ''; }
+    // Reset tab token input styles
+    var inp = document.getElementById('tab-token-input');
+    if (inp) { inp.style.background = ''; inp.style.borderColor = ''; inp.style.color = ''; }
+    var copyBtn = document.getElementById('mcp-token-copy');
+    if (copyBtn) { copyBtn.style.display = ''; }
+    var done = document.getElementById('tab-done-btn');
+    if (done) done.style.display = '';
+    var revoke = document.getElementById('tab-revoke-row');
+    if (revoke) revoke.style.display = 'none';
+    var conf = document.getElementById('tab-revoke-confirm');
+    if (conf) conf.style.display = 'none';
+    // Sync sidesheet
     var ssSetup = document.getElementById('ss-mcp-token-setup');
     var ssGen = document.getElementById('ss-mcp-token-generated');
     if (ssSetup) ssSetup.style.display = 'block';
@@ -2390,6 +2545,9 @@
 
   /* ── Validity change → reset to Generate token step ── */
   function onTabValidityChange() {
+    tabUpdateExpiryNote();
+    var sel = document.getElementById('mcp-expiry-select');
+    if (sel) { sel.disabled = false; sel.style.opacity = ''; }
     var setup = document.getElementById('mcp-token-setup');
     var gen = document.getElementById('mcp-token-generated');
     if (gen && gen.style.display === 'flex') {
